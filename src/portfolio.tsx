@@ -55,7 +55,7 @@ const SKILLS: Skill[] = [
   { name: "Node.js", icon: "◈", level: 75, category: "Backend" },
   { name: "Express", icon: "◈", level: 70, category: "Backend" },
   { name: "MongoDB", icon: "◈", level: 70, category: "Database" },
-  { name: "Firebase", icon: "◈", level: 78, category: "Database" },
+  { name: "Firebase", icon: "◈", level: 80, category: "Database" },
 ];
 
 const NAV_ITEMS: string[] = ["Home", "Experience", "Projects", "Certifications", "Skills", "Contact"];

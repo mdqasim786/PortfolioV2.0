@@ -1,10 +1,11 @@
 import './App.css'
+import Portfolio from './portfolio'
 
 function App() {
 
   return (
     <>
-    <h1 className='text-3xl'>Hello</h1>
+      <Portfolio  />
     </>
   )
 }

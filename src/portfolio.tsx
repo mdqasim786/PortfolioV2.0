@@ -76,11 +76,11 @@ const PROJECTS: Project[] = [
     image: "/img1.png",
   },
   {
-    title: "Ecommerce Website",
-    desc: "A modern ecommerce platform with product listings, shopping cart, and secure checkout functionality.",
-    tags: ["React", "MongoDB", "Firebase"],
+    title: "Exeton Official Website",
+    desc: "Frontend Developer and UI Designer for Exeton & build a 40+ page company website.",
+    tags: ["React", "TailwindCSS", "Typescript"],
     color: "#8b5cf6",
-    image: "/clone-project.png",
+    image: "/exeton.png",
   },
 ];
 
@@ -151,8 +151,8 @@ const Portfolio: FC = () => {
 
   const handleResumeDownload = (): void => {
     const link = document.createElement("a");
-    link.href = "https://docs.google.com/uc?export=download&id=1cltFyEokx2kycIhgbmNvuVlLDgiv6CaX";
-    link.setAttribute("download", "Muhammad_Qasim_Resume.pdf");
+    link.href = "https://docs.google.com/uc?export=download&id=1JFJLI2Mbq-Cb69FK3R55LQgE2NwMcGmu";
+    link.setAttribute("download", "Muhammad Qasim-CV.pdf");
     link.click();
   };
 
@@ -662,9 +662,9 @@ const Portfolio: FC = () => {
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "12px" }}>
                 <div>
                   <h3 style={{ fontSize: "21px", fontWeight: 700, color: "#fff", marginBottom: "4px" }}>
-                    Frontend Developer Intern
+                    Frontend Developer 
                   </h3>
-                  <p style={{ fontSize: "15px", color: "#6366f1", fontWeight: 500 }}>Appverse Technologies</p>
+                  <p style={{ fontSize: "15px", color: "#6366f1", fontWeight: 500 }}>Exeton (Official Partner of NVIDIA)</p>
                 </div>
                 <span
                   style={{
@@ -678,19 +678,16 @@ const Portfolio: FC = () => {
                     whiteSpace: "nowrap",
                   }}
                 >
-                  Jan 2026 — Mar 2026
+                  Mar 2026
                 </span>
               </div>
 
               <p style={{ marginTop: "18px", color: "#6b6b7e", lineHeight: 1.8, fontSize: "14.5px", fontWeight: 300 }}>
-                Contributed to fronend web application development, working with React and CSS to build
-                scalable features. Collaborated with senior developers to implement APIs, integrated
-                Firebase for authentication and real-time database operations, and participated in agile
-                sprint cycles. Gained hands-on experience with code reviews, version control, and production deployments.
+                Worked as a Frontend Developer and UI Designer in a team of 3–4 developers to build a 40+ page company website. Developed responsive UI layouts and translated design concepts into clean, maintainable frontend code while collaborating with the development team to deliver a professional web platform.
               </p>
 
               <div style={{ display: "flex", gap: "8px", marginTop: "20px", flexWrap: "wrap" }}>
-                {["React", "Node.js", "Firebase", "MongoDB", "Git"].map((tag: string) => (
+                {["React", "Next.js", "TailwindCSS", "Typescript"].map((tag: string) => (
                   <span
                     key={tag}
                     style={{
@@ -708,8 +705,236 @@ const Portfolio: FC = () => {
                 ))}
               </div>
             </div>
+            
           </div>
         </div>
+
+        <div style={{ marginTop: "60px", position: "relative" }}>
+  {/* Timeline vertical line */}
+  <div
+    style={{
+      position: "absolute",
+      left: "24px",
+      top: 0,
+      bottom: 0,
+      width: "2px",
+      background: "linear-gradient(to bottom, #f6d365, rgba(253,160,133,0.3))",
+      borderRadius: "2px",
+    }}
+  />
+
+  <div
+    style={{
+      position: "relative",
+      paddingLeft: "64px",
+      opacity: visibleSections.has("experience") ? 1 : 0,
+      transform: visibleSections.has("experience") ? "translateY(0)" : "translateY(30px)",
+      transition: "all 0.7s cubic-bezier(0.4,0,0.2,1) 0.2s",
+    }}
+  >
+    {/* Timeline dot */}
+    <div
+      style={{
+        position: "absolute",
+        left: "17px",
+        top: "8px",
+        width: "16px",
+        height: "16px",
+        borderRadius: "50%",
+        background: "#fda085",
+        boxShadow: "0 0 16px rgba(253,160,133,0.5)",
+        border: "3px solid #0a0a0f",
+      }}
+    />
+
+    {/* Experience Card */}
+    <div
+      style={{
+        background: "rgba(255,255,255,0.02)",
+        border: "1px solid rgba(255,255,255,0.06)",
+        borderRadius: "16px",
+        padding: "32px",
+        backdropFilter: "blur(10px)",
+        position: "relative",
+        overflow: "hidden",
+      }}
+    >
+      {/* Top gradient accent */}
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          height: "2px",
+          background: "linear-gradient(90deg, #f6d365, #fda085, transparent)",
+        }}
+      />
+
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "12px" }}>
+        <div>
+          <h3 style={{ fontSize: "21px", fontWeight: 700, color: "#fff", marginBottom: "4px" }}>
+            Frontend Developer Intern
+          </h3>
+          <p style={{ fontSize: "15px", color: "#f6a185", fontWeight: 500 }}>Elevvo Pathways</p>
+        </div>
+        <span
+          style={{
+            background: "rgba(253,160,133,0.12)",
+            border: "1px solid rgba(253,160,133,0.3)",
+            color: "#fda085",
+            padding: "6px 14px",
+            borderRadius: "8px",
+            fontSize: "13px",
+            fontWeight: 500,
+            whiteSpace: "nowrap",
+          }}
+        >
+          Feb 2026
+        </span>
+      </div>
+
+      <p style={{ marginTop: "18px", color: "#6b6b7e", lineHeight: 1.8, fontSize: "14.5px", fontWeight: 300 }}>
+        Completed a one-month remote internship focused on frontend development, where I
+        worked through structured levels and tasks involving HTML5, CSS3, JavaScript, and
+        responsive UI development. Built and improved interactive web interfaces while
+        strengthening practical skills in modern frontend workflows and user-focused design.
+      </p>
+
+      <div style={{ display: "flex", gap: "8px", marginTop: "20px", flexWrap: "wrap" }}>
+        {["HTML5", "CSS3", "Javascript"].map((tag: string) => (
+          <span
+            key={tag}
+            style={{
+              background: "rgba(253,160,133,0.1)",
+              border: "1px solid rgba(253,160,133,0.2)",
+              color: "#c56b4f",
+              padding: "5px 12px",
+              borderRadius: "6px",
+              fontSize: "12px",
+              fontWeight: 500,
+            }}
+          >
+            {tag}
+          </span>
+        ))}
+      </div>
+    </div>
+  </div>
+        </div>
+
+        <div style={{ marginTop: "60px", position: "relative" }}>
+  {/* Timeline vertical line */}
+  <div
+    style={{
+      position: "absolute",
+      left: "24px",
+      top: 0,
+      bottom: 0,
+      width: "2px",
+      background: "linear-gradient(to bottom, #84fab0, rgba(143,211,244,0.3))",
+      borderRadius: "2px",
+    }}
+  />
+
+  <div
+    style={{
+      position: "relative",
+      paddingLeft: "64px",
+      opacity: visibleSections.has("experience") ? 1 : 0,
+      transform: visibleSections.has("experience") ? "translateY(0)" : "translateY(30px)",
+      transition: "all 0.7s cubic-bezier(0.4,0,0.2,1) 0.2s",
+    }}
+  >
+    {/* Timeline dot */}
+    <div
+      style={{
+        position: "absolute",
+        left: "17px",
+        top: "8px",
+        width: "16px",
+        height: "16px",
+        borderRadius: "50%",
+        background: "#5bc0e5",
+        boxShadow: "0 0 16px rgba(91,192,229,0.5)",
+        border: "3px solid #0a0a0f",
+      }}
+    />
+
+    {/* Experience Card */}
+    <div
+      style={{
+        background: "rgba(255,255,255,0.02)",
+        border: "1px solid rgba(255,255,255,0.06)",
+        borderRadius: "16px",
+        padding: "32px",
+        backdropFilter: "blur(10px)",
+        position: "relative",
+        overflow: "hidden",
+      }}
+    >
+      {/* Top gradient accent */}
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          height: "2px",
+          background: "linear-gradient(90deg, #84fab0, #8fd3f4, transparent)",
+        }}
+      />
+
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "12px" }}>
+        <div>
+          <h3 style={{ fontSize: "21px", fontWeight: 700, color: "#fff", marginBottom: "4px" }}>
+            Web Developer Intern
+          </h3>
+          <p style={{ fontSize: "15px", color: "#5bc0e5", fontWeight: 500 }}>AppVerse Technologies</p>
+        </div>
+        <span
+          style={{
+            background: "rgba(143,211,244,0.12)",
+            border: "1px solid rgba(143,211,244,0.3)",
+            color: "#5bc0e5",
+            padding: "6px 14px",
+            borderRadius: "8px",
+            fontSize: "13px",
+            fontWeight: 500,
+            whiteSpace: "nowrap",
+          }}
+        >
+          Jan - Feb 2026
+        </span>
+      </div>
+
+      <p style={{ marginTop: "18px", color: "#6b6b7e", lineHeight: 1.8, fontSize: "14.5px", fontWeight: 300 }}>
+        Completed a two-month remote internship focused on modern frontend development
+        using React.js, JavaScript, HTML5, CSS3, and Tailwind CSS. Developed responsive user
+        interfaces, built reusable React components, and integrated APIs while following clean code practices and component-based architecture.
+      </p>
+
+      <div style={{ display: "flex", gap: "8px", marginTop: "20px", flexWrap: "wrap" }}>
+        {["React", "Javascript", "TailwindCSS"].map((tag: string) => (
+          <span
+            key={tag}
+            style={{
+              background: "rgba(143,211,244,0.1)",
+              border: "1px solid rgba(143,211,244,0.2)",
+              color: "#5bc0e5",
+              padding: "5px 12px",
+              borderRadius: "6px",
+              fontSize: "12px",
+              fontWeight: 500,
+            }}
+          >
+            {tag}
+          </span>
+        ))}
+      </div>
+    </div>
+  </div>
+</div>
       </section>
 
       {/* ─── PROJECTS ─── */}

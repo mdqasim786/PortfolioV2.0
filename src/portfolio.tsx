@@ -62,18 +62,11 @@ const NAV_ITEMS: string[] = ["Home", "Experience", "Projects", "Certifications",
 
 const PROJECTS: Project[] = [
   {
-    title: "ApplyWise Job Portal",
-    desc: "A full-featured job portal enabling job seekers to browse listings, submit applications, and track statuses, while employers can post jobs and manage candidates.",
-    tags: ["React", "Node.js", "MongoDB"],
-    color: "#6366f1",
-    image: "/applywise.png",
-  },
-  {
-    title: "Quick-Bill SaaS App",
-    desc: "A comprehensive billing solution for small businesses, featuring invoicing, payment tracking, and client management.",
-    tags: ["Firebase", "Tailwind", "React"],
-    color: "#10b981",
-    image: "/img1.png",
+    title: "Apex Kick",
+    desc: "Designed and developed a high-end sneakers brand landing page in React & TailwindCSS.",
+    tags: ["React", "TailwindCSS", "Typescript"],
+    color: "#c30010",
+    image: "/1.jpg",
   },
   {
     title: "Exeton Official Website",
@@ -81,6 +74,13 @@ const PROJECTS: Project[] = [
     tags: ["React", "TailwindCSS", "Typescript"],
     color: "#8b5cf6",
     image: "/exeton.png",
+  },
+  {
+    title: "Quick-Bill SaaS App",
+    desc: "A comprehensive billing solution for small businesses, payment tracking, and client management.",
+    tags: ["Firebase", "Tailwind", "React"],
+    color: "#10b981",
+    image: "/img1.png",
   },
 ];
 

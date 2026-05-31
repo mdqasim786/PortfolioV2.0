@@ -10,7 +10,7 @@ interface Skill {
   category: SkillCategory;
 }
 
-type SkillCategory = "Frontend" | "Backend" | "Database";
+type SkillCategory = "Frontend" | "Backend" | "Database" | "AI & Tools";
 
 interface Project {
   title: string;
@@ -29,7 +29,7 @@ interface Certification {
 
 interface FooterLink {
   label: string;
-  icon: string;
+  icon: React.ReactNode;
   href: string;
 }
 
@@ -47,15 +47,22 @@ interface ProjectCardProps extends Project {
 /* ─── Data Constants ─── */
 
 const SKILLS: Skill[] = [
-  { name: "HTML", icon: "◈", level: 95, category: "Frontend" },
-  { name: "CSS", icon: "◈", level: 92, category: "Frontend" },
+  { name: "HTML", icon: "◈", level: 98, category: "Frontend" },
+  { name: "CSS", icon: "◈", level: 95, category: "Frontend" },
   { name: "JavaScript", icon: "◈", level: 85, category: "Frontend" },
-  { name: "React", icon: "◈", level: 90, category: "Frontend" },
-  { name: "Tailwind CSS", icon: "◈", level: 80, category: "Frontend" },
+  { name: "React", icon: "◈", level: 92, category: "Frontend" },
+  { name: "Tailwind CSS", icon: "◈", level: 90, category: "Frontend" },
+  { name: "TypeScript", icon: "◈", level: 80, category: "Frontend" },
   { name: "Node.js", icon: "◈", level: 75, category: "Backend" },
   { name: "Express", icon: "◈", level: 70, category: "Backend" },
+  { name: "PHP", icon: "◈", level: 60, category: "Backend" },
   { name: "MongoDB", icon: "◈", level: 70, category: "Database" },
   { name: "Firebase", icon: "◈", level: 80, category: "Database" },
+  { name: "MySQL", icon: "◈", level: 75, category: "Database" },
+  { name: "Google AI Studio", icon: "◈", level: 80, category: "AI & Tools" },
+  { name: "SEO Optimization", icon: "◈", level: 75, category: "AI & Tools" },
+  { name: "OpenCode", icon: "◈", level: 85, category: "AI & Tools" },
+  { name: "Pomelli Google Lab", icon: "◈", level: 70, category: "AI & Tools" },
 ];
 
 const NAV_ITEMS: string[] = ["Home", "Experience", "Projects", "Certifications", "Skills", "Contact"];
@@ -91,17 +98,42 @@ const CERTIFICATIONS: Certification[] = [
 ];
 
 const FOOTER_LINKS: FooterLink[] = [
-  { label: "GitHub", icon: "⬡", href: "https://github.com/mdqasim786" },
-  { label: "LinkedIn", icon: "in", href: "https://linkedin.com/in/md-qasim" },
-  { label: "Email", icon: "✉", href: "mailto:mdqasim5911@gmail.com" },
+  {
+    label: "GitHub",
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z" />
+      </svg>
+    ),
+    href: "https://github.com/mdqasim786",
+  },
+  {
+    label: "LinkedIn",
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+      </svg>
+    ),
+    href: "https://linkedin.com/in/md-qasim",
+  },
+  {
+    label: "Email",
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
+      </svg>
+    ),
+    href: "mailto:mdqasim5911@gmail.com",
+  },
 ];
 
-const SKILL_CATEGORIES: SkillCategory[] = ["Frontend", "Backend", "Database"];
+const SKILL_CATEGORIES: SkillCategory[] = ["Frontend", "Backend", "Database", "AI & Tools"];
 
 const CATEGORY_COLORS: Record<SkillCategory, { primary: string; secondary: string }> = {
   Frontend: { primary: "#6366f1", secondary: "#8b5cf6" },
   Backend: { primary: "#10b981", secondary: "#34d399" },
-  Database: { primary: "#8b5cf6", secondary: "#a78bfa" },
+  Database: { primary: "#06b6d4", secondary: "#22d3ee" },
+  "AI & Tools": { primary: "#f59e0b", secondary: "#f97316" },
 };
 
 /* ─── Main Portfolio Component ─── */
@@ -116,6 +148,20 @@ const Portfolio: FC = () => {
   useEffect(() => {
     const handleScroll = (): void => {
       setScrolled(window.scrollY > 50);
+
+      const sections = document.querySelectorAll<HTMLElement>("[data-section]");
+      let current = "Home";
+      let closest = Infinity;
+      sections.forEach((section) => {
+        const rect = section.getBoundingClientRect();
+        const dist = Math.abs(rect.top - 100);
+        if (rect.top < window.innerHeight && rect.bottom > 0 && dist < closest) {
+          closest = dist;
+          const name = section.getAttribute("data-section") || "";
+          current = name.charAt(0).toUpperCase() + name.slice(1);
+        }
+      });
+      setActiveNav(current);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -356,9 +402,9 @@ const Portfolio: FC = () => {
             key={item}
             onClick={() => scrollTo(item)}
             style={{
-              background: "none",
-              border: "none",
-              color: "#e2e2e8",
+              background: activeNav === item ? "rgba(99,102,241,0.15)" : "none",
+              border: activeNav === item ? "1px solid rgba(99,102,241,0.4)" : "none",
+              color: activeNav === item ? "#6366f1" : "#e2e2e8",
               fontSize: "22px",
               fontWeight: 600,
               cursor: "pointer",
@@ -370,7 +416,7 @@ const Portfolio: FC = () => {
               letterSpacing: "1px",
             }}
             onMouseEnter={(e: MouseEvent<HTMLButtonElement>) => (e.currentTarget.style.color = "#6366f1")}
-            onMouseLeave={(e: MouseEvent<HTMLButtonElement>) => (e.currentTarget.style.color = "#e2e2e8")}
+            onMouseLeave={(e: MouseEvent<HTMLButtonElement>) => (e.currentTarget.style.color = activeNav === item ? "#6366f1" : "#e2e2e8")}
           >
             {item}
           </button>
@@ -606,6 +652,118 @@ const Portfolio: FC = () => {
               top: 0,
               bottom: 0,
               width: "2px",
+              background: "linear-gradient(to bottom, #ec4899, rgba(236,72,153,0.1))",
+              borderRadius: "2px",
+            }}
+          />
+
+          <div
+            style={{
+              position: "relative",
+              paddingLeft: "64px",
+              opacity: visibleSections.has("experience") ? 1 : 0,
+              transform: visibleSections.has("experience") ? "translateY(0)" : "translateY(30px)",
+              transition: "all 0.7s cubic-bezier(0.4,0,0.2,1) 0.2s",
+            }}
+          >
+            {/* Timeline dot */}
+            <div
+              style={{
+                position: "absolute",
+                left: "17px",
+                top: "8px",
+                width: "16px",
+                height: "16px",
+                borderRadius: "50%",
+                background: "#ec4899",
+                boxShadow: "0 0 16px rgba(236,72,153,0.5)",
+                border: "3px solid #0a0a0f",
+              }}
+            />
+
+            {/* Experience Card */}
+            <div
+              style={{
+                background: "rgba(255,255,255,0.02)",
+                border: "1px solid rgba(255,255,255,0.06)",
+                borderRadius: "16px",
+                padding: "32px",
+                backdropFilter: "blur(10px)",
+                position: "relative",
+                overflow: "hidden",
+              }}
+            >
+              {/* Top gradient accent */}
+              <div
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  height: "2px",
+                  background: "linear-gradient(90deg, #f472b6, #ec4899, transparent)",
+                }}
+              />
+
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "12px" }}>
+                <div>
+                  <h3 style={{ fontSize: "21px", fontWeight: 700, color: "#fff", marginBottom: "4px" }}>
+                    Developer (Web &amp; Mobile Apps)
+                  </h3>
+                  <p style={{ fontSize: "15px", color: "#ec4899", fontWeight: 500 }}>DMU (Digital Marketing Universe)</p>
+                </div>
+                <span
+                  style={{
+                    background: "rgba(236,72,153,0.12)",
+                    border: "1px solid rgba(236,72,153,0.3)",
+                    color: "#ec4899",
+                    padding: "6px 14px",
+                    borderRadius: "8px",
+                    fontSize: "13px",
+                    fontWeight: 500,
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  May 2026 - Ongoing
+                </span>
+              </div>
+
+              <p className="exp-desc" style={{ marginTop: "18px", color: "#6b6b7e", lineHeight: 1.8, fontSize: "14.5px", fontWeight: 300 }}>
+                Worked on developing both mobile and web applications, gaining hands-on experience with Google AI Studio and various AI tools. Learned SEO optimization for websites and utilized command-line interfaces along with Pomeili by Google Labs. Successfully delivered nearly 10 projects within a single month, demonstrating rapid development and adaptability.
+              </p>
+
+              <div style={{ display: "flex", gap: "8px", marginTop: "20px", flexWrap: "wrap" }}>
+                {["React", "PHP", "Typescript", "TailwindCSS", "HTML", "CSS"].map((tag: string) => (
+                  <span
+                    key={tag}
+                    style={{
+                      background: "rgba(236,72,153,0.1)",
+                      border: "1px solid rgba(236,72,153,0.2)",
+                      color: "#ec4899",
+                      padding: "5px 12px",
+                      borderRadius: "6px",
+                      fontSize: "12px",
+                      fontWeight: 500,
+                    }}
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+            
+          </div>
+        </div>
+
+        <div style={{ marginTop: "60px", position: "relative" }}>
+          {/* Timeline vertical line */}
+          <div
+            style={{
+              position: "absolute",
+              left: "24px",
+              top: 0,
+              bottom: 0,
+              width: "2px",
               background: "linear-gradient(to bottom, #6366f1, rgba(99,102,241,0.1))",
               borderRadius: "2px",
             }}
@@ -668,9 +826,9 @@ const Portfolio: FC = () => {
                 </div>
                 <span
                   style={{
-                    background: "rgba(16,185,129,0.12)",
-                    border: "1px solid rgba(16,185,129,0.3)",
-                    color: "#10b981",
+                    background: "rgba(99,102,241,0.12)",
+                    border: "1px solid rgba(99,102,241,0.3)",
+                    color: "#6366f1",
                     padding: "6px 14px",
                     borderRadius: "8px",
                     fontSize: "13px",
@@ -682,7 +840,7 @@ const Portfolio: FC = () => {
                 </span>
               </div>
 
-              <p style={{ marginTop: "18px", color: "#6b6b7e", lineHeight: 1.8, fontSize: "14.5px", fontWeight: 300 }}>
+              <p className="exp-desc" style={{ marginTop: "18px", color: "#6b6b7e", lineHeight: 1.8, fontSize: "14.5px", fontWeight: 300 }}>
                 Worked as a Frontend Developer and UI Designer in a team of 3–4 developers to build a 40+ page company website. Developed responsive UI layouts and translated design concepts into clean, maintainable frontend code while collaborating with the development team to deliver a professional web platform.
               </p>
 
@@ -794,7 +952,7 @@ const Portfolio: FC = () => {
         </span>
       </div>
 
-      <p style={{ marginTop: "18px", color: "#6b6b7e", lineHeight: 1.8, fontSize: "14.5px", fontWeight: 300 }}>
+      <p className="exp-desc" style={{ marginTop: "18px", color: "#6b6b7e", lineHeight: 1.8, fontSize: "14.5px", fontWeight: 300 }}>
         Completed a one-month remote internship focused on frontend development, where I
         worked through structured levels and tasks involving HTML5, CSS3, JavaScript, and
         responsive UI development. Built and improved interactive web interfaces while
@@ -908,7 +1066,7 @@ const Portfolio: FC = () => {
         </span>
       </div>
 
-      <p style={{ marginTop: "18px", color: "#6b6b7e", lineHeight: 1.8, fontSize: "14.5px", fontWeight: 300 }}>
+      <p className="exp-desc" style={{ marginTop: "18px", color: "#6b6b7e", lineHeight: 1.8, fontSize: "14.5px", fontWeight: 300 }}>
         Completed a two-month remote internship focused on modern frontend development
         using React.js, JavaScript, HTML5, CSS3, and Tailwind CSS. Developed responsive user
         interfaces, built reusable React components, and integrated APIs while following clean code practices and component-based architecture.
@@ -1430,6 +1588,12 @@ const Portfolio: FC = () => {
           nav > div:nth-child(2) { display: none !important; }
           .hamburger            { display: flex !important; }
           .mobile-menu button   { font-size: 20px !important; }
+          .exp-desc {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+          }
         }
         @media (min-width: 769px) {
           .hamburger { display: none !important; }

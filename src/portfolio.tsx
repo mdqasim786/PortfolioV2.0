@@ -60,9 +60,10 @@ const SKILLS: Skill[] = [
   { name: "Firebase", icon: "◈", level: 80, category: "Database" },
   { name: "MySQL", icon: "◈", level: 75, category: "Database" },
   { name: "Google AI Studio", icon: "◈", level: 80, category: "AI & Tools" },
-  { name: "SEO Optimization", icon: "◈", level: 75, category: "AI & Tools" },
-  { name: "OpenCode", icon: "◈", level: 85, category: "AI & Tools" },
+  { name: "SEO Optimization", icon: "◈", level: 85, category: "AI & Tools" },
+  { name: "OpenCode", icon: "◈", level: 90, category: "AI & Tools" },
   { name: "Pomelli Google Lab", icon: "◈", level: 70, category: "AI & Tools" },
+  { name: "Flow Google Lab", icon:"◈", level: 70, category: "AI & Tools" }
 ];
 
 const NAV_ITEMS: string[] = ["Home", "Experience", "Projects", "Certifications", "Skills", "Contact"];
@@ -73,14 +74,14 @@ const PROJECTS: Project[] = [
     desc: "Designed and developed a high-end sneakers brand landing page in React & TailwindCSS.",
     tags: ["React", "TailwindCSS", "Typescript"],
     color: "#c30010",
-    image: "/1.jpg",
+    image: "/proj-2.jpeg",
   },
   {
     title: "Exeton Official Website",
     desc: "Frontend Developer and UI Designer for Exeton & build a 40+ page company website.",
     tags: ["React", "TailwindCSS", "Typescript"],
     color: "#8b5cf6",
-    image: "/exeton.png",
+    image: "/proj-1.jpeg",
   },
   {
     title: "Quick-Bill SaaS App",

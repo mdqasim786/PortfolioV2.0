@@ -66,7 +66,7 @@ const SKILLS: Skill[] = [
   { name: "Flow Google Lab", icon:"◈", level: 70, category: "AI & Tools" }
 ];
 
-const NAV_ITEMS: string[] = ["Home", "Experience", "Projects", "Certifications", "Skills", "Contact"];
+const NAV_ITEMS: string[] = ["Home", "Experience", "Projects", "Skills", "Testimonials", "Contact"];
 
 const PROJECTS: Project[] = [
   {
@@ -125,6 +125,33 @@ const FOOTER_LINKS: FooterLink[] = [
       </svg>
     ),
     href: "mailto:mdqasim5911@gmail.com",
+  },
+  {
+    label: "Medium",
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M0 3v18h24V3H0zm6.6 14.2c-1.9 0-3.4-1.5-3.4-3.4s1.5-3.4 3.4-3.4c1.9 0 3.4 1.5 3.4 3.4s-1.5 3.4-3.4 3.4zm7.6.2c-1.1 0-2.1-1.6-2.1-3.6s1-3.6 2.1-3.6 2.1 1.6 2.1 3.6-1 3.6-2.1 3.6zm5.9-.1c-.4 0-.7-1.6-.7-3.5s.3-3.5.7-3.5.7 1.6.7 3.5-.3 3.5-.7 3.5z" />
+      </svg>
+    ),
+    href: "https://medium.com/@muhammadqasimdev",
+  },
+  {
+    label: "Fiverr",
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M21 13.4V2h-8.9v3.9h4.5v4.1h-5v5.6c0 3.6-2.9 6.5-6.5 6.5S2 19.2 2 15.6s2.9-6.5 6.5-6.5H10v-4H8.5C4.4 5.1 1.1 8.4 1.1 12.5s3.3 7.4 7.4 7.4 7.4-3.3 7.4-7.4v-2h1.5V8.7h-1.5V4.7H21v8.8c0 3.6-2.9 6.5-6.5 6.5s-6.1-2.6-6.5-6.5h-4c.5 5.5 5.2 9.9 10.5 9.9S21 19 21 13.4z" />
+      </svg>
+    ),
+    href: "https://www.fiverr.com/s/WE4PGZ5",
+  },
+  {
+    label: "Upwork",
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M18.561 13.158c-1.102 0-2.135-.467-3.074-1.227l.228-.668.044-.148c.416-1.233.63-2.552.63-3.888 0-3.636-2.916-6.597-6.5-6.597-3.583 0-6.5 2.96-6.5 6.597 0 3.636 2.917 6.597 6.5 6.597 1.123 0 2.184-.296 3.107-.829l-.366-.874c-.811.443-1.733.703-2.741.703-2.543 0-4.618-2.066-4.618-4.597 0-2.532 2.075-4.597 4.618-4.597 2.544 0 4.618 2.065 4.618 4.597 0 .927-.222 1.806-.616 2.585l-.633 2.118c.582.974 1.476 1.707 2.578 2.068l.713-1.416c.435-.169.742-.595.742-1.089 0-.649-.527-1.177-1.177-1.177zm-6-5.255c0-1.655-1.347-3-3-3s-3 1.345-3 3 1.347 3 3 3 3-1.345 3-3z" />
+      </svg>
+    ),
+    href: "https://www.upwork.com/freelancers/~01285a0e9bb227f77f?mp_source=share",
   },
 ];
 
@@ -540,9 +567,8 @@ const Portfolio: FC = () => {
             fontWeight: 300,
           }}
         >
-          I craft immersive digital experiences with clean code, intuitive design, and a
-          passion for turning ideas into reality. From concept to deployment — I build
-          solutions that users love.
+          Frontend Developer specializing in React, Next.js and AI-powered web applications.
+          Currently building products, contributing to open source, and sharing what I learn.
         </p>
 
         {/* CTA Buttons */}
@@ -1131,6 +1157,96 @@ const Portfolio: FC = () => {
         </p>
       </section>
 
+      {/* ─── ARTICLES ─── */}
+      <section
+        id="articles"
+        data-section="articles"
+        style={{ position: "relative", zIndex: 1, padding: "120px 24px", maxWidth: "900px", margin: "0 auto" }}
+      >
+        <SectionHeader title="Latest Articles" subtitle="Thoughts & Insights" visible={visibleSections.has("articles")} />
+
+        <div style={{ marginTop: "60px", display: "grid", gap: "20px" }}>
+          {/* Article 1 */}
+          <a
+            href="https://medium.com/@muhammadqasimdev/my-first-large-scale-next-js-project-taught-me-more-than-any-tutorial-ever-could-3dcca85d8ecd"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ textDecoration: "none" }}
+          >
+            <div
+              style={{
+                background: "rgba(255,255,255,0.02)",
+                border: "1px solid rgba(255,255,255,0.06)",
+                borderRadius: "14px",
+                padding: "18px 22px",
+                backdropFilter: "blur(10px)",
+                display: "flex",
+                alignItems: "center",
+                gap: "24px",
+                cursor: "pointer",
+                transition: "all 0.3s ease",
+              }}
+              onMouseEnter={(e: MouseEvent<HTMLDivElement>) => {
+                e.currentTarget.style.background = "rgba(99,102,241,0.06)";
+                e.currentTarget.style.borderColor = "rgba(99,102,241,0.3)";
+              }}
+              onMouseLeave={(e: MouseEvent<HTMLDivElement>) => {
+                e.currentTarget.style.background = "rgba(255,255,255,0.02)";
+                e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)";
+              }}
+            >
+              <img
+                src="/1-article.png"
+                alt="Article thumbnail"
+                style={{
+                  width: "90px",
+                  height: "90px",
+                  borderRadius: "10px",
+                  objectFit: "contain",
+                  flexShrink: 0,
+                  background: "rgba(255,255,255,0.03)",
+                  border: "1px solid rgba(255,255,255,0.06)",
+                }}
+              />
+              <div style={{ flex: 1 }}>
+                <h4 style={{ fontSize: "16px", fontWeight: 600, color: "#fff", marginBottom: "6px", lineHeight: 1.5 }}>
+                  My First Large-Scale Next.js Project Taught Me More Than Any Tutorial Ever Could
+                </h4>
+                <span style={{ color: "#6366f1", fontSize: "13px", fontWeight: 500 }}>
+                  Read Article →
+                </span>
+              </div>
+            </div>
+          </a>
+
+          {/* Article 2 */}
+          <div
+            style={{
+              background: "rgba(255,255,255,0.02)",
+              border: "1px solid rgba(255,255,255,0.06)",
+              borderRadius: "14px",
+              padding: "18px 22px",
+              backdropFilter: "blur(10px)",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              gap: "20px",
+              opacity: 0.6,
+              cursor: "default",
+            }}
+          >
+            <div style={{ flex: 1 }}>
+              <h4 style={{ fontSize: "16px", fontWeight: 600, color: "#fff", marginBottom: "6px", lineHeight: 1.5 }}>
+                Building My First npm Package
+              </h4>
+              <span style={{ color: "#5a5a6e", fontSize: "13px", fontWeight: 500 }}>
+                Coming Soon
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ─── CERTIFICATIONS ─── */}
       <section
         id="certifications"
@@ -1295,6 +1411,110 @@ const Portfolio: FC = () => {
               </div>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* ─── TESTIMONIALS ─── */}
+      <section
+        id="testimonials"
+        data-section="testimonials"
+        style={{ position: "relative", zIndex: 1, padding: "120px 24px", maxWidth: "900px", margin: "0 auto" }}
+      >
+        <SectionHeader title="Testimonials" subtitle="What People Say" visible={visibleSections.has("testimonials")} />
+
+        <div style={{ marginTop: "60px", display: "grid", gap: "20px" }}>
+          {/* Testimonial 1 */}
+          <div
+            style={{
+              background: "rgba(255,255,255,0.02)",
+              border: "1px solid rgba(255,255,255,0.06)",
+              borderRadius: "14px",
+              padding: "28px 32px",
+              backdropFilter: "blur(10px)",
+              transition: "all 0.3s ease",
+            }}
+            onMouseEnter={(e: MouseEvent<HTMLDivElement>) => {
+              e.currentTarget.style.borderColor = "rgba(99,102,241,0.3)";
+              e.currentTarget.style.background = "rgba(99,102,241,0.04)";
+            }}
+            onMouseLeave={(e: MouseEvent<HTMLDivElement>) => {
+              e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)";
+              e.currentTarget.style.background = "rgba(255,255,255,0.02)";
+            }}
+          >
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "12px", marginBottom: "14px" }}>
+              <div>
+                <p style={{ fontSize: "16px", fontWeight: 700, color: "#fff", marginBottom: "2px" }}>DMU (CEO)</p>
+                <span style={{ fontSize: "13px", color: "#6366f1", fontWeight: 500 }}>CEO, Digital Marketing Universe</span>
+              </div>
+              <span style={{ fontSize: "14px", color: "#f59e0b", letterSpacing: "2px", whiteSpace: "nowrap" }}>⭐⭐⭐⭐⭐</span>
+            </div>
+            <p style={{ fontSize: "14.5px", color: "#6b6b7e", lineHeight: 1.8, fontWeight: 300, fontStyle: "italic" }}>
+              "Qasim has shown excellent growth since joining our team. He builds modern web interfaces with attention to detail, accepts feedback well, and consistently delivers quality work within deadlines."
+            </p>
+          </div>
+
+          {/* Testimonial 2 */}
+          <div
+            style={{
+              background: "rgba(255,255,255,0.02)",
+              border: "1px solid rgba(255,255,255,0.06)",
+              borderRadius: "14px",
+              padding: "28px 32px",
+              backdropFilter: "blur(10px)",
+              transition: "all 0.3s ease",
+            }}
+            onMouseEnter={(e: MouseEvent<HTMLDivElement>) => {
+              e.currentTarget.style.borderColor = "rgba(99,102,241,0.3)";
+              e.currentTarget.style.background = "rgba(99,102,241,0.04)";
+            }}
+            onMouseLeave={(e: MouseEvent<HTMLDivElement>) => {
+              e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)";
+              e.currentTarget.style.background = "rgba(255,255,255,0.02)";
+            }}
+          >
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "12px", marginBottom: "14px" }}>
+              <div>
+                <p style={{ fontSize: "16px", fontWeight: 700, color: "#fff", marginBottom: "2px" }}>Exeton Project Manager</p>
+                <span style={{ fontSize: "13px", color: "#6366f1", fontWeight: 500 }}>Project Manager, Exeton</span>
+              </div>
+              <span style={{ fontSize: "14px", color: "#f59e0b", letterSpacing: "2px", whiteSpace: "nowrap" }}>⭐⭐⭐⭐⭐</span>
+            </div>
+            <p style={{ fontSize: "14.5px", color: "#6b6b7e", lineHeight: 1.8, fontWeight: 300, fontStyle: "italic" }}>
+              "Working with Qasim was a great experience. He translated complex Figma designs into responsive, production-ready interfaces while maintaining clean code and consistency across the project."
+            </p>
+          </div>
+
+          {/* Testimonial 3 */}
+          <div
+            style={{
+              background: "rgba(255,255,255,0.02)",
+              border: "1px solid rgba(255,255,255,0.06)",
+              borderRadius: "14px",
+              padding: "28px 32px",
+              backdropFilter: "blur(10px)",
+              transition: "all 0.3s ease",
+            }}
+            onMouseEnter={(e: MouseEvent<HTMLDivElement>) => {
+              e.currentTarget.style.borderColor = "rgba(99,102,241,0.3)";
+              e.currentTarget.style.background = "rgba(99,102,241,0.04)";
+            }}
+            onMouseLeave={(e: MouseEvent<HTMLDivElement>) => {
+              e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)";
+              e.currentTarget.style.background = "rgba(255,255,255,0.02)";
+            }}
+          >
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "12px", marginBottom: "14px" }}>
+              <div>
+                <p style={{ fontSize: "16px", fontWeight: 700, color: "#fff", marginBottom: "2px" }}>Senior Frontend Developer</p>
+                <span style={{ fontSize: "13px", color: "#6366f1", fontWeight: 500 }}>Senior Frontend Developer</span>
+              </div>
+              <span style={{ fontSize: "14px", color: "#f59e0b", letterSpacing: "2px", whiteSpace: "nowrap" }}>⭐⭐⭐⭐⭐</span>
+            </div>
+            <p style={{ fontSize: "14.5px", color: "#6b6b7e", lineHeight: 1.8, fontWeight: 300, fontStyle: "italic" }}>
+              "Qasim is dependable, detail-oriented, and genuinely interested in improving as an engineer. He takes feedback positively, learns quickly, and consistently delivers polished frontend implementations."
+            </p>
+          </div>
         </div>
       </section>
 
@@ -1487,31 +1707,32 @@ const Portfolio: FC = () => {
               <h4 style={{ color: "#fff", fontSize: "14px", fontWeight: 600, letterSpacing: "2px", textTransform: "uppercase", marginBottom: "20px" }}>
                 Connect
               </h4>
-              <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
-                {FOOTER_LINKS.map((link: FooterLink) => (
-                  <a
-                    key={link.label}
-                    href={link.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "12px",
-                      color: "#5a5a6e",
-                      textDecoration: "none",
-                      fontSize: "14px",
-                      transition: "all 0.3s ease",
-                    }}
-                    onMouseEnter={(e: MouseEvent<HTMLAnchorElement>) => {
-                      e.currentTarget.style.color = "#6366f1";
-                      e.currentTarget.style.transform = "translateX(4px)";
-                    }}
-                    onMouseLeave={(e: MouseEvent<HTMLAnchorElement>) => {
-                      e.currentTarget.style.color = "#5a5a6e";
-                      e.currentTarget.style.transform = "translateX(0)";
-                    }}
-                  >
+              <div style={{ display: "flex", gap: "32px" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+                  {FOOTER_LINKS.slice(0, 3).map((link: FooterLink) => (
+                      <a
+                        key={link.label}
+                        href={link.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "12px",
+                          color: "#5a5a6e",
+                          textDecoration: "none",
+                          fontSize: "14px",
+                          transition: "all 0.3s ease",
+                        }}
+                        onMouseEnter={(e: MouseEvent<HTMLAnchorElement>) => {
+                          e.currentTarget.style.color = "#6366f1";
+                          e.currentTarget.style.transform = "translateX(4px)";
+                        }}
+                        onMouseLeave={(e: MouseEvent<HTMLAnchorElement>) => {
+                          e.currentTarget.style.color = "#5a5a6e";
+                          e.currentTarget.style.transform = "translateX(0)";
+                        }}
+                      >
                     <span
                       style={{
                         width: "32px",
@@ -1531,6 +1752,52 @@ const Portfolio: FC = () => {
                     {link.label}
                   </a>
                 ))}
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+                  {FOOTER_LINKS.slice(3, 6).map((link: FooterLink) => (
+                    <a
+                      key={link.label}
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "12px",
+                        color: "#5a5a6e",
+                        textDecoration: "none",
+                        fontSize: "14px",
+                        transition: "all 0.3s ease",
+                      }}
+                      onMouseEnter={(e: MouseEvent<HTMLAnchorElement>) => {
+                        e.currentTarget.style.color = "#6366f1";
+                        e.currentTarget.style.transform = "translateX(4px)";
+                      }}
+                      onMouseLeave={(e: MouseEvent<HTMLAnchorElement>) => {
+                        e.currentTarget.style.color = "#5a5a6e";
+                        e.currentTarget.style.transform = "translateX(0)";
+                      }}
+                    >
+                      <span
+                        style={{
+                          width: "32px",
+                          height: "32px",
+                          borderRadius: "8px",
+                          background: "rgba(99,102,241,0.1)",
+                          border: "1px solid rgba(99,102,241,0.2)",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          fontSize: "13px",
+                          color: "#6366f1",
+                        }}
+                      >
+                        {link.icon}
+                      </span>
+                      {link.label}
+                    </a>
+                  ))}
+                </div>
               </div>
             </div>
           </div>

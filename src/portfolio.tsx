@@ -51,19 +51,23 @@ const SKILLS: Skill[] = [
   { name: "CSS", icon: "◈", level: 95, category: "Frontend" },
   { name: "JavaScript", icon: "◈", level: 85, category: "Frontend" },
   { name: "React", icon: "◈", level: 92, category: "Frontend" },
+  { name: "Next.js", icon: "◈", level: 80, category: "Frontend" },
   { name: "Tailwind CSS", icon: "◈", level: 90, category: "Frontend" },
   { name: "TypeScript", icon: "◈", level: 80, category: "Frontend" },
   { name: "Node.js", icon: "◈", level: 75, category: "Backend" },
   { name: "Express", icon: "◈", level: 70, category: "Backend" },
-  { name: "PHP", icon: "◈", level: 60, category: "Backend" },
+  { name: "PHP", icon: "◈", level: 65, category: "Backend" },
+  { name: "Laravel", icon: "◈", level: 75, category: "Backend" },
   { name: "MongoDB", icon: "◈", level: 70, category: "Database" },
   { name: "Firebase", icon: "◈", level: 80, category: "Database" },
   { name: "MySQL", icon: "◈", level: 75, category: "Database" },
+  { name: "SQLITE", icon: "◈", level: 70, category: "Database" },
   { name: "Google AI Studio", icon: "◈", level: 80, category: "AI & Tools" },
   { name: "SEO Optimization", icon: "◈", level: 85, category: "AI & Tools" },
   { name: "OpenCode", icon: "◈", level: 90, category: "AI & Tools" },
   { name: "Pomelli Google Lab", icon: "◈", level: 70, category: "AI & Tools" },
-  { name: "Flow Google Lab", icon:"◈", level: 70, category: "AI & Tools" }
+  { name: "Flow Google Lab", icon:"◈", level: 70, category: "AI & Tools" },
+  { name: "Github Copilot", icon:"◈", level: 80, category: "AI & Tools" }
 ];
 
 const NAV_ITEMS: string[] = ["Home", "Experience", "Projects", "Skills", "Testimonials", "Contact"];
@@ -760,7 +764,7 @@ const Portfolio: FC = () => {
               </p>
 
               <div style={{ display: "flex", gap: "8px", marginTop: "20px", flexWrap: "wrap" }}>
-                {["React", "PHP", "Typescript", "TailwindCSS", "HTML", "CSS"].map((tag: string) => (
+                {["React/Next.js", "PHP", "Typescript", "TailwindCSS", "HTML5/CSS3", "Laravel"].map((tag: string) => (
                   <span
                     key={tag}
                     style={{
@@ -1220,30 +1224,58 @@ const Portfolio: FC = () => {
           </a>
 
           {/* Article 2 */}
-          <div
-            style={{
-              background: "rgba(255,255,255,0.02)",
-              border: "1px solid rgba(255,255,255,0.06)",
-              borderRadius: "14px",
-              padding: "18px 22px",
-              backdropFilter: "blur(10px)",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              gap: "20px",
-              opacity: 0.6,
-              cursor: "default",
-            }}
+                    <a
+            href="https://medium.com/@muhammadqasimdev/what-tutorials-dont-teach-you-before-your-first-frontend-job-eb1798f1f980"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ textDecoration: "none" }}
           >
-            <div style={{ flex: 1 }}>
-              <h4 style={{ fontSize: "16px", fontWeight: 600, color: "#fff", marginBottom: "6px", lineHeight: 1.5 }}>
-                Building My First npm Package
-              </h4>
-              <span style={{ color: "#5a5a6e", fontSize: "13px", fontWeight: 500 }}>
-                Coming Soon
-              </span>
+            <div
+              style={{
+                background: "rgba(255,255,255,0.02)",
+                border: "1px solid rgba(255,255,255,0.06)",
+                borderRadius: "14px",
+                padding: "18px 22px",
+                backdropFilter: "blur(10px)",
+                display: "flex",
+                alignItems: "center",
+                gap: "24px",
+                cursor: "pointer",
+                transition: "all 0.3s ease",
+              }}
+              onMouseEnter={(e: MouseEvent<HTMLDivElement>) => {
+                e.currentTarget.style.background = "rgba(99,102,241,0.06)";
+                e.currentTarget.style.borderColor = "rgba(99,102,241,0.3)";
+              }}
+              onMouseLeave={(e: MouseEvent<HTMLDivElement>) => {
+                e.currentTarget.style.background = "rgba(255,255,255,0.02)";
+                e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)";
+              }}
+            >
+              <img
+                src="/2-article.png"
+                alt="Article thumbnail"
+                style={{
+                  width: "90px",
+                  height: "90px",
+                  borderRadius: "10px",
+                  objectFit: "contain",
+                  flexShrink: 0,
+                  background: "rgba(255,255,255,0.03)",
+                  border: "1px solid rgba(255,255,255,0.06)",
+                }}
+              />
+              <div style={{ flex: 1 }}>
+                <h4 style={{ fontSize: "16px", fontWeight: 600, color: "#fff", marginBottom: "6px", lineHeight: 1.5 }}>
+                  What Tutorials Don’t Teach You Before Your First Frontend Job
+                </h4>
+                <span style={{ color: "#6366f1", fontSize: "13px", fontWeight: 500 }}>
+                  Read Article →
+                </span>
+              </div>
             </div>
-          </div>
+          </a>
+
         </div>
       </section>
 

@@ -39,6 +39,14 @@ interface SectionHeaderProps {
   visible: boolean;
 }
 
+interface OpenSourceProject {
+  name: string;
+  desc: string;
+  tags: string[];
+  npmUrl: string;
+  githubUrl: string;
+}
+
 interface ProjectCardProps extends Project {
   index: number;
   visible: boolean;
@@ -70,7 +78,7 @@ const SKILLS: Skill[] = [
   { name: "Github Copilot", icon:"◈", level: 80, category: "AI & Tools" }
 ];
 
-const NAV_ITEMS: string[] = ["Home", "Experience", "Projects", "Skills", "Testimonials", "Contact"];
+const NAV_ITEMS: string[] = ["Home", "Experience", "Projects", "Open Source", "Skills", "Testimonials", "Contact"];
 
 const PROJECTS: Project[] = [
   {
@@ -93,6 +101,16 @@ const PROJECTS: Project[] = [
     tags: ["Firebase", "Tailwind", "React"],
     color: "#10b981",
     image: "/img1.png",
+  },
+];
+
+const OPEN_SOURCE_PROJECTS: OpenSourceProject[] = [
+  {
+    name: "react-ai-chatkit",
+    desc: "A customizable AI chat UI component library for React applications, built with TypeScript and designed for seamless integration into modern AI-powered interfaces.",
+    tags: ["React", "TypeScript", "AI", "UI Library"],
+    npmUrl: "https://www.npmjs.com/package/react-ai-chatkit",
+    githubUrl: "https://github.com/mdqasim786/react-ai-chatkit",
   },
 ];
 
@@ -1276,6 +1294,183 @@ const Portfolio: FC = () => {
             </div>
           </a>
 
+        </div>
+      </section>
+
+      {/* ─── OPEN SOURCE ─── */}
+      <section
+        id="open-source"
+        data-section="open-source"
+        style={{ position: "relative", zIndex: 1, padding: "120px 24px", maxWidth: "900px", margin: "0 auto" }}
+      >
+        <SectionHeader title="Open Source" subtitle="Contributions & Packages" visible={visibleSections.has("open-source")} />
+
+        <div style={{ marginTop: "60px", display: "grid", gap: "24px" }}>
+          {OPEN_SOURCE_PROJECTS.map((project: OpenSourceProject, i: number) => (
+            <div
+              key={project.name}
+              style={{
+                background: "rgba(255,255,255,0.02)",
+                border: "1px solid rgba(255,255,255,0.06)",
+                borderRadius: "18px",
+                padding: "32px",
+                backdropFilter: "blur(10px)",
+                position: "relative",
+                overflow: "hidden",
+                opacity: visibleSections.has("open-source") ? 1 : 0,
+                transform: visibleSections.has("open-source") ? "translateY(0)" : "translateY(30px)",
+                transition: `all 0.7s cubic-bezier(0.4,0,0.2,1) ${0.15 * i + 0.2}s`,
+              }}
+              onMouseEnter={(e: MouseEvent<HTMLDivElement>) => {
+                e.currentTarget.style.borderColor = "rgba(99,102,241,0.35)";
+                e.currentTarget.style.background = "rgba(99,102,241,0.04)";
+                e.currentTarget.style.transform = "translateY(-4px)";
+              }}
+              onMouseLeave={(e: MouseEvent<HTMLDivElement>) => {
+                e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)";
+                e.currentTarget.style.background = "rgba(255,255,255,0.02)";
+                e.currentTarget.style.transform = "translateY(0)";
+              }}
+            >
+              {/* Top gradient accent */}
+              <div
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  height: "2px",
+                  background: "linear-gradient(90deg, #6366f1, #10b981, transparent)",
+                }}
+              />
+
+              {/* Header row */}
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "16px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+                  {/* Icon */}
+                  <div
+                    style={{
+                      width: "48px",
+                      height: "48px",
+                      borderRadius: "14px",
+                      background: "linear-gradient(135deg, rgba(99,102,241,0.15), rgba(16,185,129,0.15))",
+                      border: "1px solid rgba(99,102,241,0.25)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontSize: "24px",
+                      color: "#6366f1",
+                      flexShrink: 0,
+                    }}
+                  >
+                    ⎔
+                  </div>
+                  <div>
+                    <h3 style={{ fontSize: "21px", fontWeight: 700, color: "#fff", letterSpacing: "-0.3px" }}>
+                      {project.name}
+                    </h3>
+                  </div>
+                </div>
+              </div>
+
+              {/* Description */}
+              <p style={{ color: "#5a5a6e", fontSize: "14px", lineHeight: 1.8, fontWeight: 300, marginBottom: "20px" }}>
+                {project.desc}
+              </p>
+
+              {/* Tags */}
+              <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", marginBottom: "24px" }}>
+                {project.tags.map((tag: string) => (
+                  <span
+                    key={tag}
+                    style={{
+                      background: "rgba(99,102,241,0.08)",
+                      border: "1px solid rgba(99,102,241,0.2)",
+                      color: "#818cf8",
+                      padding: "4px 12px",
+                      borderRadius: "6px",
+                      fontSize: "12px",
+                      fontWeight: 500,
+                    }}
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+
+              {/* Action Buttons */}
+              <div style={{ display: "flex", gap: "14px", flexWrap: "wrap" }}>
+                {/* npm Button */}
+                <a
+                  href={project.npmUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    padding: "12px 28px",
+                    background: "linear-gradient(135deg, #cb3837, #e05a4a)",
+                    border: "none",
+                    borderRadius: "10px",
+                    color: "#fff",
+                    fontSize: "14px",
+                    fontWeight: 600,
+                    textDecoration: "none",
+                    cursor: "pointer",
+                    transition: "all 0.3s ease",
+                    boxShadow: "0 6px 24px rgba(203,56,55,0.25)",
+                  }}
+                  onMouseEnter={(e: MouseEvent<HTMLAnchorElement>) => {
+                    e.currentTarget.style.transform = "translateY(-2px)";
+                    e.currentTarget.style.boxShadow = "0 10px 32px rgba(203,56,55,0.4)";
+                  }}
+                  onMouseLeave={(e: MouseEvent<HTMLAnchorElement>) => {
+                    e.currentTarget.style.transform = "translateY(0)";
+                    e.currentTarget.style.boxShadow = "0 6px 24px rgba(203,56,55,0.25)";
+                  }}
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                    View npm
+                  </a>
+
+                  {/* GitHub Button */}
+                  <a
+                    href={project.githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "8px",
+                      padding: "12px 28px",
+                      background: "rgba(255,255,255,0.06)",
+                      border: "1px solid rgba(255,255,255,0.12)",
+                      borderRadius: "10px",
+                      color: "#fff",
+                      fontSize: "14px",
+                      fontWeight: 600,
+                      textDecoration: "none",
+                      cursor: "pointer",
+                      transition: "all 0.3s ease",
+                    }}
+                    onMouseEnter={(e: MouseEvent<HTMLAnchorElement>) => {
+                      e.currentTarget.style.background = "rgba(255,255,255,0.1)";
+                      e.currentTarget.style.borderColor = "rgba(255,255,255,0.25)";
+                      e.currentTarget.style.transform = "translateY(-2px)";
+                    }}
+                    onMouseLeave={(e: MouseEvent<HTMLAnchorElement>) => {
+                      e.currentTarget.style.background = "rgba(255,255,255,0.06)";
+                      e.currentTarget.style.borderColor = "rgba(255,255,255,0.12)";
+                      e.currentTarget.style.transform = "translateY(0)";
+                    }}
+                  >
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                    View GitHub
+                  </a>
+                </div>
+              </div>
+            ))}
         </div>
       </section>
 

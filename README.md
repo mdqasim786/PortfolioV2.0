@@ -1,73 +1,138 @@
-# React + TypeScript + Vite
+# 🌐 Muhammad Qasim — Developer Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, responsive developer portfolio built with **React**, **TypeScript**, and **Vite** to showcase my professional experience, projects, technical articles, open-source work, and skills.
 
-Currently, two official plugins are available:
+## 🚀 Live Demo
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+🌍 **Portfolio:** https://mdqasim.netlify.app/
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 📸 Preview
 
-## Expanding the ESLint configuration
+![Portfolio Preview](./public/portfolio-preview.png)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## ✨ Features
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- ⚡ Modern UI with smooth animations
+- 📱 Fully responsive design
+- 🎨 Dark theme with glassmorphism
+- 💼 Professional experience timeline
+- 🚀 Featured projects showcase
+- ✍️ Latest Medium articles
+- 🌍 Open Source & npm packages
+- 💬 Testimonials section
+- 📄 Resume download
+- 📬 Contact section
+- 🎯 Optimized for performance
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+---
+
+## 🛠 Tech Stack
+
+### Frontend
+
+- React 19
+- TypeScript
+- Vite
+- CSS3
+
+### Deployment
+
+- Netlify
+
+---
+
+## 📂 Project Structure
+
+```text
+src/
+ ├── components/
+ ├── assets/
+ ├── App.tsx
+ ├── main.tsx
+ └── index.css
+
+public/
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 🚀 Getting Started
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Clone the repository
+
+```bash
+git clone https://github.com/mdqasim786/portfolio.git
 ```
+
+Navigate into the project
+
+```bash
+cd portfolio
+```
+
+Install dependencies
+
+```bash
+npm install
+```
+
+Start development server
+
+```bash
+npm run dev
+```
+
+Build for production
+
+```bash
+npm run build
+```
+
+Preview production build
+
+```bash
+npm run preview
+```
+
+---
+
+## 📖 Sections
+
+- Home
+- Experience
+- Projects
+- Latest Articles
+- Open Source
+- Certifications
+- Skills
+- Testimonials
+- Contact
+
+---
+
+## 🌍 Connect With Me
+
+- 💼 LinkedIn: https://linkedin.com/in/md-qasim
+- 💻 GitHub: https://github.com/mdqasim786
+- ✍️ Medium: https://medium.com/@muhammadqasimdev
+- 📦 npm: https://www.npmjs.com/~muhammadqasim
+- 🎯 Fiverr: https://www.fiverr.com/s/WE4PGZ5
+- 🚀 Upwork: https://www.upwork.com/freelancers/~01285a0e9bb227f77f
+
+---
+
+## 📜 License
+
+This project is licensed under the MIT License.
+
+---
+
+### 👨‍💻 Author
+
+**Muhammad Qasim**
+
+Frontend Developer specializing in **React**, **Next.js**, **TypeScript**, and modern web experiences while actively contributing to the open-source ecosystem.

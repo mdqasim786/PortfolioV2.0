@@ -78,7 +78,7 @@ const SKILLS: Skill[] = [
   { name: "Github Copilot", icon:"◈", level: 80, category: "AI & Tools" }
 ];
 
-const NAV_ITEMS: string[] = ["Home", "Experience", "Projects", "Open Source", "Skills", "Testimonials", "Contact"];
+const NAV_ITEMS: string[] = ["Home", "Experience", "Projects", "Skills", "Testimonials", "Contact"];
 
 const PROJECTS: Project[] = [
   {
@@ -1294,6 +1294,58 @@ const Portfolio: FC = () => {
             </div>
           </a>
 
+          {/* Article 3 */}
+                    <a
+            href="https://medium.com/@muhammadqasimdev/why-most-junior-developers-stay-stuck-and-its-usually-not-because-of-coding-dceb16db71cd"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ textDecoration: "none" }}
+          >
+            <div
+              style={{
+                background: "rgba(255,255,255,0.02)",
+                border: "1px solid rgba(255,255,255,0.06)",
+                borderRadius: "14px",
+                padding: "18px 22px",
+                backdropFilter: "blur(10px)",
+                display: "flex",
+                alignItems: "center",
+                gap: "24px",
+                cursor: "pointer",
+                transition: "all 0.3s ease",
+              }}
+              onMouseEnter={(e: MouseEvent<HTMLDivElement>) => {
+                e.currentTarget.style.background = "rgba(99,102,241,0.06)";
+                e.currentTarget.style.borderColor = "rgba(99,102,241,0.3)";
+              }}
+              onMouseLeave={(e: MouseEvent<HTMLDivElement>) => {
+                e.currentTarget.style.background = "rgba(255,255,255,0.02)";
+                e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)";
+              }}
+            >
+              <img
+                src="/3-article.png"
+                alt="Article thumbnail"
+                style={{
+                  width: "90px",
+                  height: "90px",
+                  borderRadius: "10px",
+                  objectFit: "contain",
+                  flexShrink: 0,
+                  background: "rgba(255,255,255,0.03)",
+                  border: "1px solid rgba(255,255,255,0.06)",
+                }}
+              />
+              <div style={{ flex: 1 }}>
+                <h4 style={{ fontSize: "16px", fontWeight: 600, color: "#fff", marginBottom: "6px", lineHeight: 1.5 }}>
+                  Why Most Junior Developers Stay Stuck (And It’s Usually Not Because of Coding)
+                </h4>
+                <span style={{ color: "#6366f1", fontSize: "13px", fontWeight: 500 }}>
+                  Read Article →
+                </span>
+              </div>
+            </div>
+          </a>
         </div>
       </section>
 

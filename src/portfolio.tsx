@@ -18,6 +18,7 @@ interface Project {
   tags: string[];
   color: string;
   image: string;
+  link: string;
 }
 
 interface Certification {
@@ -78,7 +79,7 @@ const SKILLS: Skill[] = [
   { name: "Github Copilot", icon:"◈", level: 80, category: "AI & Tools" }
 ];
 
-const NAV_ITEMS: string[] = ["Home", "Experience", "Projects", "Skills", "Testimonials", "Contact"];
+const NAV_ITEMS: string[] = ["Home", "Experience", "Projects", "Open Source", "Skills", "Testimonials", "Contact"];
 
 const PROJECTS: Project[] = [
   {
@@ -87,6 +88,7 @@ const PROJECTS: Project[] = [
     tags: ["React", "TailwindCSS", "Typescript"],
     color: "#c30010",
     image: "/proj-2.jpeg",
+    link: "https://apexkicks.netlify.app/",
   },
   {
     title: "Exeton Official Website",
@@ -94,6 +96,7 @@ const PROJECTS: Project[] = [
     tags: ["React", "TailwindCSS", "Typescript"],
     color: "#8b5cf6",
     image: "/proj-1.jpeg",
+    link: "https://exeton.com/",
   },
   {
     title: "Quick-Bill SaaS App",
@@ -101,6 +104,7 @@ const PROJECTS: Project[] = [
     tags: ["Firebase", "Tailwind", "React"],
     color: "#10b981",
     image: "/img1.png",
+    link: "https://mdquickbill.netlify.app/",
   },
 ];
 
@@ -2214,11 +2218,14 @@ const SectionHeader: FC<SectionHeaderProps> = ({ title, subtitle, visible }) => 
 
 /* ─── ProjectCard Component ─── */
 
-const ProjectCard: FC<ProjectCardProps> = ({ title, desc, tags, color, index, visible, image }) => {
+const ProjectCard: FC<ProjectCardProps> = ({ title, desc, tags, color, index, visible, image, link }) => {
   const [hovered, setHovered] = useState<boolean>(false);
 
   return (
-    <div
+    <a
+      href={link}
+      target="_blank"
+      rel="noopener noreferrer"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
@@ -2227,6 +2234,8 @@ const ProjectCard: FC<ProjectCardProps> = ({ title, desc, tags, color, index, vi
         borderRadius: "18px",
         padding: "28px",
         cursor: "pointer",
+        textDecoration: "none",
+        display: "block",
         transition: "all 0.4s cubic-bezier(0.4,0,0.2,1)",
         transform: hovered ? "translateY(-4px)" : "translateY(0)",
         boxShadow: hovered ? `0 16px 48px ${color}15` : "none",
@@ -2325,7 +2334,7 @@ const ProjectCard: FC<ProjectCardProps> = ({ title, desc, tags, color, index, vi
           </span>
         ))}
       </div>
-    </div>
+    </a>
   );
 };
 

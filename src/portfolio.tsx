@@ -120,6 +120,13 @@ const OPEN_SOURCE_PROJECTS: OpenSourceProject[] = [
     npmUrl: "https://www.npmjs.com/package/react-ai-chatkit",
     githubUrl: "https://github.com/mdqasim786/react-ai-chatkit",
   },
+  {
+    name: "Wailist AgentMesh",
+    desc: "Contributed to this multi-agent AI platform, working on features and improvements across the codebase.",
+    tags: ["Python", "Open Source", "React", "Next.js", "TailwindCSS"],
+    npmUrl: "https://github.com/agen-mesh/wailist-agentmesh",
+    githubUrl: "https://github.com/agen-mesh/wailist-agentmesh",
+  },
 ];
 
 const CERTIFICATIONS: Certification[] = [
@@ -216,7 +223,7 @@ const Portfolio: FC = () => {
         if (rect.top < window.innerHeight && rect.bottom > 0 && dist < closest) {
           closest = dist;
           const name = section.getAttribute("data-section") || "";
-          current = name.charAt(0).toUpperCase() + name.slice(1);
+          current = name.replace(/-/g, " ").replace(/\b\w/g, (c: string) => c.toUpperCase());
         }
       });
       setActiveNav(current);
@@ -1347,6 +1354,7 @@ const Portfolio: FC = () => {
               {/* Action Buttons */}
               <div style={{ display: "flex", gap: "14px", flexWrap: "wrap" }}>
                 {/* npm Button */}
+                {project.npmUrl.includes("npmjs.com") && (
                 <a
                   href={project.npmUrl}
                   target="_blank"
@@ -1379,6 +1387,7 @@ const Portfolio: FC = () => {
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
                     View npm
                   </a>
+                )}
 
                   {/* GitHub Button */}
                   <a

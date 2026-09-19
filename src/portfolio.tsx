@@ -579,7 +579,7 @@ const Portfolio: FC = () => {
             letterSpacing: "0.5px",
           }}
         >
-          MERN-Stack Web Developer & UI Craftsman
+          Full-Stack Web Developer & AI Builder
         </p>
 
         {/* Bio */}
@@ -593,8 +593,7 @@ const Portfolio: FC = () => {
             fontWeight: 300,
           }}
         >
-          Frontend Developer specializing in React, Next.js and AI-powered web applications.
-          Currently building products, contributing to open source, and sharing what I learn.
+          Building modern web applications with React, Next.js, Laravel, and Ruby on Rails. I work across frontend, backend, and AI-powered solutions, while contributing to open source and building products.
         </p>
 
         {/* CTA Buttons */}
@@ -661,30 +660,6 @@ const Portfolio: FC = () => {
           >
             Download Resume
           </button>
-        </div>
-
-        {/* Scroll indicator */}
-        <div
-          style={{
-            position: "absolute",
-            bottom: "40px",
-            left: "50%",
-            transform: "translateX(-50%)",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: "8px",
-            animation: "fadeInUp 1s ease 1s both",
-          }}
-        >
-          <div
-            style={{
-              width: "1px",
-              height: "40px",
-              background: "linear-gradient(to bottom, #6366f1, transparent)",
-              animation: "scrollPulse 2s ease-in-out infinite",
-            }}
-          />
         </div>
       </section>
 

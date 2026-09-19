@@ -1595,7 +1595,7 @@ const Portfolio: FC = () => {
         <SectionHeader title="Testimonials" subtitle="What People Say" visible={visibleSections.has("testimonials")} />
 
         <div style={{ marginTop: "60px", display: "grid", gap: "20px" }}>
-          {/* Testimonial 1 */}
+          {/* Testimonial 1 - DOAB */}
           <div
             style={{
               background: "rgba(255,255,255,0.02)",
@@ -1606,8 +1606,39 @@ const Portfolio: FC = () => {
               transition: "all 0.3s ease",
             }}
             onMouseEnter={(e: MouseEvent<HTMLDivElement>) => {
-              e.currentTarget.style.borderColor = "rgba(99,102,241,0.3)";
-              e.currentTarget.style.background = "rgba(99,102,241,0.04)";
+              e.currentTarget.style.borderColor = "rgba(20,184,166,0.3)";
+              e.currentTarget.style.background = "rgba(20,184,166,0.04)";
+            }}
+            onMouseLeave={(e: MouseEvent<HTMLDivElement>) => {
+              e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)";
+              e.currentTarget.style.background = "rgba(255,255,255,0.02)";
+            }}
+          >
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "12px", marginBottom: "14px" }}>
+              <div>
+                <p style={{ fontSize: "16px", fontWeight: 700, color: "#fff", marginBottom: "2px" }}>Senior Ruby on Rails Developer</p>
+                <span style={{ fontSize: "13px", color: "#14b8a6", fontWeight: 500 }}>Diary of a Bride (DOAB)</span>
+              </div>
+              <span style={{ fontSize: "14px", color: "#f59e0b", letterSpacing: "2px", whiteSpace: "nowrap" }}>⭐⭐⭐⭐⭐</span>
+            </div>
+            <p style={{ fontSize: "14.5px", color: "#6b6b7e", lineHeight: 1.8, fontWeight: 300, fontStyle: "italic" }}>
+              "Qasim is dependable, detail-oriented, and genuinely interested in improving as an engineer. He takes feedback positively, learns quickly, and consistently delivers polished frontend implementations."
+            </p>
+          </div>
+
+          {/* Testimonial 2 - DMU */}
+          <div
+            style={{
+              background: "rgba(255,255,255,0.02)",
+              border: "1px solid rgba(255,255,255,0.06)",
+              borderRadius: "14px",
+              padding: "28px 32px",
+              backdropFilter: "blur(10px)",
+              transition: "all 0.3s ease",
+            }}
+            onMouseEnter={(e: MouseEvent<HTMLDivElement>) => {
+              e.currentTarget.style.borderColor = "rgba(236,72,153,0.3)";
+              e.currentTarget.style.background = "rgba(236,72,153,0.04)";
             }}
             onMouseLeave={(e: MouseEvent<HTMLDivElement>) => {
               e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)";
@@ -1617,7 +1648,7 @@ const Portfolio: FC = () => {
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "12px", marginBottom: "14px" }}>
               <div>
                 <p style={{ fontSize: "16px", fontWeight: 700, color: "#fff", marginBottom: "2px" }}>DMU (CEO)</p>
-                <span style={{ fontSize: "13px", color: "#6366f1", fontWeight: 500 }}>CEO, Digital Marketing Universe</span>
+                <span style={{ fontSize: "13px", color: "#ec4899", fontWeight: 500 }}>CEO, Digital Marketing Universe</span>
               </div>
               <span style={{ fontSize: "14px", color: "#f59e0b", letterSpacing: "2px", whiteSpace: "nowrap" }}>⭐⭐⭐⭐⭐</span>
             </div>
@@ -1626,7 +1657,7 @@ const Portfolio: FC = () => {
             </p>
           </div>
 
-          {/* Testimonial 2 */}
+          {/* Testimonial 3 - Exeton */}
           <div
             style={{
               background: "rgba(255,255,255,0.02)",
@@ -1654,37 +1685,6 @@ const Portfolio: FC = () => {
             </div>
             <p style={{ fontSize: "14.5px", color: "#6b6b7e", lineHeight: 1.8, fontWeight: 300, fontStyle: "italic" }}>
               "Working with Qasim was a great experience. He translated complex Figma designs into responsive, production-ready interfaces while maintaining clean code and consistency across the project."
-            </p>
-          </div>
-
-          {/* Testimonial 3 */}
-          <div
-            style={{
-              background: "rgba(255,255,255,0.02)",
-              border: "1px solid rgba(255,255,255,0.06)",
-              borderRadius: "14px",
-              padding: "28px 32px",
-              backdropFilter: "blur(10px)",
-              transition: "all 0.3s ease",
-            }}
-            onMouseEnter={(e: MouseEvent<HTMLDivElement>) => {
-              e.currentTarget.style.borderColor = "rgba(99,102,241,0.3)";
-              e.currentTarget.style.background = "rgba(99,102,241,0.04)";
-            }}
-            onMouseLeave={(e: MouseEvent<HTMLDivElement>) => {
-              e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)";
-              e.currentTarget.style.background = "rgba(255,255,255,0.02)";
-            }}
-          >
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "12px", marginBottom: "14px" }}>
-              <div>
-                <p style={{ fontSize: "16px", fontWeight: 700, color: "#fff", marginBottom: "2px" }}>Senior Frontend Developer</p>
-                <span style={{ fontSize: "13px", color: "#6366f1", fontWeight: 500 }}>Senior Frontend Developer</span>
-              </div>
-              <span style={{ fontSize: "14px", color: "#f59e0b", letterSpacing: "2px", whiteSpace: "nowrap" }}>⭐⭐⭐⭐⭐</span>
-            </div>
-            <p style={{ fontSize: "14.5px", color: "#6b6b7e", lineHeight: 1.8, fontWeight: 300, fontStyle: "italic" }}>
-              "Qasim is dependable, detail-oriented, and genuinely interested in improving as an engineer. He takes feedback positively, learns quickly, and consistently delivers polished frontend implementations."
             </p>
           </div>
         </div>

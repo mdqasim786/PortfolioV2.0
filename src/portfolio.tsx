@@ -245,7 +245,8 @@ const Portfolio: FC = () => {
   }, []);
 
   const scrollTo = (id: string): void => {
-    const el = document.getElementById(id.toLowerCase());
+    const sectionId = id === "Open Source" ? "open-source" : id.toLowerCase();
+    const el = document.getElementById(sectionId);
     if (el) {
       el.scrollIntoView({ behavior: "smooth" });
       setActiveNav(id);

@@ -60,13 +60,14 @@ const SKILLS: Skill[] = [
   { name: "CSS", icon: "◈", level: 95, category: "Frontend" },
   { name: "JavaScript", icon: "◈", level: 85, category: "Frontend" },
   { name: "React", icon: "◈", level: 92, category: "Frontend" },
-  { name: "Next.js", icon: "◈", level: 80, category: "Frontend" },
+  { name: "Next.js", icon: "◈", level: 85, category: "Frontend" },
   { name: "Tailwind CSS", icon: "◈", level: 90, category: "Frontend" },
   { name: "TypeScript", icon: "◈", level: 80, category: "Frontend" },
   { name: "Node.js", icon: "◈", level: 75, category: "Backend" },
   { name: "Express", icon: "◈", level: 70, category: "Backend" },
-  { name: "PHP", icon: "◈", level: 65, category: "Backend" },
+  { name: "PHP", icon: "◈", level: 75, category: "Backend" },
   { name: "Laravel", icon: "◈", level: 75, category: "Backend" },
+  { name: "Ruby on Rails", icon: "◈", level: 70, category: "Backend" },
   { name: "MongoDB", icon: "◈", level: 70, category: "Database" },
   { name: "Firebase", icon: "◈", level: 80, category: "Database" },
   { name: "MySQL", icon: "◈", level: 75, category: "Database" },
@@ -76,6 +77,9 @@ const SKILLS: Skill[] = [
   { name: "OpenCode", icon: "◈", level: 90, category: "AI & Tools" },
   { name: "Pomelli Google Lab", icon: "◈", level: 70, category: "AI & Tools" },
   { name: "Flow Google Lab", icon:"◈", level: 70, category: "AI & Tools" },
+  { name: "Docker", icon:"◈", level: 70, category: "AI & Tools" },
+  { name: "Codex", icon:"◈", level: 80, category: "AI & Tools" },
+  { name: "Cursor", icon:"◈", level: 70, category: "AI & Tools" },
   { name: "Github Copilot", icon:"◈", level: 80, category: "AI & Tools" }
 ];
 
@@ -736,7 +740,7 @@ const Portfolio: FC = () => {
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "12px" }}>
                 <div>
                   <h3 style={{ fontSize: "21px", fontWeight: 700, color: "#fff", marginBottom: "4px" }}>
-                    Developer (Web &amp; Mobile Apps)
+                    Full Stack Engineer
                   </h3>
                   <p style={{ fontSize: "15px", color: "#ec4899", fontWeight: 500 }}>DMU (Digital Marketing Universe)</p>
                 </div>

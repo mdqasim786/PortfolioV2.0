@@ -263,7 +263,7 @@ const Portfolio: FC = () => {
 
   const handleResumeDownload = (): void => {
     const link = document.createElement("a");
-    link.href = "https://docs.google.com/uc?export=download&id=1yuMwqCR6NkjPaFIEtzfmJ5OouNeucKbb";
+    link.href = "https://docs.google.com/uc?export=download&id=11KLuzOLfX5e0uo15t3mpn_dlFkKr4odc";
     link.setAttribute("download", "Muhammad Qasim-CV.pdf");
     link.click();
   };

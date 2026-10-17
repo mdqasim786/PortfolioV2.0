@@ -764,7 +764,7 @@ const Portfolio: FC = () => {
                     whiteSpace: "nowrap",
                   }}
                 >
-                  May 2026 - Ongoing
+                  May 2026 - Oct 2026
                 </span>
               </div>
 
@@ -876,7 +876,7 @@ const Portfolio: FC = () => {
                     whiteSpace: "nowrap",
                   }}
                 >
-                  Sept 2026 - Ongoing
+                  Sept 2026 - Oct 2026
                 </span>
               </div>
 

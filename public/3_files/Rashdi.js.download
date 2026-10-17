@@ -1,0 +1,1168 @@
+var console_log = console.log;
+var global_mvc=null, mvco_app=null;var app=null;
+let pop_up_window= null;
+
+window.state_list=[{id:0,name:"Passive"},{id:1,name:"Active"}];
+window.gender_list=[{id:0,name:"Male"},{id:1,name:"Female"},{id:2,name:"Other"}];
+window.religion_list=[{id:0,name:"Not Selected"},{id:1,name:"Islam"},{id:2,name:"Chirstianity"},{id:3,name:"Buddhism"},{id:4,name:"Hinduism"},{id:5,name:"Judaism",},
+{id:6,name:"Sikhism"},{id:-1,name:"Athiest"},{id:-2,name:"Other"}];
+
+/*function checkHacker(){
+	return;
+	 if(//(window.outerHeight-window.innerHeight)>80 ||
+	 (window.outerWidth-window.innerWidth)>80)
+	 {
+	   //alert("Don't Try hacking");
+	location.replace("./?hacker=true");
+	 }
+};
+checkHacker();*/
+
+function startSubscription(vapidPublicKey, email){
+	let domain = window.location.origin;
+	console.log(vapidPublicKey);
+	if ('serviceWorker' in navigator && 'PushManager' in window) {
+	  navigator.serviceWorker.register(domain+'/script/core/controller/vapid/vapid.js').then(swReg => {
+		Notification.requestPermission().then(permission => {
+		  if (permission === 'granted') {
+			swReg.pushManager.subscribe({
+			  userVisibleOnly: true,
+			  applicationServerKey: urlBase64ToUint8Array(vapidPublicKey)
+			}).then(subscription => {
+			  
+				let fm = new FormData();
+				fm.append('method', 'save-subscription');
+				fm.append('email', email);
+				fm.append('subscription', JSON.stringify(subscription));
+				fetch(domain+'/script/core/controller/vapid/subscribe.php', {
+				  method: 'POST',
+				  body: fm
+				}).then(function(rsp){
+					return rsp.text();
+				}).then(function(data){console.log(data);});
+			});
+		  }
+		});
+	  });
+	}
+}
+
+function urlBase64ToUint8Array(base64String) {
+  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
+  const rawData = atob(base64);
+  return new Uint8Array([...rawData].map(char => char.charCodeAt(0)));
+}
+
+function loadRashdiScript(method, callback){
+	query_post(method, {}, function(rsp, s){
+		callback(rsp, s);
+	}, 'app=components/docs');
+}
+
+function printMode(size = 'A4 Portrait',){
+	
+	html= `
+	<style>
+		@media print {
+			@page {
+				size: `+size+`
+			}
+		}
+		
+		table td{
+			font-size:12px;
+		}
+
+		table {border-collapse: collapse; width: 100%; font-family:arial; font-size: 12px}
+	</style>
+	<`+`script>setTimeout(function(){window.print();}, 500);<`+`/script>`;
+	return html;
+}
+
+function printPage(html){
+	if(pop_up_window!=null)pop_up_window.close();
+	pop_up_window = window.open("", "myWindow", "width=400,height=600");
+	if(pop_up_window)
+		pop_up_window.document.write(html);
+	else alertText("Window is disabled!");
+	console.log(pop_up_window);
+	return pop_up_window;
+}
+
+function pruneText(text,max=30) {
+	return text.length > max ? text.substr(0, max) : text;
+}
+function removeAll(node,startfrom=0,depth=0)
+{
+	for(let len=node.children.length,i=len-1;i>=0;i--)removeAll(node.children[i],startfrom,depth+1);
+	if(depth>=startfrom)node.remove();
+}
+
+function str_random(len) {
+	var tmp='';
+    for(var i = 0; i <len; i++) {
+        var j = Math.floor(Math.random() * base_range.length);
+        tmp+=base_range[j];
+    }
+    return tmp;
+}
+
+var base_range = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ+-*/=`~!@#$%^&|(){}[]<>;:.,?'.split('');
+function convertBase(value, from_base, to_base) {
+  var from_range = base_range.slice(0, from_base);
+  var to_range = base_range.slice(0, to_base);
+  
+  var dec_value = value.split('').reverse().reduce(function (carry, digit, index) {
+    if (from_range.indexOf(digit) === -1) throw new Error('Invalid digit `'+digit+'` for base '+from_base+'.');
+    return carry += from_range.indexOf(digit) * (Math.pow(from_base, index));
+  }, 0);
+  
+  var new_value = '';
+  while (dec_value > 0) {
+    new_value = to_range[dec_value % to_base] + new_value;
+    dec_value = (dec_value - (dec_value % to_base)) / to_base;
+  }
+  return new_value || '0';
+}
+
+function randPass(len=10)
+{
+	let tm=parseInt((new Date()-0)/1000);
+	console_log(tm);
+	let code=convertBase(tm+"",10,90)
+	code=str_random(len-code.length)+code;
+	return code;
+}
+
+var inWords_a = ['','One ','Two ','Three ','Four ', 'Five ','Six ','Seven ','Eight ','Nine ','Ten ','Eleven ','Twelve ','Thirteen ','Fourteen ','Fifteen ','Sixteen ','Seventeen ','Eighteen ','Nineteen '];
+var inWords_b = ['', '', 'Twenty','Thirty','Forty','Fifty', 'Sixty','Seventy','Eighty','Ninety'];
+function inWords (num) {
+    if ((num = num.toString()).length > 9) return 'overflow';
+    n = ('000000000' + num).substr(-9).match(/^(\d{2})(\d{2})(\d{2})(\d{1})(\d{2})$/);
+    if (!n) return; var str = '';
+    str += (n[1] != 0) ? (inWords_a[Number(n[1])] || inWords_b[n[1][0]] + ' ' + inWords_a[n[1][1]]) + 'Crore ' : '';
+    str += (n[2] != 0) ? (inWords_a[Number(n[2])] || inWords_b[n[2][0]] + ' ' + inWords_a[n[2][1]]) + 'Lakh ' : '';
+    str += (n[3] != 0) ? (inWords_a[Number(n[3])] || inWords_b[n[3][0]] + ' ' + inWords_a[n[3][1]]) + 'Thousand ' : '';
+    str += (n[4] != 0) ? (inWords_a[Number(n[4])] || inWords_b[n[4][0]] + ' ' + inWords_a[n[4][1]]) + 'Hundred ' : '';
+    str += (n[5] != 0) ? ((str != '') ? 'and ' : '') + (inWords_a[Number(n[5])] || inWords_b[n[5][0]] + ' ' + inWords_a[n[5][1]]) : '';
+    return str;
+}
+
+function toGeneralDate(dt=null){
+	if(dt==null)dt= new Date();
+	let pts = dt.toISOString().split('T')[0].split('-');
+	return pts[2]+'-'+pts[1]+'-'+pts[0];
+}
+
+function confirmUserAuthentication(return_to = ''){
+	/*let want_login = confirm("Session is Timeout, if you want login in again, Press OK");
+	
+	if(want_login)
+	{
+		let umail = prompt("Username/Email");
+		let pass = prompt("Password");
+		
+		$.post("index.php", {sm_ULog:"1",u_umail: umail,u_pass: pass}, function(data){			
+          try{
+            var dta=JSON.parse(data);
+            
+            alertText(dta.code,dta.text);
+			setTimeout(function(){
+				if(dta.code!=0)confirmUserAuthentication();
+			}, 1000);
+          }catch(e){console_log(e,'Data: ',data);}
+            
+        });
+	}else {*/
+		if(window.__dm_session_expired)return; // several requests can fail at once: ask only once
+		window.__dm_session_expired = true;
+		const requestUri = window.location.pathname + window.location.search;
+		// Someone who signed in through another portal goes back to it; the server says which.
+		const portal = (return_to || window.__sessionReturnTo || '');
+		const goLogin = function(){
+			document.location.href = portal ? portal : (document.location.origin+"/page/login?t="+btoa(requestUri));
+		};
+		$('#overlay').hide();
+		const text = portal
+			? "Your session has expired, so this action was NOT saved. You will be taken back to the portal you signed in from."
+			: "Your session has expired, so this action was NOT saved. Please log in again; you will come back to this page.";
+		if(typeof Swal !== 'undefined')
+			Swal.fire({icon: 'warning', title: 'Session expired', text: text, confirmButtonText: 'Log in again', allowOutsideClick: false, allowEscapeKey: false}).then(goLogin);
+		else { alert(text); goLogin(); }
+	//}
+	
+}
+
+/*function alertText(code,obj, duration=3000, _title='')
+{
+	var title="Alert",clss="alert alert-success fade in",excalam="";
+	if(code>0){title="Error";clss="alert alert-block alert-danger fade in"}
+	if(code==0){title="";clss="alert alert-success fade in";}
+	if(code==-1){title="Warning";clss="alert alert-warning fade in";}
+	if(code==-2){title="Information";clss="alert alert-info fade in";}
+	if(code==-3){title="Admin";clss="alert alert-block alert-danger fade in";}
+	if(code==-4){title="Alert";clss="alert alert-block alert-success fade in";}
+	
+	if(_title!='')title = _title;
+	//let nodes=document.getElementsByClassName("rider_alertBox");for(let i=nodes.length-1; i >= 0;i--)removeAll(nodes[i])
+	let node=$('<div style="color: black; position:fixed;width:60%;height:40%;left:20%;top:40%;z-index:1100;text-align:center;padding:5% 3%;font-size:100%;" >'+
+	'<section style="border-radius: 15px;background: white;border-style: solid;"><p class="alert-card-header" style="font-weight: bold;">'+
+	title+'<button type="button" class="close" aria-label="close" onclick="removeAll(this.parentElement.parentElement.parentElement);"><span aria-hidden="true" >&times</span></button></p><div class="alert-card-body" >'+
+	'<strong>'+excalam+'</strong><div id="alert_content" style="text-align:center;vertical-align:baseline;width:100%;height:100px;overflow: auto;"></div>'+
+	'</p></section></div>');
+	
+	if(typeof obj=="string")
+	{
+		if(obj[0]=='<')node.find('#alert_content').html(obj);
+		else node.find('#alert_content').text(obj);
+	}
+	else node.find('#alert_content').append(obj);
+	$('body').append(node);
+	
+	
+	$('body').append(node);
+	if(duration!=0)setTimeout(function(){removeAll(node[0]);},duration);
+	return node;
+}*/
+
+function alertText(code, obj, duration = 3000, _title = '') {
+
+  /* --- 1. map your “code” → title & icon ------------------------ */
+  let title  = 'Alert',
+      icon   = 'success';                        // default
+  if (code > 0 || code === -3) { title = 'Error';        icon = 'error'; }
+  else if (code === 0)          { title = '';            icon = 'success'; }
+  else if (code === -1)         { title = 'Warning';     icon = 'warning'; }
+  else if (code === -2)         { title = 'Information'; icon = 'info';    }
+  else if (code === -4)         { title = 'Alert';       icon = 'success'; }
+
+  if (_title) title = _title;                     // caller override
+
+  /* --- 2. normalise the message into html/text ------------------- */
+  let swalOptions = { title, icon };
+
+  if (typeof obj === 'string') {
+    // crude check: string starts with "<" => treat as HTML, else as plaintext
+    if (obj.trim().startsWith('<')) swalOptions.html = obj;
+    else swalOptions.text = obj;
+  } else if (window.jQuery && obj instanceof jQuery) {
+    swalOptions.html = obj[0].outerHTML;
+  } else if (obj instanceof HTMLElement) {
+    swalOptions.html = obj.outerHTML;
+  } else {
+    swalOptions.text = String(obj);
+  }
+
+  /* --- 3. auto‑close timer -------------------------------------- */
+  if (duration !== 0) {
+    swalOptions.timer            = duration;          // ms to close automatically
+    swalOptions.timerProgressBar = true;              // nice progress bar
+    swalOptions.showConfirmButton = false;            // no OK button when it auto‑closes
+  } else {
+    swalOptions.showConfirmButton = true;             // default OK button
+  }
+
+  /* --- 4. fire the alert and return its promise ------------------ */
+  return Swal.fire(swalOptions);
+}
+
+function PrintMe()
+{
+	document.body.innerHTML=document.getElementById('print-section').innerHTML;
+	window.print();
+}
+
+function getPositionXY(element) 
+{ 
+    var rect = element.getBoundingClientRect(); 
+   return 'X: ' + rect.x + ', ' + 'Y: ' + rect.y;
+} 
+
+function getParameterByName(name, url) {
+	if (!url) url = window.location.href;
+	name = name.replace(/[\[\]]/g, '\\$&');
+	var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+	results = regex.exec(url);
+	if (!results) return null;
+	if (!results[2]) return '';
+	return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}
+//Part of System WebSite ,It heart of Program
+
+function getCategory(){
+	var cat=getParameterByName('cat');
+	if(cat)return cat;
+	
+	let tmp = window.location.href.split("/category/");
+	if(tmp.length >= 2){
+		return tmp[1].split('?')[0];
+	}
+	return null;
+}
+
+function getRuntime(inp=null) {
+	
+	if(inp!=null)return document.location.origin+'/Runtime.php?'+inp;
+	
+	let tmp = window.location.href.split("/page/");
+	if(tmp.length >= 2){
+		var act = tmp[1].split('?')[0]
+		return document.location.origin+'/Runtime.php?action='+act;
+	}
+	
+	tmp = window.location.href.split("/category/");
+	if(tmp.length >= 2){
+		var cat = tmp[1].split('?')[0]
+		return document.location.origin+'/Runtime.php?cat='+cat;
+	}
+	
+	var act=getParameterByName('action');
+	var cat=getParameterByName('cat');
+	if(act)return 'Runtime.php?action='+act;
+	else if(cat)return 'Runtime.php?cat='+cat;
+	
+}
+
+function makeHierarchy(data, groups, leafs, dd=null){
+    let date_filter = false;
+    
+    if(dd!=null && (dd.type!='' && dd.start!='' && dd.end!='') )date_filter = true;
+    
+    
+    let root = {nodes: {}, data: {}};
+    for(let len=data.length, i=0;i<len;i++){
+        let d=data[i];
+        if(date_filter){
+            let dte = new Date(d[dd.type]), s=new Date(dd.start), e= new Date(dd.end);
+            if( dte< s || dte>e)continue;
+        }
+        let tmp= root;
+        
+        for(let g_len=groups.length,g=0;g<g_len;g++){
+            let group = d[groups[g]];
+            
+            if(!tmp.nodes[group])
+            {
+                tmp.nodes[group]={nodes: {}, data: {} };
+				if(g+1 == g_len)tmp.nodes[group].value = d;
+            }
+            
+            
+            for(let l_len=leafs.length, l=0;l<l_len;l++){
+                let leaf = leafs[l];
+                let nd = tmp.nodes[group].data;
+                if(!nd[leaf]) nd[leaf]=0;
+                nd[leaf]+=parseInt(d[leaf]);
+                
+            }
+            tmp=tmp.nodes[group];
+        }
+    }
+    return root;
+}
+
+
+function readURL(input,utype,success_callback,obj={}) 
+{
+	let form_data = new FormData();
+	let keys=Object.keys(obj);
+	for(let i=0;i<keys.length;i++){
+		form_data.append(keys[i],obj[keys[i]]);
+	}
+	if (input.files && input.files[0]) 
+	{
+		var file_data = input.files[0];   
+		                 
+		form_data.append('file', file_data);
+		form_data.append('utype', utype);
+		//form_data.append('uid', 1);
+		$.ajax({
+			url: document.location.origin+'/upload.php', // point to server-side PHP script 
+			dataType: 'text',  // what to expect back from the PHP script, if anything
+			cache: false,
+			contentType: false,
+			processData: false,
+			data: form_data,                         
+			type: 'post',
+			success: function(php_script_response){
+				try{
+				let obj=JSON.parse(php_script_response);
+				
+				if(obj.error_code==0){
+					$("#previmg")
+					.attr("src", obj.message);//URL.createObjectURL(input.files[0])
+					$("#percentage").html("");
+					if(success_callback)success_callback(obj.message);
+				}else {
+					$("#percentage").html(obj.error);
+					
+				}
+				}catch(e){console.log(php_script_response, form_data, e);}
+			},
+			uploadProgress: function(event, position, total, percentComplete) {
+				$("#percentage").html(percentComplete+"%");
+			}
+		});
+	}
+}
+
+Number.prototype.zeroPad = Number.prototype.zeroPad || function(base)
+{
+	var nr=this, len=(String(base).length - String(nr).length)+1;
+	return len >0 ? new Array(len).join('0')+nr:nr;
+}
+
+/**
+ * Flexible, time‑zone‑proof date formatter
+ *
+ * @param {string|null} iso     '2025-06-17' | '2025-06-17T14:35:00Z' | null (=now)
+ * @param {object}      opts
+ *        {boolean} withDay     – include the day number          (default true)
+ *        {boolean} withTime    – include HH:MM (24‑h, UTC)       (default false)
+ *        {string}  locale      – e.g. 'en-GB', 'fr-FR'           (default 'en-GB')
+ *        {boolean} hour12      – true → 02:35 PM, false → 14:35  (default false)
+ * @returns {string}
+ */
+function prettyDate(iso = null, {
+  withDay  = true,
+  withTime = false,
+  locale   = 'en-GB',
+  hour12   = false
+} = {}) {
+
+  /* ---------- build a UTC Date object without touching local time ---------- */
+  let d;
+  if (iso) {
+    // If only YYYY-MM-DD given, add T00:00:00Z so we have a valid UTC ISO
+    if (/^\d{4}-\d{2}-\d{2}$/.test(iso)) iso += 'T00:00:00Z';
+    d = new Date(iso);                     // ISO with explicit Z stays in UTC
+  } else {
+    const now = new Date();
+    d = new Date(Date.UTC(
+      now.getUTCFullYear(),
+      now.getUTCMonth(),
+      now.getUTCDate(),
+      now.getUTCHours(),
+      now.getUTCMinutes()
+    ));
+  }
+
+  /* ---------------------- build Intl options dynamically ------------------- */
+  const opts = {
+    year:   'numeric',
+    month:  'long',
+    timeZone: 'UTC'
+  };
+  if (withDay)  opts.day   = '2-digit';
+  if (withTime) {
+    opts.hour   = '2-digit';
+    opts.minute = '2-digit';
+    opts.hour12 = hour12;
+  }
+
+  const parts = new Intl.DateTimeFormat(locale, opts).formatToParts(d);
+  const get = (type) => parts.find(p => p.type === type)?.value || '';
+
+  /* ---------------------------- compose output ----------------------------- */
+  let result = '';
+
+  if (withDay) {
+    result += `${get('day')} ${get('month')}, ${get('year')}`;
+  } else {
+    result += `${get('month')} ${get('year')}`;
+  }
+
+  if (withTime) {
+    const time = `${get('hour')}:${get('minute')}${hour12 ? ` ${get('dayPeriod')}` : ''}`;
+    result += `  ${time}`;                 // two NBSPs between date and time
+  }
+
+  return result.trim();
+}
+
+/* -------------------------- quick demonstrations --------------------------- */
+/*console.log(formatISO('2025-06-17'));                          // 17 June, 2025
+console.log(formatISO('2025-06-17', {withDay:false}));         // June 2025
+console.log(formatISO('2025-06-17T14:35:00Z', {withTime:true}));// 17 June, 2025  14:35
+console.log(formatISO(null,             {withTime:true}));     // today, now in UTC
+console.log(formatISO(null, {withTime:true, hour12:true}));    // 02:35 PM style
+console.log(formatISO(null, {withDay:false, withTime:true,
+                             locale:'fr-FR'}));                // juin 2025  14:35*/
+
+
+function time_ago(time) {
+
+  switch (typeof time) {
+    case 'number':
+      break;
+    case 'string':
+      time = +new Date(time);
+      break;
+    case 'object':
+      if (time.constructor === Date) time = time.getTime();
+      break;
+    default:
+      time = +new Date();
+  }
+  var time_formats = [
+    [60, 'seconds', 1], // 60
+    [120, '1 minute ago', '1 minute from now'], // 60*2
+    [3600, 'minutes', 60], // 60*60, 60
+    [7200, '1 hour ago', '1 hour from now'], // 60*60*2
+    [86400, 'hours', 3600], // 60*60*24, 60*60
+    [172800, 'Yesterday', 'Tomorrow'], // 60*60*24*2
+    [604800, 'days', 86400], // 60*60*24*7, 60*60*24
+    [1209600, 'Last week', 'Next week'], // 60*60*24*7*4*2
+    [2419200, 'weeks', 604800], // 60*60*24*7*4, 60*60*24*7
+    [4838400, 'Last month', 'Next month'], // 60*60*24*7*4*2
+    [29030400, 'months', 2419200], // 60*60*24*7*4*12, 60*60*24*7*4
+    [58060800, 'Last year', 'Next year'], // 60*60*24*7*4*12*2
+    [2903040000, 'years', 29030400], // 60*60*24*7*4*12*100, 60*60*24*7*4*12
+    [5806080000, 'Last century', 'Next century'], // 60*60*24*7*4*12*100*2
+    [58060800000, 'centuries', 2903040000] // 60*60*24*7*4*12*100*20, 60*60*24*7*4*12*100
+  ];
+  var seconds = (+new Date() - time) / 1000,
+    token = 'ago',
+    list_choice = 1;
+
+  if (seconds == 0) {
+    return 'Just now'
+  }
+  if (seconds < 0) {
+    seconds = Math.abs(seconds);
+    token = 'from now';
+    list_choice = 2;
+  }
+  var i = 0,
+    format;
+  while (format = time_formats[i++])
+    if (seconds < format[0]) {
+      if (typeof format[2] == 'string')
+        return format[list_choice];
+      else
+        return Math.floor(seconds / format[2]) + ' ' + format[1] + ' ' + token;
+    }
+  return time;
+}
+
+function numberToword(num){
+	let oneth = ["","one","two", "three", "four", "five", "six", "seven", "eight", "nine"];
+	let tenth = ["","ten","twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"];
+	let teenth = ["", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"];
+	let correct=Math.abs(parseInt(num));
+	let str=(correct?correct:"")+"";
+	let teen=false;
+	
+	let words= "";
+	for(let len=str.length,i=len-1;i>=0;i--){
+		let num=parseInt(str[len-(i+1)]);
+		
+		if(i==1 || i==4){// Tenth
+		    if(num==0);
+			else if(num==1 && parseInt(str[len-(i)])>0)teen=true;
+			else words+=tenth[num]+" ";
+		}else {//Oneth
+		  if(num>0){
+			if(teen)words+=teenth[num]+" ";
+			else words+=oneth[num]+" ";
+		  }
+			teen=false;
+			
+			if(i==2)words+="hundred ";
+			if(i==3)words+="thousand ";
+		}
+	}
+	return words;
+}
+
+function copyText(that)
+{
+	that.select();
+	that.setSelectionRange(0, 99999);
+	
+	document.execCommand("copy");
+	alert("Successfully Copied");
+}
+
+
+//Component Manager
+
+function GS(color)
+{
+	let col=parseInt(color);
+	let b=col%256;col=parseInt(col/256);
+	let g=col%256;col=parseInt(col/256);
+	let r=col;
+	//let gs=parseInt((255-r)*0.299)+parseInt((255-g)*0.587)+parseInt((255-b)*0.11);
+	return ((255-r)<16?'0':'')+(255-r).toString(16)+((255-g)<16?'0':'')+(255-g).toString(16)+((255-b)<16?'0':'')+(255-b).toString(16);
+}
+
+function get_from(arr,id, attr='id'){
+	let self=this;
+	for(let i=0; i<arr.length;i++){
+		let x = arr[i];
+		if(typeof attr == "object" && attr.length>0){
+			let OK=true;
+			for(let a=0;a<attr.length;a++)
+				if(x[attr[a]]!=id[attr[a]])OK=false;
+			if(OK)return x;
+		}
+		else if(x[attr]==id)return x;
+	}
+	return null;
+}
+
+function compareObject(obj1,obj2){
+	
+	// If null then direct return
+	if(!obj1 && obj1==obj2)return true;
+	
+	let k1=Object.keys(obj1), k2 = Object.keys(obj2);
+	if(k1.length!=k2.length)return false;
+	for(let n=0;n<k1.length;n++){
+		let x=obj1[k1[n]], y=obj2[k2[n]];
+		if(x!=y)return false;
+	}
+	return true;
+}
+
+function inArray(x,arr,prop){
+	for(let n=0;n<arr.length;n++)
+		if(x[prop]==arr[n][prop])return arr[n];
+	return null;
+}
+
+function includesArray(arr,x,prop){
+	let ret=[];
+	for(let n=0;n<arr.length;n++)
+		if(x[prop]==arr[n][prop])ret.push(arr[n]);
+	return ret;
+}
+
+function select_distinct(arr, prop){
+	let ret=[];
+	for(let n=0;n<arr.length;n++){
+		let x=arr[n];
+		if(insideArray(ret,x, prop)==-1)ret.push(x);
+	}
+	return ret;
+}
+
+function insideArray(arr,x,  prop=null){
+	for(let n=0;n<arr.length;n++){
+		if(prop!=null){
+			if(x[prop]==arr[n][prop]){return n;}
+		}else if(x==arr[n]){return n;}
+	}
+		
+	return -1;
+}
+
+function findIndexFromProp(arr,x,  prop=null){
+	for(let n=0;n<arr.length;n++){
+		if(prop!=null){
+			if(x==arr[n][prop]){return n;}
+		}else if(x==arr[n]){return n;}
+	}
+		
+	return -1;
+}
+
+function pushdistinctArray(arr,x){
+	if(insideArray(arr,x)==-1 ){
+		arr.push(x); return true
+	}
+	return false;
+}
+
+function removefromArray(arr,x){
+	let in_array=false;
+	for(let n=0;n<arr.length;n++)
+		if(x==arr[n]){arr.splice(n,1);return true;}
+
+	return false;
+}
+
+function findIndexFromID(arr,id){
+    for(let i=0;i<arr.length;i++){
+        if(arr[i].id==id)return i;
+    }
+    return -1;
+}
+
+/*function convertAsType(str)
+{
+	
+	let isNum=true;for(let i=0,len=str.length;i<len;i++)if(isNaN(str[i]))isNum=false;
+	if(typeof str=="string" && str.length==6);
+	else if(typeof str=="string"  && str.length>0 && isNum)return parseInt(str);
+	return str;
+}*/
+// MVC Manipulation [  Start  ]
+function mvc_component(input_tag,mvc_obj)
+{
+	if(!mvc_obj.props)mvc_obj.props=[];
+	mvc_obj.props.push('data','prop','condition', 'update_callback');
+	
+	if(!mvc_obj.dta)mvc_obj.dta={};
+	mvc_obj.dta.can_change=true;
+	mvc_obj.data=function(){return JSON.parse(JSON.stringify(mvc_obj.dta));};
+	
+	mvc_obj.beforeDestroy = function(){
+		
+	};
+	mvc_obj.methods.repairType = function(dta)
+	{
+		/*if(!global_mvc.attrs)return dta;
+		let self=this,d=dta;
+		let _type="string",toks=self.prop.split("_"), prp=toks[toks.length-1];
+		for(let i=0,len=global_mvc.attrs.length;i<len;i++){
+			let x=global_mvc.attrs[i];
+			if(x.name==prp){_type=typeof x.dflt;break;}
+		}
+		if(_type=="integer")d=parseInt(dta);*/
+		return dta;
+	};
+	mvc_obj.methods.settoProp = function(dta)
+	{
+		let self=this;
+		self.data[self.prop]=self.repairType(dta);
+	};
+	mvc_obj.methods.getfromProp = function()
+	{
+		let self=this;//if(!self.data)self.data=global_mvc;
+		return self.data[self.prop];
+	};
+	mvc_obj.methods.inCondition = function(params)
+	{
+		let len=params.length;
+		let self=this;if(!self.condition || params.length==0)return 0;
+		
+		let done=1;
+		for(let i=0;i<len;i++)if( !self.condition.startsWith(params[i]) )done=0;
+		return len*done;
+	};
+	mvc_obj.render = function(ce)
+	{
+		let self=this;let app=global_mvc;
+		if(!self.data){
+			self.data=global_mvc;
+			self.condition="insert";
+		}
+		if(global_mvc && self.data == global_mvc.sup)self.condition="insert";
+		if( (self.inCondition(['insert']) || !app) || (app.permission.state<2 && self.data.temp && self.data.temp[self.prop]) )
+		{
+			let obj={};
+			obj.on={
+				dblclick:function(event){if(!(self.inCondition(['insert']) || !app))self.data.temp[self.prop]=false;self.eventManager(event);},
+				keyup:function(event){if(!(self.inCondition(['insert']) || !app) && event.keyCode==13)self.data.temp[self.prop]=false;self.eventManager(event);}
+			  };
+			
+			
+			obj.on.beforeinput=function(event){self.can_change=!self.update_callback || typeof self.update_callback!="function" || self.update_callback(self,event);self.eventManager(event);};
+			obj.on.input = function (event) {
+				self.can_change=!self.update_callback || typeof self.update_callback!="function" || self.update_callback(self,event);
+				if(!self.typed)
+				{
+					if(self.can_change){self.settoProp(event.target.value);}
+					else event.target.value=self.getfromProp();
+				}
+				self.eventManager(event);
+			};
+			obj.on.change=function(event){if(!(self.inCondition(['insert']) || !app) && self.can_change){self.data.temp.changed=true;} self.eventManager(event);};
+				
+			
+			let root_=ce('input',obj);
+			if(!self.dynamicInput)console_log("dynamicInput function not found!");
+			else self.dynamicInput(root_,ce);
+			return root_;
+		}
+		else {
+			let obj={};
+			if(self.data.temp)obj.on={
+				dblclick:function(event){if(app.permission.state<2)self.data.temp[self.prop]=true;},
+				touchstart:function(event){event.target.tstart=new Date();},
+				touchend:function(event){if(event.target.tstart && ((new Date())-event.target.tstart)<500 ){self.data.temp[self.prop]=true;}event.target.tstart=null;}
+			  };
+			let root_=ce('span',obj);
+			if(!self.staticInput)console_log("staticInput function not found!");
+			else self.staticInput(root_,ce);
+			return root_;
+		}
+	};
+	Vue.component(input_tag,mvc_obj);
+}
+
+function mvc_component_wtyped(input_tag,mvc_obj)
+//window.mvc_component=function (mvc_obj)
+{
+	if(!mvc_obj.props)mvc_obj.props=[];
+	mvc_obj.props.push('data','prop','condition', 'update_callback');
+	
+	if(!mvc_obj.dta)mvc_obj.dta={};
+    mvc_obj.dta.can_change=true;
+	mvc_obj.dta.typed='';
+	mvc_obj.dta.focus=false;
+	mvc_obj.dta.previous=null;
+	mvc_obj.data=function(){return JSON.parse(JSON.stringify(mvc_obj.dta));};
+    mvc_obj.created = function()
+    {
+		this.reload();
+	};
+	mvc_obj.methods.reload = function()
+	{
+		this.loadProp();
+	};
+    
+	mvc_obj.methods.loadProp = function()
+	{
+		let self=this;
+        if(!self.typed)
+			self.typed=self.data[self.prop];
+    };
+    mvc_obj.methods.saveProp = function()
+	{
+		let self=this;
+		
+		self.data[self.prop]=self.typed;
+        if(!self.inCondition(['insert']))self.data.temp[self.prop]=false;
+	};
+	mvc_obj.methods.repairType = function(dta)
+	{
+		if(!global_mvc.attrs)return dta;
+		let self=this,d=dta;
+		let _type="string",toks=self.prop.split("_"), prp=toks[toks.length-1];
+		for(let i=0,len=global_mvc.attrs.length;i<len;i++){
+			let x=global_mvc.attrs[i];
+			if(x.name==prp){_type=typeof x.dflt;break;}
+		}
+		if(_type=="integer")d=parseInt(dta);
+		return d;
+	};
+	mvc_obj.methods.settoProp = function(dta)
+	{
+        let self=this,d=self.repairType(dta);
+        self['typed']=d;
+	};
+	mvc_obj.methods.getfromProp = function()
+	{
+        let self=this;
+        return self['typed'];
+	};
+	mvc_obj.methods.check_preChange = function(event)
+	{
+		let self=this;
+		return !self.update_callback || typeof self.update_callback!="function" || self.update_callback(self,event);
+	};
+	mvc_obj.methods.inCondition = function(params)
+	{
+		let len=params.length;
+		let self=this;if(!self.condition || params.length==0)return 0;
+		
+		let done=1;
+		for(let i=0;i<len;i++)if( !self.condition.startsWith(params[i]) )done=0;
+		return len*done;
+	};
+	mvc_obj.render = function(ce)
+	{
+		let self=this, app=global_mvc;
+		
+		if(!self.data){
+			self.data=global_mvc;
+			self.condition="insert";
+		}
+		if(global_mvc && self.data == global_mvc.sup)self.condition="insert";
+		if(self.data[self.prop]!=self.previous){self.typed=self.data[self.prop];self.previous=self.data[self.prop];}
+		
+		if(self.inCondition(['insert']) || (app.permission.state<2 && self.data.temp && self.data.temp[self.prop]) )
+		{
+			let obj={};
+			obj.on={
+				dblclick:function(event){self.saveProp();self.eventManager(event);},
+				keyup:function(event){if(event.keyCode==13)self.saveProp();self.eventManager(event);}
+				,focus:function(event){self.focus=true;self.eventManager(event);},focusout:function(event){self.saveProp();self.focus=false;self.eventManager(event);}
+			};
+			
+			
+			obj.on.beforeinput=function(event){self.can_change=self.check_preChange(event);self.eventManager(event);};
+			obj.on.input = function (event) {
+				self.can_change=self.check_preChange(event);
+                if(self.can_change){self.settoProp(event.target.value);}
+                else event.target.value=self.getfromProp();
+				self.eventManager(event);
+			};
+			obj.on.change=function(event){if(!self.inCondition(['insert']) && self.can_change)self.data.temp.changed=true;self.eventManager(event);};
+				
+			
+			let root_=ce('input',obj);
+			if(!self.dynamicInput)console.log("dynamicInput function not found!");
+			else self.dynamicInput(root_,ce,obj);
+			return root_;
+		}
+		else {
+			let obj={};
+			if(self.data.temp)obj.on={
+				dblclick:function(event){if(app.permission.state<2)self.data.temp[self.prop]=true;},
+				touchstart:function(event){event.target.tstart=new Date();},
+				touchend:function(event){if(event.target.tstart && ((new Date())-event.target.tstart)<500 ){self.data.temp[self.prop]=true;}event.target.tstart=null;}
+			  };
+			let root_=ce('span',obj);
+			if(!self.staticInput)console.log("staticInput function not found!");
+			else self.staticInput(root_,ce);
+			return root_;
+		}
+	};
+	//return mvc_obj;
+	Vue.component(input_tag,mvc_obj);
+}
+
+class skipOption
+{
+	constructor(){
+		this.node =null;
+		this.permit= false;
+	}
+
+	addAdverstisement(time=5,event=null)
+	{
+		let self=this;
+		console.log('#1 ',self.permit);
+		if(self.permit){self.permit=false;return true;}
+		if(event!=null)event.preventDefault();
+
+		let node=$(`<div class="row" style="position:fixed;width:60%;height:40%;left:30%;top:20%;z-index:2;text-align:center;font-size:100%;">
+			<div class="col-md-8"></div><div class="col-md-4"><button disabled class="btn btn-success skip_ad"></button></div>
+			<div class="col-md-12">
+				<img height="100%" src="">
+			</div>
+		</div>`);
+		this.node=node[0];
+		console.log('A ',self.node);
+		$('body').append(node);
+
+		this.AdTimer(event?event.target:null,time);
+		return false;
+	}
+
+	askWindow(msg, inps, response_callback){
+		let self=this;
+		console.log('#1 ',self.permit);
+		if(self.permit){self.permit=false;return true;}
+		if(event!=null)event.preventDefault();
+
+		let html = `<div style="border: solid; background-color: white;position:fixed;width:60%;height:40%;left:30%;top:20%;z-index:2;text-align:center;font-size:100%;">
+			<table width="100%" border="0">
+				<tr><td width="20%"></td><td width="60%">`+msg+`</td><td width="20%"></td></tr>`;
+		for(let i=0;i<inps.length;i++){
+			let inp = inps[i];
+			
+			let fixed_options =  'class="askWindow_input" name="input_'+i+'"';
+			let option_field = '<input type="'+inp.type+'"'+fixed_options+'/>';
+			if(inp.type=="select"){
+				option_field = '<select '+fixed_options+'/>';
+				for(let j=0;j<inp.options.length;j++){let opt=inp.options[j]; option_field +='<option value="'+opt.id+'">'+opt.name+'</option>';}
+				option_field+= '</select>';
+			}
+			html+=`<tr><td>`+inp.label+`</td><td>`+option_field+`</td><td></td></tr>`;
+		}
+		
+		html+=`<tr><td></td><td></td><td><button class="askWindow_submit">Done</button></td></tr>
+		</table>
+		</div>`;
+		
+		let node=$(html);
+		self.node=node[0];
+		let _submit = node.find(".askWindow_submit");
+		
+		let tmp = node.find(".askWindow_input");
+		let submit_data = function(){
+			let values = []; for(let j=0;j<tmp.length;j++)values.push(tmp[j].value);
+			removeAll(self.node);self.node=null;
+			response_callback(values);
+		};
+		_submit.click(submit_data);
+		$(tmp[tmp.length-1]).keyup(function(e){ 
+			var code = e.key; // recommended to use e.key, it's normalized across devices and languages
+			if(code==="Enter")submit_data(e);
+		});
+		$('body').append(node);
+		
+		return false;
+	}
+	
+	AdTimer(elm,time=5){
+		let self=this;
+		
+		let skip=self.node.getElementsByClassName('skip_ad')[0];
+		
+		skip.innerText=time>0? ('After '+time): 'Skip Ad';
+		if(time>0)
+			setTimeout(function(t){self.AdTimer(elm,t);},1000,time-1);
+		else {
+			skip.disabled=null;
+			skip.onclick= function(){
+				console.log('On Click');
+				removeAll(self.node);this.node=null;
+				self.permit=true;
+				if(elm)elm.click();
+			}
+		}
+	}
+};
+
+const SR_stringToRegex = str => {
+    // Main regex
+    const main = str.match(/\/(.+)\/.*/)[1]
+    
+    // Regex options
+    const options = str.match(/\/.+\/(.*)/)[1]
+    
+    // Compiled regex
+    return new RegExp(main, options)
+}
+function SR_beforeValue(e) {
+  let next_char = event.data;
+  e.target.correctText = 0;
+  let val= e.target.value;
+  e.target.prevText = val;
+  
+  if(!next_char){return false;}
+  let pat =  SR_stringToRegex(e.target.pattern);
+  
+  let next_str= val+next_char;
+  let res = next_str.match(pat);
+  
+  if(!res) e.target.correctText=1;
+}
+
+function SR_afterValue(e) {
+  if(e.target.correctText==1)
+	  e.target.value = e.target.prevText;
+}
+function SRM_initialize(){
+	let elementsArray = document.querySelectorAll(".masking");
+	elementsArray.forEach(function(input) {
+		if(!input.haveEvent){
+			input.addEventListener('beforeinput', SR_beforeValue);
+			input.addEventListener('input', SR_afterValue);
+			input.haveEvent = true;
+		}
+	});
+}
+
+
+window.onbeforeunload = function()
+{
+	if(pop_up_window!=null){pop_up_window.close();pop_up_window=null;}
+};
+
+const toDataUrl = async function (url, callback) {
+        //Convert to base64
+        return new Promise((resolve, reject) => {
+          var xhr = new XMLHttpRequest();
+          xhr.onload = function () {
+            var reader = new FileReader();
+            reader.onloadend = function () {
+              resolve(reader.result);
+            };
+            reader.readAsDataURL(xhr.response);
+          };
+          xhr.onerror = () => {
+            reject({
+              status: this.status,
+              statusText: xhr.statusText,
+            });
+          };
+          xhr.open("GET", url);
+          xhr.responseType = "blob";
+          xhr.send();
+        });
+};
+	
+function downloadPdf(html, orientation, mode='print', elm_callback){
+    //mode print or pdf
+    var hiddenElementId = "hidden-element";
+
+    // Check if the hidden element with the specified ID exists
+    var hiddenElement = document.getElementById(hiddenElementId);
+
+    if(mode=='pdf'){
+        if (!hiddenElement) {
+            // If the element doesn't exist, create it
+            hiddenElement = document.createElement("div");
+            hiddenElement.id = hiddenElementId;
+            hiddenElement.style.display = "none"; // Hide the element
+
+            let doc = document.createElement("html");
+            hiddenElement.appendChild(doc);
+            document.body.appendChild(hiddenElement); // Insert it into the body
+        }
+        hiddenElement = hiddenElement.children[0];
+
+        hiddenElement.innerHTML = html;
+    }else {
+        if(pop_up_window!=null)pop_up_window.close();
+        pop_up_window = window.open("", "myWindow", "width=400,height=600");
+        if(pop_up_window){
+            pop_up_window.document.write(html);
+            hiddenElement = pop_up_window.document;
+        }
+            
+        else alertText("Window is disabled!");
+        
+    }    
+
+    setTimeout(function(){
+        elm_callback(hiddenElement);
+
+        if(mode=='pdf'){ // For PDF
+            const elements = hiddenElement.querySelectorAll('*');
+            elements.forEach(td => {
+                if(td.style.borderLeftWidth=='1px'){
+                    td.style.borderLeftWidth = '2px';
+                }
+                if(td.style.borderRightWidth=='1px'){
+                    td.style.borderRightWidth = '2px';
+                }
+                if(td.style.borderTopWidth=='1px'){
+                    td.style.borderTopWidth = '2px';
+                }
+                if(td.style.borderBottomWidth=='1px'){
+                    td.style.borderBottomWidth = '2px';
+                }
+                // Set individual border widths
+            // td.style.borderTopWidth = '2px';    // Set top border width
+                //td.style.borderRightWidth = '3px';  // Set right border width
+                //td.style.borderBottomWidth = '4px'; // Set bottom border width
+                //td.style.borderLeftWidth = '1px';   // Set left border width
+            });
+			
+			const imgElements = hiddenElement.querySelectorAll('img');
+
+			// Filter out img elements with non-base64 src attributes.
+			const nonBase64Images = [...imgElements].filter(img => {
+				const src = img.getAttribute('src');
+				// Check if src is not a base64-encoded image (doesn't start with 'data:image').
+				return !src || !src.startsWith('data:image');
+			});
+			console.log(nonBase64Images);
+
+            const options = {
+                margin: 1,
+                filename: 'DOC.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { dpi: 192,scale: 1,useCORS: true },
+                //html2canvas:  {  letterRendering: true },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: orientation },
+            };
+
+            // Use html2pdf to convert HTML to PDF
+            html2pdf(hiddenElement,options);
+        }else { // For print 
+    
+        }
+        
+
+    },500);
+}

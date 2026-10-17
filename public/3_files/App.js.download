@@ -1,0 +1,959 @@
+//Control the MVC Object
+/** 
+MVC App Preview Available in three varieties
+	DOM : Complete manipulateable Environment, Example Shown in Saluman/cat/40
+	full:
+	list: Normal shown All the entities as the list form
+**/
+
+
+function setTemporary(entities,clone, editable=false)
+{
+	let ent=JSON.parse(JSON.stringify(entities));
+	for(let i=0;i<ent.length;i++)
+	{
+		ent[i].temp={checked:false,changed:false};
+		for(let c=0;c<clone.length;c++)
+			ent[i].temp[clone[c].key]=editable;
+	}
+	return ent;
+}
+
+let app_cmp=null;
+function Sections(self)
+{
+	let call=(self.section?self.section+'-':'');
+	
+	for(let i=0;self.askSelect && typeof self.askSelect[i]!=="undefined";i++)
+	{
+		if(parseInt(self.askSelect[i].selected)==-1)call+='-';
+		else call+=self.askSelect[i].selected+'-';
+	}
+	return (call.length>0?('&s_code='+btoa(call)):'')+Parameters(self);
+};
+
+function Parameters(self){
+	let call="";
+	for(let i=0;self.params && typeof self.params[i]!=="undefined";i++)
+	{
+		if(parseInt(self.params[i])==-1)call+='-';
+		else call+=self.params[i]+'-';
+	}
+	return call.length>0?('&params='+btoa(call)):'';
+}
+
+function askSelectData(item, ref, key=-1){
+
+	if(typeof ref=="function")return ref(item,key);
+	if(!ref || ref=="")return item;
+	let toks=ref.split('.');
+	let _var=item;
+	for(let i=0;i<toks.length;i++){
+		_var=_var[toks[i]];
+		
+	}
+	
+	return _var;
+}
+
+function MVCPermission_Controller()
+{
+mvco_app.props = ['type', 'callback_insert'];
+mvco_app.created =function(){
+	global_mvc=this;
+};
+mvco_app.methods.setInputs= function(ce,x,is_insert=false)
+{
+	let self=this;let nodes=[];
+	for(let i=0,len=self.attrs.length;i<len;i++){			
+		let parm=self.attrs[i].intp.split("-");
+		
+		let input_type=parm[0];
+		let obj={attrs:{},props:{data:x,prop:self.attrs[i].name}};
+		if(is_insert) obj.props.condition="insert";
+		if(input_type=="input"){
+			if(!obj.domProps)obj.domProps = {};
+			obj.domProps.type=(parm.length>1?parm[1]:"string");
+			
+			obj.attrs.placeholder=self.attrs[i].lbel;
+		}else if(input_type=="select"){
+			obj.props.options=parm.length>1?window[parm[1]]:null;
+		}
+		nodes.push(ce('td',[ce('mvc_'+input_type,obj)]));
+	}
+	return nodes;
+}
+mvco_app.methods.initializeProps = function(dta,obj,clone)
+{
+	let kys=Object.keys(obj);
+	for(let i=0;i<kys.length;i++)
+		if(kys[i]=="clone");
+		else if(kys[i]=="entities"){
+			if(!obj.backup)dta.backup=obj.entities;
+			
+			dta.entities=setTemporary(obj.entities,clone, global_mvc && global_mvc.box_editable);
+			dta.page_index=0;
+		}else
+		{
+			dta[kys[i]]=obj[kys[i]];
+		}
+};
+
+mvco_app.methods.LoadEntities = function()
+{
+	let self=this;
+	
+	let view=getParameterByName("view")
+	if(view)return;
+	let call=Sections(self);
+
+	if (self.askSelect){
+		query_post('Load&filterElement='+self.filterElement+call, {}, function(response)
+		{
+			try
+			{
+				let obj=JSON.parse(response);
+				
+				if(typeof obj.filter!="undefined"){
+					let keys=Object.keys(obj.filter);
+					for(let i=0;i<keys.length;i++){
+						let x=obj.filter[keys[i]];
+						self[keys[i]]=x;
+					}
+				}
+				if(typeof obj.entities!="undefined"){
+					//Load Entities and other props
+					self.initializeProps(self,obj,self.clone);
+					if(self.after_loadEntities)self.after_loadEntities();
+				}
+			}catch(e){console_log('ERROR:',e,'DATA:',response);}
+		});
+	}
+	return true;
+};
+
+mvco_app.methods.removeEntity = function(id)
+{
+	let self=this;let found=-1;
+	for(let i=0;i<self.entities.length;i++)if(parseInt(self.entities[i].id)==id)found=i;
+	if(found==-1)alertText(1,"Removing Failed!");
+	else self.entities.splice(found,1);
+};
+
+mvco_app.methods.removeData = function()
+{
+	let self=this;let list=self.checked_rows;
+	self.checkRemoveRestriction(list,self.entity_label,function(x,i){let ent=[x.id];return ent;}
+	,function(x,i){
+		for(let i=0;i<list.length;i++)
+		if(list[i].id==0){
+			for(let j=0,len=self.entities.length;j<len;j++)
+				if(self.entities[j]==list[i]){self.entities.splice(j,1);break;}
+		}
+		else self.removeEntity(parseInt(list[i].id));
+		});
+};
+
+mvco_app.methods.checkRemoveRestriction=function (list,point,input_callback,output_callback)
+{
+	let self=this,entry=[];
+	for(let i=0;i<list.length;i++)
+	{
+		let x=list[i];
+		entry.push(input_callback(x,i));
+	}
+	query_post('checkRemoveRestriction',{entry:entry},function(response)
+	{
+		try
+		{
+			let obj=JSON.parse(response).remove;
+			let all=true,atleast=false;
+			for(let i=0;i<obj.length;i++)
+			{
+				let x=obj[i];
+				if(x.interrupt>0){alertText(1,point(list[i])+", "+x.message+"");all=false;}
+				else if(x.affect!=1){alertText(1,point(list[i])+", Problem Occur!");all=false;}
+				else {output_callback(x,i,entry[i]);atleast=true;}
+				
+			}
+			if(all)alertText(0,"Successfully Removed");
+			if(atleast)self.saveData(false);
+		}catch(e){console_log('ERROR:',e,'DATA:',response);}
+	});
+}
+mvco_app.methods.checkUpdateRestriction=function (list,point,input_callback,output_callback)
+{
+	let self=this,entry=[];
+	for(let i=0;i<list.length;i++)
+	{
+		let x=list[i];
+		entry.push(input_callback(x,i));
+	}
+	query_post('checkUpdateRestriction',{entry:entry},function(response)
+	{
+		try
+		{
+			let obj=JSON.parse(response).update;
+			let all=true,atleast=false;
+			for(let i=0;i<obj.length;i++)
+			{
+				let x=obj[i];
+				if(x.interrupt>0){alertText(1,pint(list[i])+", "+x.message+"");all=false;}
+				else if(x.affect!=1){alertText(1,point(list[i])+", Problem Occur!");all=false;}
+				else {output_callback(x,i,entry[i]);atleast=true;}
+				
+			}
+			//if(all)alertText(0,"Successfully Updated");
+			//if(atleast)self.saveData(false);
+		}catch(e){console_log('ERROR:',e,'DATA:',response);}
+	});
+}
+mvco_app.methods.saveData = function(show_done=true, just_save=0)
+{
+	let self=this;let list=this.changes;
+	self.hideButtons=true;
+	let len=self.entities.length;
+	let entry=[];
+	for(let i=0;i<len;i++)
+	{
+		let x=self.entities[i],keys=Object.keys(x),klen=keys.length;
+		entry[i]={};
+		for(let j=0;j<klen;j++)
+			entry[i][keys[j]]=x[keys[j]];
+	}
+	
+	let call=Sections(self);
+	let json={entities:JSON.stringify(entry),state:self.permission.state};
+	if(self.permission.state==0)json.backup=JSON.stringify(self.backup);
+	query_post('saveData'+call+("&just_save="+just_save),json,function(response)
+	{
+		try
+		{
+			let obj=JSON.parse(response);
+			
+			if(obj.interrupt==0)
+			{
+				if(show_done && self.saveData_callback==null)alertText(0,"Successfully Updated!");
+				
+				self.permission.state=obj.state;
+			}else if(self.saveData_callback==null)alertText(1,obj.message);
+			
+			if(typeof self.saveData_callback=='function')self.saveData_callback(obj);
+			
+			for(let i=list.length-1;i>=0;i--)list[i].temp.changed=false;
+		}catch(e){console_log('ERROR:',e,'DATA:',response);}
+		self.hideButtons=false;
+	});
+};
+
+mvco_app.methods.permissionRequest = function()
+{
+	let self=this;
+	let call=Sections(self);
+	if(self.changes.length>0){self.saveData();return;}
+	query_post('permissionRequest'+call,{content:self.permission_content,state:self.permission.state},function(response)
+	{
+		try
+		{
+			let obj=JSON.parse(response);
+			if(obj.interrupt==0)
+			{
+				self.permission.state=obj.state;
+				self.permission.content=obj.content;
+			}else alertText(1,obj.message);
+			
+		}catch(e){console_log('ERROR:',e,'DATA:',response);}
+	});
+};
+
+mvco_app.methods.resetData = function()
+{
+	if(!confirm("Are you sure to Reset"))return;
+	let self=this;
+	let call=Sections(self);
+	
+	query_post('resetData'+call,{},function(response)
+	{
+		try
+		{
+			let obj=JSON.parse(response);
+			if(obj.interrupt==0)
+			{
+				alertText(0,"Reseting Started");
+				window.location.href=window.location.href;
+			}else alertText(1,obj.message);
+			
+		}catch(e){console_log('ERROR:',e,'DATA:',response);}
+	});
+};
+
+mvco_app.methods.add_entity = function(){
+	let self=this;
+	let tmp=Object.assign(self.sup);
+	
+	if(self.callback_insert && (typeof self[self.callback_insert])=="function" && !self[self.callback_insert](tmp))return null;
+	let ent=self.entityclone();
+	let keys=Object.keys(tmp);
+	for(let i=0,len=keys.length;i<len;i++){
+		ent[keys[i]]=tmp[keys[i]];
+	}
+}
+mvco_app.methods.entityclone = function(_ent=null)
+{
+	let ent={};let self=this;
+	
+	if(_ent!=null)ent=JSON.parse(JSON.stringify(_ent));
+	ent.temp={checked:false,changed:true};
+	for(let c=0;c<self.clone.length;c++)
+	{
+		if(_ent==null)ent[self.clone[c].key]=self.clone[c].val;
+		ent.temp[self.clone[c].key]=false;
+	}
+
+	self.wait_add=true;
+	setTimeout(function(){
+		self.checkUpdateRestriction([ent],self.entity_label,function(x,i){return x;}
+		,function(x,i){
+			
+			self.entities.push(ent);
+			self.setPaginationPage(self.pagination_total_pages-1);
+		});
+		self.wait_add=false;
+	},1000);
+	return ent;
+};
+
+mvco_app.methods.directInsert = function(_ent=null)
+{
+	let ent={};let self=this;
+	
+	if(_ent!=null)ent=JSON.parse(JSON.stringify(_ent));
+	ent.temp={checked:false,changed:true};
+	for(let c=0;c<self.clone.length;c++)
+	{
+		if(_ent==null)ent[self.clone[c].key]=self.clone[c].val;
+		ent.temp[self.clone[c].key]=false;
+	}
+
+	self.entities.push(ent);
+	self.setPaginationPage(self.pagination_total_pages-1);
+	
+	return ent;
+};
+
+mvco_app.computed.checked_rows = function()
+{
+	let self=this;let ret=[];
+	for(let i=0;i<self.entities.length;i++)
+	{
+		if(self.entities[i].temp.checked)ret.push(self.entities[i]);
+	}
+	return ret;
+};
+mvco_app.computed.changes = function()
+{
+	let self=this;
+	let ret=[];
+	for(let i=0;i<self.entities.length;i++)
+		if(self.entities[i].temp.changed==true)ret.push(self.entities[i]);
+	return ret;
+};
+
+mvco_app.computed.is_loaded = function()
+{
+	let self=this;let show=true;
+	for(let i=0;self.askSelect && typeof self.askSelect[i]!=="undefined";i++)
+	{
+		if(self.askSelect[i].selected==-1)show=false;
+	}
+	return show;
+};
+mvco_app.computed.pagination_page_size = function()
+{
+	let size=parseInt(this.page_size);
+	if(isNaN(size) || size<1)return this.entities.length>0?this.entities.length:1;
+	return size;
+};
+mvco_app.computed.pagination_total_pages = function()
+{
+	if(this.entities.length==0)return 1;
+	return Math.ceil(this.entities.length/this.pagination_page_size);
+};
+mvco_app.computed.pagination_start = function()
+{
+	let max_index=this.pagination_total_pages-1;
+	if(this.page_index>max_index)this.page_index=max_index;
+	if(this.page_index<0)this.page_index=0;
+	return this.page_index*this.pagination_page_size;
+};
+mvco_app.computed.pagination_end = function()
+{
+	return Math.min(this.pagination_start+this.pagination_page_size,this.entities.length);
+};
+mvco_app.computed.visible_entities = function()
+{
+	return this.entities.slice(this.pagination_start,this.pagination_end);
+};
+mvco_app.methods.setPaginationPage = function(page)
+{
+	let max_index=this.pagination_total_pages-1;
+	page=parseInt(page);
+	if(isNaN(page))page=0;
+	if(page<0)page=0;
+	if(page>max_index)page=max_index;
+	this.page_index=page;
+};
+mvco_app.methods.changePaginationSize = function(event)
+{
+	this.page_size=parseInt(event.target.value);
+	this.setPaginationPage(0);
+};
+mvco_app.methods.mvc_paginationController = function(ce, root)
+{
+	let self=this;
+	if(self.entities.length<=self.pagination_page_size && self.page_size!=0)return;
+	let buttons=[];
+	buttons.push(ce('button',{class:'btn btn-sm btn-default',attrs:{disabled:self.page_index==0},on:{click:function(){self.setPaginationPage(0);}}},'First'));
+	buttons.push(ce('button',{class:'btn btn-sm btn-default',attrs:{disabled:self.page_index==0},on:{click:function(){self.setPaginationPage(self.page_index-1);}}},'Prev'));
+	buttons.push(ce('span',{style:{padding:'7px 10px',display:'inline-block'}},'Page '+(self.page_index+1)+' of '+self.pagination_total_pages+' | Showing '+(self.entities.length==0?0:self.pagination_start+1)+'-'+self.pagination_end+' of '+self.entities.length));
+	buttons.push(ce('button',{class:'btn btn-sm btn-default',attrs:{disabled:self.page_index>=self.pagination_total_pages-1},on:{click:function(){self.setPaginationPage(self.page_index+1);}}},'Next'));
+	buttons.push(ce('button',{class:'btn btn-sm btn-default',attrs:{disabled:self.page_index>=self.pagination_total_pages-1},on:{click:function(){self.setPaginationPage(self.pagination_total_pages-1);}}},'Last'));
+	buttons.push(ce('select',{class:'form-control form-control-sm',style:{display:'inline-block',width:'90px',marginLeft:'10px'},domProps:{value:self.page_size},on:{change:self.changePaginationSize}},[
+		ce('option',{domProps:{value:10}},'10'),
+		ce('option',{domProps:{value:25}},'25'),
+		ce('option',{domProps:{value:50}},'50'),
+		ce('option',{domProps:{value:100}},'100'),
+		ce('option',{domProps:{value:0}},'All')
+	]));
+	root.push(ce('div',{class:'col-md-12',style:{margin:'10px 0'}},buttons));
+};
+let VUE_current_slotname="";
+mvco_app.methods.mvc_listController=function(ce, root)
+{
+	let self=this;
+	self.mvc_paginationController(ce, root);
+	let tbl=ce('table',{class:"table"});root.push(tbl);
+		tbl=tbl.children=[];
+		
+		
+		let thead=ce('thead');tbl.push(thead);
+			thead=thead.children=[];
+		let toolbar=[];
+		toolbar.push(ce('th',[ce('input',{attrs:{type:'file'},on:{
+			change:function(evt){
+				var tgt = evt.target || window.event.srcElement,
+				files = tgt.files;
+				const reader = new FileReader()
+
+				reader.readAsDataURL(files[0])
+				reader.onload = () => {
+				const buffer = reader.result;
+				const workbook = new ExcelJS.Workbook();	
+				workbook.xlsx.load(buffer,{base64:true}).then(workbook => {
+					workbook.eachSheet((sheet, id) => {
+						if(sheet.name=="Import"){
+							let head=[];
+							sheet.eachRow((row, rowIndex) => {
+							if(rowIndex==2){
+								head=row.values;//head.shift();
+								
+							}else if(rowIndex>2){
+								let keys=Object.keys(head);
+								
+								let ent=self.directInsert();
+								
+								for(let k=0,len=keys.length;k<len;k++){
+									let x=head[keys[k]];
+									let y=row.values[keys[k]];
+									
+									if(typeof y=="undefined")y='';
+									ent[x]=y;
+									
+								}
+								if(self.callback_insert && (typeof self[self.callback_insert])=="function" && !self[self.callback_insert](ent))return null;
+							}
+							});
+						}
+					  })
+				});
+			}
+		}}},'Import')]));
+		thead.push(ce('tr',toolbar));
+		let selectAll=ce('th',[ce('input',{attrs:{type:"checkbox"},domProps:{checked:self.selectCount()},on:{click:function(that){self.selectAll(that.target.checked);} }})]);	
+		if(this.$scopedSlots.header)
+		{
+			let header=this.$scopedSlots.header();
+			
+			let header_len=header.length;
+			for(let h=0;h<header_len;h++)
+			{
+				
+				if(header[h].tag!=='div')continue;
+				else for(let len=header[h].children.length,i=len-1;i>=0;i--){if(header[h].children[i].tag!=='div')header[h].children.splice(i,1);else header[h].children[i].tag='th';}
+				
+				if(h==0){
+					let htr=ce('tr',[selectAll,header[h].children]);thead.push(htr);
+				}else{
+					let htr=ce('tr',[header[h].children]);thead.push(htr);
+				}
+			}//if(header[i].tag=='div')header[0].children
+		}else {
+			let labels=[];for(let i=0,len=self.attrs.length;i<len;i++)labels.push(ce('th',self.attrs[i].lbel));
+			let htr=ce('tr',[selectAll,labels]);thead.push(htr);
+		}
+
+		let tbody=ce('tbody');tbl.push(tbody);
+			tbody=tbody.children=[];
+		
+		
+		for(let _visible_tr=0;_visible_tr<self.visible_entities.length;_visible_tr++)
+		{
+			let _tr=self.pagination_start+_visible_tr;
+			let x=self.visible_entities[_visible_tr];
+			
+			let index=ce('td',[ce('input',{attrs:{type:"checkbox"},domProps:{checked:x.temp.checked},on:{click:function(that){x.temp.checked=that.target.checked;} }}),""+(_tr+1)]);
+			let slot=null;
+			if(this.$scopedSlots.default)slot=this.$scopedSlots.default(x);
+			else slot=self.setInputs(ce,x);
+			
+			if(slot)for(let len=slot.length,i=len-1;i>=0;i--){
+				let y=slot[i]
+				if(y.tag!=='div' && y.tag!=='td')slot.splice(i,1);
+				else {
+					y.tag='td';//
+					let cmp=y.children[0].componentOptions;
+					if(cmp){
+						let elm=y.children[0].elm;
+						
+						let label=cmp.propsData.prop;
+						let result=inArray(x,self.backup,'id');
+						
+						if(!result)y.data={style:"background-color:rgb(128,255,128)"};
+						else if(typeof result[label]== "object" && typeof self.entities[_tr][label]=="object" && compareObject(result[label],self.entities[_tr][label]));
+						else if(result[label]==self.entities[_tr][label]);
+						else {
+							
+							let active_obj=document.activeElement.__vue__;
+							let idle=!active_obj || active_obj.data!=cmp.propsData.data;
+							if(idle)
+							y.data={style:"border: 3px dashed rgb(255,255,0)",domProps:{title:cmp.Ctor.extendOptions.methods.getText(result[label],cmp)}};
+						}
+					}
+				}
+			}
+			
+			let tr=ce('tr',[index,slot]);tbody.push(tr);
+		}
+		if(self.backup)for(let _tr=0;_tr<self.backup.length;_tr++)
+		{
+			let x=self.backup[_tr],Exist=inArray(x,self.entities,'id');
+			if(!Exist)
+			{
+				let restore=ce('td',self.permission.state>1?'':[ce('button',{class:"btn btn-success",on:{click:function(event){self.entityclone(x);} }},"Restore")]);
+				let slot=null;
+				if(this.$scopedSlots.default)slot=this.$scopedSlots.default(x);
+				else slot=self.setInputs(ce,x);
+				
+				for(let len=slot.length,i=len-1;i>=0;i--){
+					
+					let y=slot[i];
+					if(y.tag!=='div' && y.tag!=='td')slot.splice(i,1);
+					else {
+						
+						y.tag='td';
+						y.data={style:"background-color:rgb(255,128,128)"};
+					}
+				}
+				
+				let tr=ce('tr',[restore,slot]);tbody.push(tr);
+			}
+		}
+		
+	if(self.permission.state<2){
+		if(self.can_add)
+		{
+			let ob={ class:"btn", on:{click:self.add_entity} };
+			if(self.wait_add)ob.attrs={disabled:true};
+			let Add_new=ce('td',[ce('button',ob,'Add New')]);
+			
+			let inserting=[];
+			if(this.$scopedSlots.insert)
+			{
+				inserting=this.$scopedSlots.insert(self.sup);
+				if(inserting)for(let len=inserting.length,i=len-1;i>=0;i--){if(inserting[i].tag!=='div')inserting.splice(i,1);else inserting[i].tag='td';}
+			}else inserting=self.setInputs(ce,self.sup,true);
+			
+			let ftr=ce('tr',[Add_new,inserting]);tbody.push(ftr);
+		}
+	}
+	self.mvc_paginationController(ce, root);
+}
+mvco_app.methods.mvc_domController =function(ce,root)
+{
+	let self=this;
+	let slot=this.$scopedSlots.default(self.entities[0]);
+	
+	if(this.$scopedSlots.default)root.push(ce('div', {class: 'col-12'},[slot]));
+}
+
+mvco_app.methods.mvc_domMultiController =function(ce,root)
+{
+	let self=this;
+	let slot=this.$scopedSlots.default(self.entities);
+	
+	if(this.$scopedSlots.default)root.push(slot);
+}
+
+mvco_app.data.current_entity=-1;
+mvco_app.data.filterElement = -1;
+mvco_app.methods.mvc_fullPageController =function(ce,root)
+{
+	let self=this;
+	
+	let list=[];
+	
+	for(let i=0;i<self.entities.length;i++){
+		let x=self.entities[i];
+		//list.push({id: x.id, name : self.entity_label(x)});
+		
+		let ent=ce('a',{on:{click:function(e){self.current_entity=i;}}},(i+1)+". "+self.entity_label(x));
+		let index=ce('input',{attrs:{type:"checkbox"},domProps:{checked:x.temp.checked},on:{click:function(that){x.temp.checked=that.target.checked;} }});
+		list.push(ce('li',[ce('div',[index,ent])]));
+	}
+	let aside=ce('aside',{class : 'col-md-3'},[ce('div',{class : 'widget'},[
+		,ce('ul',{class : 'recent_post'},list)
+	])]);
+
+	let dom=ce('div',{class : 'col-md-9'});
+
+	root.push(ce('div',{class : 'row'}, [aside,dom]));
+	dom.children=[];
+	if(this.$scopedSlots.default){
+		dom.children.push(ce('button',{class :'btn btn-success', on: {click : function(e){self.current_entity=-1;}}},'New'));
+		dom.children.push(ce('div',[this.$scopedSlots.default(self.current_entity==-1?self.sup:self.entities[self.current_entity])
+			,ce('button',{class : 'btn btn-success', on:{
+				click : function(e){
+					if(self.current_entity==-1){
+						self.add_entity();
+					}//else {
+						self.saveData();
+					//}
+				}
+			}},self.current_entity==-1?'Add New':'Edit')
+		]));
+	}
+}
+
+mvco_app.render = function(ce,ctxt){
+	let self=this;
+	
+	let _root=ce('div',{class: "row"});
+	
+	let root=_root.children=[];
+	if(!getParameterByName('view')){
+
+		if(self.askSelect)for(let i=0;i<self.askSelect.length;i++){
+			let asel=self.askSelect[i];
+			let tmp_list=askSelectData(self,asel.list),list=[];
+			
+			if(typeof tmp_list=="object"){
+				let keys=Object.keys(tmp_list);
+				list.push(ce('option',{domProps :{value:-1 } }, "Not Selected"));
+				for(let l=0;l<keys.length;l++){
+					let item=tmp_list[keys[l]];
+					
+					
+					list.push(ce('option',{domProps :{value:askSelectData(item,asel.value, keys[l]) } }, askSelectData(item,asel.name, keys[l])));
+				}
+			}
+			else for(let l=0;l<tmp_list.length;l++){
+				let item=tmp_list[l];
+				
+				list.push(ce('option',{domProps :{value:askSelectData(item,asel.value, l) } }, askSelectData(item,asel.name, l)));
+			}
+
+			if(typeof asel.label!="undefined"){
+				root.push(ce('div',{class:'col-md-2'},[ce('label',asel.label+"")]));
+			}
+			root.push(ce('div',{class:'col-md-2'},[ ce('select',{class:"form-control form-control-sm",
+				on:{
+					focus : function(event){
+						event.target.previous=asel.selected;
+					},
+					change : function(event){
+						self.filterElement = i;
+						if(self.changes.length>0 && !confirm("You have not save this, Are you sure to change?")){
+							asel.selected=event.target.previous;
+							
+							event.target.value=event.target.previous;return false;
+						}else {asel.selected=parseInt(event.target.value);self[asel.change_func]();}
+					}
+				},
+				domProps : {value: asel.selected}
+			},list)]) );
+
+			if(asel.selected==-1)break;
+		}
+	
+	}
+
+	if(!self.data)self.data=self;
+	if(self.is_loaded){
+		if(this.$scopedSlots.status){
+			let hd=this.$scopedSlots.status();
+			root.push(ce('div',hd));
+		}
+		if(self.permission.state>1)root.push(ce('p',
+		[ce('span',{domProps:{innerHTML:self.permission.content}})," on "+self.permission.request_date]));
+		if(!self.hideButtons && self.permission && self.permission.state==1)root.push(ce('button',{class:"btn btn-success",on:{click:self.permissionRequest}},'Submit Request'));
+		if(!self.hideButtons && self.permission && self.permission.state==2)root.push(ce('button',{class:"btn btn-danger",on:{click:self.permissionRequest}},'Cancel Request'));
+		if(self.type=="dom")self.mvc_domController(ce,root);
+		else if(self.type=="dom_multi")self.mvc_domMultiController(ce,root);
+		else if(self.type=="full")self.mvc_fullPageController(ce,root);
+		else self.mvc_listController(ce,root);
+
+		if(self.permission.state<2){
+			if(!self.hideButtons && self.can_reset)root.push(ce('button',{class:"btn btn-danger",on:{click:self.resetData }},'Reset'));
+			if(!self.hideButtons && self.can_save && self.changes.length>0)root.push(ce('button',{class:"btn btn-success",on:{click:function(e){self.saveData();e.target.hidden=true;}}},'Save'));
+			if(!self.hideButtons && self.can_remove && self.checked_rows.length>0)root.push(ce('button',{class:"btn btn-danger",on:{click:self.removeData }},'Remove'));
+		}
+		if(this.$scopedSlots.footer)root.push(ce('div',this.$scopedSlots.footer()));
+	}
+	return _root;
+};
+mvco_app.data.permission = {};			
+if(mvco_app.data.page_size==null)mvco_app.data.page_size = 25;
+if(mvco_app.data.page_index==null)mvco_app.data.page_index = 0;
+if(mvco_app.data.can_add==null)mvco_app.data.can_add = true;
+if(mvco_app.data.wait_add==null)mvco_app.data.wait_add = false;
+if(mvco_app.data.can_remove==null)mvco_app.data.can_remove = true;
+if(mvco_app.data.can_reset==null)mvco_app.data.can_reset = true;
+if(mvco_app.data.can_save==null)mvco_app.data.can_save = true;
+if(mvco_app.data.hideButtons==null)mvco_app.data.hideButtons = false;
+//Pending
+mvco_app.methods.selectCount = function(){
+	for(let i=0;i<this.visible_entities.length;i++)
+		if(!this.visible_entities[i].temp.checked)return false;
+	return this.visible_entities.length>0;
+};
+mvco_app.methods.selectAll=function(value){
+
+for(let i=0;i<this.visible_entities.length;i++)
+	this.visible_entities[i].temp.checked=value;
+};
+
+	let view=getParameterByName("view"), v_toks=[];
+	if(view)v_toks=view.split("**");
+	
+	let req='All'+(view?'&view='+view:'')+Sections(mvco_app.data);
+	let link_address = 'cat='+(view?v_toks[1]:getCategory());
+	
+	query_post(req,{},function(response)
+	{
+
+		try
+		{
+			let obj=JSON.parse(response);
+			let clone=[],ckeys=Object.keys(obj.clone);
+			for(let i=0;i<ckeys.length;i++)clone.push({key:ckeys[i],val:obj.clone[ckeys[i]]});
+			mvco_app.data.clone=clone;
+			//Load Entities and other props
+			mvco_app.methods.initializeProps(mvco_app.data,obj,clone);
+			//Input v-model data
+			let sup={};
+			for(let c=0;c<clone.length;c++)
+				sup[clone[c].key]=clone[c].val;
+			mvco_app.data.sup=sup;		
+		if(view)
+		{
+			let tks=v_toks[2].split('-');
+			for(let i=0;mvco_app.data.askSelect && typeof mvco_app.data.askSelect[i]!=="undefined";i++)
+			{
+				mvco_app.data.askSelect[i].selected=parseInt(tks[i-1]);
+			}
+			mvco_app.data.permission.state=3;
+			mvco_app.data.can_add = false;
+			mvco_app.data.can_remove = false;
+		}
+		
+		
+		/*let type=document.getElementsByClassName('permissionApp')[0].getAttribute('type');
+		
+		if(type=="list")mvc_listController();
+		else mvc_domController();*/
+
+		let __data={};Object.assign(__data,mvco_app.data);
+		mvco_app.data=function(){return __data;};
+		Vue.component("permission_content",mvco_app);
+		( new Vue({})).$mount('.permissionApp')
+		}catch(e){console_log('ERROR:',e,'DATA:',response);}
+	},link_address);
+}
+
+
+/*function mvc_updateData(list,point,input_callback,output_callback)
+{
+	let entry=[];
+	for(let i=0;i<list.length;i++)
+	{
+		let x=list[i];
+		entry.push(input_callback(x,i));
+	}
+	query_post('updateData',{entry:entry},function(response)
+	{
+		try
+		{
+			let obj=JSON.parse(response);
+			//console_log(obj);
+			let all=true;
+			for(let i=0;i<obj.length;i++)
+			{
+				let x=obj[i];
+				if(x.affect==-1){alertText(1,list[i][point]+", could not be added!");all=false}
+				else if(x.affect==1)output_callback(x,i,entry[i]);
+			}
+			if(all)alertText(0,"Successfully Updated!");
+			for(let i=list.length-1;i>=0;i--)list[i].temp.changed=false;
+		}catch(e){console_log('ERROR:',e,'DATA:',response);}
+	});
+}*/
+
+function mvc_preload()
+{
+	if(!mvco_app){console_log('MVC is not initialized!');}
+	else if(typeof mvco_app.computed.permission_content=="undefined"){console_log('permission_content is not initialized!');}
+	else if(typeof mvco_app.data.entity_label=="undefined"){console_log('entity_label is not initialized!');}
+	else MVCPermission_Controller();
+}
+mvc_preload();
+
+window.onbeforeunload = function()
+{
+	if(pop_up_window!=null){pop_up_window.close();pop_up_window=null;}
+	if(global_mvc.changes.length>0)return '';
+};
+// MVC Manipulation [   End   ]
+
+
+// Notification Manipulation [ Start ]
+
+let noti_app=null;
+
+noti_app = new Vue(
+{
+	data:
+	{
+		messages : [],permissions:[],
+		show_messages:false, show_permissions:false
+	},
+	computed:{
+		new_messages:function()
+		{
+			let self=this,n=0;
+			for(let i=0;i<self.messages.length;i++)
+			{
+				let y=self.messages[i];
+				if((new Date(y.date))>last_notify)n++;
+			}
+			return n;
+		},
+		new_permissions:function()
+		{
+			let self=this,n=0;
+			for(let i=0;i<self.permissions.length;i++)
+			{
+				let y=self.permissions[i];
+				if((new Date(y.date))>last_notify)n++;
+			}
+			return n;
+		}
+	},
+	methods:{
+		loadNotifications : function()
+		{
+			let self=this;
+			query_get('load',function(response)
+			{
+				try
+				{
+					let noti=JSON.parse(response);
+					self.receivedNotification(noti);
+				}catch(e){console_log('ERROR:',e,'DATA:',response);}
+			},'type=notifications');
+		},
+		permissionResponse : function(idx,x,r)
+		{
+			let self=this;
+			if(!confirm("Are you sure to "+(r?"Confirm":"Reject")+"?"))return;
+			
+			query_get('permissionResponse&address='+encodeURI(x.address)+'&response='+r,function(response)
+			{
+				try
+				{
+					let obj=JSON.parse(response);
+					console_log(obj);
+					self.permissions.splice(idx,1);
+				}catch(e){console_log('ERROR:',e,'DATA:',response);}
+			},'type=notifications');
+		},
+		viewNotifications()
+		{
+			query_get('viewNotifications',function(response)
+			{
+				try
+				{
+					let obj=JSON.parse(response);
+					//last_notify=new Date();
+				}catch(e){console_log('ERROR:',e,'DATA:',response);}
+			},'type=notifications');
+		},
+		receivedNotification : function(noti)
+		{
+			let self=this;let noti_=[];
+			//console_log(noti);
+			if(noti.messages)for(let i=0;i<noti.messages.length;i++)
+			{
+				let x=noti.messages[i];
+				
+				self.push_notifications(x,"messages");
+			}
+			if(noti.permissions)for(let i=0;i<noti.permissions.length;i++)
+			{
+				let x=noti.permissions[i];
+				
+				self.push_notifications(x,"permissions");
+			}
+			self.messages.sort(function(a,b){return new Date(b.date) - new Date(a.date);});
+			self.permissions.sort(function(a,b){return new Date(b.date) - new Date(a.date);});
+		},
+		push_notifications : function(x,prop="messages")
+		{
+			let self=this;
+			
+			for(let i=0;i<self[prop].length;i++)
+			{
+				let y=self[prop][i];
+				if(x.address==y.address){self[prop].splice(i,1);};
+			}
+			self[prop].push(x);
+		}
+	}
+});
+noti_app.$mount('.notificationApp');
+noti_app.loadNotifications();
+
+if(typeof(EventSource) !== "undefined") 
+	{
+		var source = new EventSource("script/core/sse.php");
+
+		source.onmessage = function(event) {
+			let data=event.data.split('data:')[0];
+			let obj=JSON.parse(data);
+			noti_app.receivedNotification(obj);
+		}
+	} else {
+	
+  // Sorry! No server-sent events support..
+}
+
+// Notification Manipulation  [ End ]

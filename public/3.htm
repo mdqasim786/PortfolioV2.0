@@ -1,0 +1,3671 @@
+<!DOCTYPE html>
+<!-- saved from url=(0037)https://attest.ibcc.edu.pk/category/3 -->
+<html lang="en" style="height: auto;"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="./3_files/jquery.min.js.download"></script><script src="./3_files/jquery.mask.min.js.download"></script><script src="./3_files/easy.qrcode.min.js.download"></script>
+<link href="./3_files/font-awesome.min.css" rel="stylesheet">
+<style>
+				.important-notice {
+  background-color: #fff4e5;
+  border-left: 5px solid #f39c12;
+  padding: 16px 20px;
+  margin: 20px 0;
+  border-radius: 6px;
+  font-family: sans-serif;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.important-notice p {
+  color: #000000;
+  font-size: 15px;
+  text-align: justify;
+  margin: 0;
+}
+  </style>
+
+
+<style>
+	.btn-success, bg-success {
+		background-color: #157347;
+	}
+</style>
+  
+<script src="./3_files/exceljs.min.js.download"></script>
+<script>
+
+let q_posts = 0, rq_posts = 0;
+function query_post(method,data,callback,_link=null)
+{
+	$('#overlay').show();
+	q_posts++;
+	//$('#overlay').hide();
+	let link=getRuntime(_link)+"&tgo=41&uid=1370138&method="+method;
+	
+	let overlay_callback = function(response){
+		try{
+			let obj = JSON.parse(response);
+			if(obj.code==255){
+				// obj.redirect: the portal this session came from, when it came from one.
+				confirmUserAuthentication(obj.redirect || '');
+				return true;
+			}
+			
+			if(obj.code==254){ // lastUser != currentUser
+				if(confirm("Other Account detected, Are you sure to refresh the Page."))
+					document.location.href = document.location.href;
+				return true;
+			}
+		}catch(e){}
+		
+		rq_posts++;
+		if (rq_posts >= q_posts)
+			$('#overlay').hide();
+		callback(response);
+	};
+	let fail_callback = function(response){
+		rq_posts++;
+		if (rq_posts >= q_posts)
+			$('#overlay').hide();
+	};
+	
+	if(typeof data=="string")$.post(link, JSON.parse(data), overlay_callback).fail(fail_callback);
+	else $.post(link, data, overlay_callback).fail(fail_callback);
+}
+
+function direct_post(method,data,callback,_link=null)
+{
+	
+	let link=getRuntime(_link)+"&tgo=41&uid=1370138&method="+method;
+	
+	let overlay_callback = function(response){
+		try{
+			let obj = JSON.parse(response);
+			if(obj.code==255){
+				// obj.redirect: the portal this session came from, when it came from one.
+				confirmUserAuthentication(obj.redirect || '');
+				return true;
+			}
+			
+			if(obj.code==254){ // lastUser != currentUser
+				if(confirm("Other Account detected, Are you sure to refresh the Page."))
+					document.location.href = document.location.href;
+				return true;
+			}
+		}catch(e){}
+		
+		callback(response);
+	};
+	let fail_callback = function(response){
+	};
+	
+	if(typeof data=="string")$.post(link, JSON.parse(data), overlay_callback).fail(fail_callback);
+	else $.post(link, data, overlay_callback).fail(fail_callback);
+}
+
+function query_get(method,callback,_link=null)
+{
+	let link=getRuntime(_link)+"&tgo=41&method="+method;
+	$.get(link, callback);
+}
+
+
+function save_post(method,data,callback,_link=null)
+{
+	let link=getRuntime(_link)+"&method="+method;
+    const saveName = 'sp_' + btoa(link + JSON.stringify(data));
+	//console.log(saveName);
+    // Check if the data is already in the cookie
+    const cachedData = sessionStorage.getItem(saveName);
+    if (cachedData) {
+        // If the data is found in the cookie, call the callback with the cached data
+		//console.log("Cached",JSON.parse(cachedData));
+        callback(cachedData);
+    } else {
+        // Otherwise, make a $.post request
+        query_post(method, data, function(response) {
+            // Save the response data in a cookie
+            sessionStorage.setItem(saveName, response, 7); // Cookie expires in 7 days
+            // Call the callback with the response data
+            callback(response);
+        }, _link);
+    }
+}
+
+</script>
+<script src="./3_files/vue.min.js.download"></script>
+<script src="./3_files/v-mask.min.js.download"></script>
+<script>
+// As a plugin
+Vue.use(VueMask.VueMaskPlugin);
+
+// Or as a directive
+Vue.directive('mask', VueMask.VueMaskDirective);
+</script>
+
+<link rel="stylesheet" href="./3_files/Rashdi.css">
+<script src="./3_files/sweetalert2@11"></script><style>:root{--swal2-outline: 0 0 0 3px rgba(100, 150, 200, 0.5);--swal2-container-padding: 0.625em;--swal2-backdrop: rgba(0, 0, 0, 0.4);--swal2-backdrop-transition: background-color 0.15s;--swal2-width: 32em;--swal2-padding: 0 0 1.25em;--swal2-border: none;--swal2-border-radius: 0.3125rem;--swal2-background: white;--swal2-color: #545454;--swal2-show-animation: swal2-show 0.3s;--swal2-hide-animation: swal2-hide 0.15s forwards;--swal2-icon-zoom: 1;--swal2-title-padding: 0.8em 1em 0;--swal2-html-container-padding: 1em 1.6em 0.3em;--swal2-input-border: 1px solid #d9d9d9;--swal2-input-border-radius: 0.1875em;--swal2-input-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.06), 0 0 0 3px transparent;--swal2-input-background: transparent;--swal2-input-transition: border-color 0.2s, box-shadow 0.2s;--swal2-input-hover-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.06), 0 0 0 3px transparent;--swal2-input-focus-border: 1px solid #b4dbed;--swal2-input-focus-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.06), 0 0 0 3px rgba(100, 150, 200, 0.5);--swal2-progress-step-background: #add8e6;--swal2-validation-message-background: #f0f0f0;--swal2-validation-message-color: #666;--swal2-footer-border-color: #eee;--swal2-footer-background: transparent;--swal2-footer-color: inherit;--swal2-timer-progress-bar-background: rgba(0, 0, 0, 0.3);--swal2-close-button-position: initial;--swal2-close-button-inset: auto;--swal2-close-button-font-size: 2.5em;--swal2-close-button-color: #ccc;--swal2-close-button-transition: color 0.2s, box-shadow 0.2s;--swal2-close-button-outline: initial;--swal2-close-button-box-shadow: inset 0 0 0 3px transparent;--swal2-close-button-focus-box-shadow: inset var(--swal2-outline);--swal2-close-button-hover-transform: none;--swal2-actions-justify-content: center;--swal2-actions-width: auto;--swal2-actions-margin: 1.25em auto 0;--swal2-actions-padding: 0;--swal2-actions-border-radius: 0;--swal2-actions-background: transparent;--swal2-action-button-transition: background-color 0.2s, box-shadow 0.2s;--swal2-action-button-hover: black 10%;--swal2-action-button-active: black 10%;--swal2-confirm-button-box-shadow: none;--swal2-confirm-button-border-radius: 0.25em;--swal2-confirm-button-background-color: #7066e0;--swal2-confirm-button-color: #fff;--swal2-deny-button-box-shadow: none;--swal2-deny-button-border-radius: 0.25em;--swal2-deny-button-background-color: #dc3741;--swal2-deny-button-color: #fff;--swal2-cancel-button-box-shadow: none;--swal2-cancel-button-border-radius: 0.25em;--swal2-cancel-button-background-color: #6e7881;--swal2-cancel-button-color: #fff;--swal2-toast-show-animation: swal2-toast-show 0.5s;--swal2-toast-hide-animation: swal2-toast-hide 0.1s forwards;--swal2-toast-border: none;--swal2-toast-box-shadow: 0 0 1px hsl(0deg 0% 0% / 0.075), 0 1px 2px hsl(0deg 0% 0% / 0.075), 1px 2px 4px hsl(0deg 0% 0% / 0.075), 1px 3px 8px hsl(0deg 0% 0% / 0.075), 2px 4px 16px hsl(0deg 0% 0% / 0.075)}[data-swal2-theme=dark]{--swal2-dark-theme-black: #19191a;--swal2-dark-theme-white: #e1e1e1;--swal2-background: var(--swal2-dark-theme-black);--swal2-color: var(--swal2-dark-theme-white);--swal2-footer-border-color: #555;--swal2-input-background: color-mix(in srgb, var(--swal2-dark-theme-black), var(--swal2-dark-theme-white) 10%);--swal2-validation-message-background: color-mix( in srgb, var(--swal2-dark-theme-black), var(--swal2-dark-theme-white) 10% );--swal2-validation-message-color: var(--swal2-dark-theme-white);--swal2-timer-progress-bar-background: rgba(255, 255, 255, 0.7)}@media(prefers-color-scheme: dark){[data-swal2-theme=auto]{--swal2-dark-theme-black: #19191a;--swal2-dark-theme-white: #e1e1e1;--swal2-background: var(--swal2-dark-theme-black);--swal2-color: var(--swal2-dark-theme-white);--swal2-footer-border-color: #555;--swal2-input-background: color-mix(in srgb, var(--swal2-dark-theme-black), var(--swal2-dark-theme-white) 10%);--swal2-validation-message-background: color-mix( in srgb, var(--swal2-dark-theme-black), var(--swal2-dark-theme-white) 10% );--swal2-validation-message-color: var(--swal2-dark-theme-white);--swal2-timer-progress-bar-background: rgba(255, 255, 255, 0.7)}}body.swal2-shown:not(.swal2-no-backdrop,.swal2-toast-shown){overflow:hidden}body.swal2-height-auto{height:auto !important}body.swal2-no-backdrop .swal2-container{background-color:rgba(0,0,0,0) !important;pointer-events:none}body.swal2-no-backdrop .swal2-container .swal2-popup{pointer-events:auto}body.swal2-no-backdrop .swal2-container .swal2-modal{box-shadow:0 0 10px var(--swal2-backdrop)}body.swal2-toast-shown .swal2-container{box-sizing:border-box;width:360px;max-width:100%;background-color:rgba(0,0,0,0);pointer-events:none}body.swal2-toast-shown .swal2-container.swal2-top{inset:0 auto auto 50%;transform:translateX(-50%)}body.swal2-toast-shown .swal2-container.swal2-top-end,body.swal2-toast-shown .swal2-container.swal2-top-right{inset:0 0 auto auto}body.swal2-toast-shown .swal2-container.swal2-top-start,body.swal2-toast-shown .swal2-container.swal2-top-left{inset:0 auto auto 0}body.swal2-toast-shown .swal2-container.swal2-center-start,body.swal2-toast-shown .swal2-container.swal2-center-left{inset:50% auto auto 0;transform:translateY(-50%)}body.swal2-toast-shown .swal2-container.swal2-center{inset:50% auto auto 50%;transform:translate(-50%, -50%)}body.swal2-toast-shown .swal2-container.swal2-center-end,body.swal2-toast-shown .swal2-container.swal2-center-right{inset:50% 0 auto auto;transform:translateY(-50%)}body.swal2-toast-shown .swal2-container.swal2-bottom-start,body.swal2-toast-shown .swal2-container.swal2-bottom-left{inset:auto auto 0 0}body.swal2-toast-shown .swal2-container.swal2-bottom{inset:auto auto 0 50%;transform:translateX(-50%)}body.swal2-toast-shown .swal2-container.swal2-bottom-end,body.swal2-toast-shown .swal2-container.swal2-bottom-right{inset:auto 0 0 auto}@media print{body.swal2-shown:not(.swal2-no-backdrop,.swal2-toast-shown){overflow-y:scroll !important}body.swal2-shown:not(.swal2-no-backdrop,.swal2-toast-shown)>[aria-hidden=true]{display:none}body.swal2-shown:not(.swal2-no-backdrop,.swal2-toast-shown) .swal2-container{position:static !important}}div:where(.swal2-container){display:grid;position:fixed;z-index:1060;inset:0;box-sizing:border-box;grid-template-areas:"top-start     top            top-end" "center-start  center         center-end" "bottom-start  bottom-center  bottom-end";grid-template-rows:minmax(min-content, auto) minmax(min-content, auto) minmax(min-content, auto);height:100%;padding:var(--swal2-container-padding);overflow-x:hidden;transition:var(--swal2-backdrop-transition);-webkit-overflow-scrolling:touch}div:where(.swal2-container).swal2-backdrop-show,div:where(.swal2-container).swal2-noanimation{background:var(--swal2-backdrop)}div:where(.swal2-container).swal2-backdrop-hide{background:rgba(0,0,0,0) !important}div:where(.swal2-container).swal2-top-start,div:where(.swal2-container).swal2-center-start,div:where(.swal2-container).swal2-bottom-start{grid-template-columns:minmax(0, 1fr) auto auto}div:where(.swal2-container).swal2-top,div:where(.swal2-container).swal2-center,div:where(.swal2-container).swal2-bottom{grid-template-columns:auto minmax(0, 1fr) auto}div:where(.swal2-container).swal2-top-end,div:where(.swal2-container).swal2-center-end,div:where(.swal2-container).swal2-bottom-end{grid-template-columns:auto auto minmax(0, 1fr)}div:where(.swal2-container).swal2-top-start>.swal2-popup{align-self:start}div:where(.swal2-container).swal2-top>.swal2-popup{grid-column:2;place-self:start center}div:where(.swal2-container).swal2-top-end>.swal2-popup,div:where(.swal2-container).swal2-top-right>.swal2-popup{grid-column:3;place-self:start end}div:where(.swal2-container).swal2-center-start>.swal2-popup,div:where(.swal2-container).swal2-center-left>.swal2-popup{grid-row:2;align-self:center}div:where(.swal2-container).swal2-center>.swal2-popup{grid-column:2;grid-row:2;place-self:center center}div:where(.swal2-container).swal2-center-end>.swal2-popup,div:where(.swal2-container).swal2-center-right>.swal2-popup{grid-column:3;grid-row:2;place-self:center end}div:where(.swal2-container).swal2-bottom-start>.swal2-popup,div:where(.swal2-container).swal2-bottom-left>.swal2-popup{grid-column:1;grid-row:3;align-self:end}div:where(.swal2-container).swal2-bottom>.swal2-popup{grid-column:2;grid-row:3;place-self:end center}div:where(.swal2-container).swal2-bottom-end>.swal2-popup,div:where(.swal2-container).swal2-bottom-right>.swal2-popup{grid-column:3;grid-row:3;place-self:end end}div:where(.swal2-container).swal2-grow-row>.swal2-popup,div:where(.swal2-container).swal2-grow-fullscreen>.swal2-popup{grid-column:1/4;width:100%}div:where(.swal2-container).swal2-grow-column>.swal2-popup,div:where(.swal2-container).swal2-grow-fullscreen>.swal2-popup{grid-row:1/4;align-self:stretch}div:where(.swal2-container).swal2-no-transition{transition:none !important}div:where(.swal2-container)[popover]{width:auto;border:0}div:where(.swal2-container) div:where(.swal2-popup){display:none;position:relative;box-sizing:border-box;grid-template-columns:minmax(0, 100%);width:var(--swal2-width);max-width:100%;padding:var(--swal2-padding);border:var(--swal2-border);border-radius:var(--swal2-border-radius);background:var(--swal2-background);color:var(--swal2-color);font-family:inherit;font-size:1rem}div:where(.swal2-container) div:where(.swal2-popup):focus{outline:none}div:where(.swal2-container) div:where(.swal2-popup).swal2-loading{overflow-y:hidden}div:where(.swal2-container) div:where(.swal2-popup).swal2-draggable{cursor:grab}div:where(.swal2-container) div:where(.swal2-popup).swal2-draggable div:where(.swal2-icon){cursor:grab}div:where(.swal2-container) div:where(.swal2-popup).swal2-dragging{cursor:grabbing}div:where(.swal2-container) div:where(.swal2-popup).swal2-dragging div:where(.swal2-icon){cursor:grabbing}div:where(.swal2-container) h2:where(.swal2-title){position:relative;max-width:100%;margin:0;padding:var(--swal2-title-padding);color:inherit;font-size:1.875em;font-weight:600;text-align:center;text-transform:none;overflow-wrap:break-word;cursor:initial}div:where(.swal2-container) div:where(.swal2-actions){display:flex;z-index:1;box-sizing:border-box;flex-wrap:wrap;align-items:center;justify-content:var(--swal2-actions-justify-content);width:var(--swal2-actions-width);margin:var(--swal2-actions-margin);padding:var(--swal2-actions-padding);border-radius:var(--swal2-actions-border-radius);background:var(--swal2-actions-background)}div:where(.swal2-container) div:where(.swal2-loader){display:none;align-items:center;justify-content:center;width:2.2em;height:2.2em;margin:0 1.875em;animation:swal2-rotate-loading 1.5s linear 0s infinite normal;border-width:.25em;border-style:solid;border-radius:100%;border-color:#2778c4 rgba(0,0,0,0) #2778c4 rgba(0,0,0,0)}div:where(.swal2-container) button:where(.swal2-styled){margin:.3125em;padding:.625em 1.1em;transition:var(--swal2-action-button-transition);border:none;box-shadow:0 0 0 3px rgba(0,0,0,0);font-weight:500}div:where(.swal2-container) button:where(.swal2-styled):not([disabled]){cursor:pointer}div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-confirm){border-radius:var(--swal2-confirm-button-border-radius);background:initial;background-color:var(--swal2-confirm-button-background-color);box-shadow:var(--swal2-confirm-button-box-shadow);color:var(--swal2-confirm-button-color);font-size:1em}div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-confirm):hover{background-color:color-mix(in srgb, var(--swal2-confirm-button-background-color), var(--swal2-action-button-hover))}div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-confirm):active{background-color:color-mix(in srgb, var(--swal2-confirm-button-background-color), var(--swal2-action-button-active))}div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-deny){border-radius:var(--swal2-deny-button-border-radius);background:initial;background-color:var(--swal2-deny-button-background-color);box-shadow:var(--swal2-deny-button-box-shadow);color:var(--swal2-deny-button-color);font-size:1em}div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-deny):hover{background-color:color-mix(in srgb, var(--swal2-deny-button-background-color), var(--swal2-action-button-hover))}div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-deny):active{background-color:color-mix(in srgb, var(--swal2-deny-button-background-color), var(--swal2-action-button-active))}div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-cancel){border-radius:var(--swal2-cancel-button-border-radius);background:initial;background-color:var(--swal2-cancel-button-background-color);box-shadow:var(--swal2-cancel-button-box-shadow);color:var(--swal2-cancel-button-color);font-size:1em}div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-cancel):hover{background-color:color-mix(in srgb, var(--swal2-cancel-button-background-color), var(--swal2-action-button-hover))}div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-cancel):active{background-color:color-mix(in srgb, var(--swal2-cancel-button-background-color), var(--swal2-action-button-active))}div:where(.swal2-container) button:where(.swal2-styled):focus-visible{outline:none;box-shadow:var(--swal2-action-button-focus-box-shadow)}div:where(.swal2-container) button:where(.swal2-styled)[disabled]:not(.swal2-loading){opacity:.4}div:where(.swal2-container) button:where(.swal2-styled)::-moz-focus-inner{border:0}div:where(.swal2-container) div:where(.swal2-footer){margin:1em 0 0;padding:1em 1em 0;border-top:1px solid var(--swal2-footer-border-color);background:var(--swal2-footer-background);color:var(--swal2-footer-color);font-size:1em;text-align:center;cursor:initial}div:where(.swal2-container) .swal2-timer-progress-bar-container{position:absolute;right:0;bottom:0;left:0;grid-column:auto !important;overflow:hidden;border-bottom-right-radius:var(--swal2-border-radius);border-bottom-left-radius:var(--swal2-border-radius)}div:where(.swal2-container) div:where(.swal2-timer-progress-bar){width:100%;height:.25em;background:var(--swal2-timer-progress-bar-background)}div:where(.swal2-container) img:where(.swal2-image){max-width:100%;margin:2em auto 1em;cursor:initial}div:where(.swal2-container) button:where(.swal2-close){position:var(--swal2-close-button-position);inset:var(--swal2-close-button-inset);z-index:2;align-items:center;justify-content:center;width:1.2em;height:1.2em;margin-top:0;margin-right:0;margin-bottom:-1.2em;padding:0;overflow:hidden;transition:var(--swal2-close-button-transition);border:none;border-radius:var(--swal2-border-radius);outline:var(--swal2-close-button-outline);background:rgba(0,0,0,0);color:var(--swal2-close-button-color);font-family:monospace;font-size:var(--swal2-close-button-font-size);cursor:pointer;justify-self:end}div:where(.swal2-container) button:where(.swal2-close):hover{transform:var(--swal2-close-button-hover-transform);background:rgba(0,0,0,0);color:#f27474}div:where(.swal2-container) button:where(.swal2-close):focus-visible{outline:none;box-shadow:var(--swal2-close-button-focus-box-shadow)}div:where(.swal2-container) button:where(.swal2-close)::-moz-focus-inner{border:0}div:where(.swal2-container) div:where(.swal2-html-container){z-index:1;justify-content:center;margin:0;padding:var(--swal2-html-container-padding);overflow:auto;color:inherit;font-size:1.125em;font-weight:normal;line-height:normal;text-align:center;overflow-wrap:break-word;word-break:break-word;cursor:initial}div:where(.swal2-container) input:where(.swal2-input),div:where(.swal2-container) input:where(.swal2-file),div:where(.swal2-container) textarea:where(.swal2-textarea),div:where(.swal2-container) select:where(.swal2-select),div:where(.swal2-container) div:where(.swal2-radio),div:where(.swal2-container) label:where(.swal2-checkbox){margin:1em 2em 3px}div:where(.swal2-container) input:where(.swal2-input),div:where(.swal2-container) input:where(.swal2-file),div:where(.swal2-container) textarea:where(.swal2-textarea){box-sizing:border-box;width:auto;transition:var(--swal2-input-transition);border:var(--swal2-input-border);border-radius:var(--swal2-input-border-radius);background:var(--swal2-input-background);box-shadow:var(--swal2-input-box-shadow);color:inherit;font-size:1.125em}div:where(.swal2-container) input:where(.swal2-input).swal2-inputerror,div:where(.swal2-container) input:where(.swal2-file).swal2-inputerror,div:where(.swal2-container) textarea:where(.swal2-textarea).swal2-inputerror{border-color:#f27474 !important;box-shadow:0 0 2px #f27474 !important}div:where(.swal2-container) input:where(.swal2-input):hover,div:where(.swal2-container) input:where(.swal2-file):hover,div:where(.swal2-container) textarea:where(.swal2-textarea):hover{box-shadow:var(--swal2-input-hover-box-shadow)}div:where(.swal2-container) input:where(.swal2-input):focus,div:where(.swal2-container) input:where(.swal2-file):focus,div:where(.swal2-container) textarea:where(.swal2-textarea):focus{border:var(--swal2-input-focus-border);outline:none;box-shadow:var(--swal2-input-focus-box-shadow)}div:where(.swal2-container) input:where(.swal2-input)::placeholder,div:where(.swal2-container) input:where(.swal2-file)::placeholder,div:where(.swal2-container) textarea:where(.swal2-textarea)::placeholder{color:#ccc}div:where(.swal2-container) .swal2-range{margin:1em 2em 3px;background:var(--swal2-background)}div:where(.swal2-container) .swal2-range input{width:80%}div:where(.swal2-container) .swal2-range output{width:20%;color:inherit;font-weight:600;text-align:center}div:where(.swal2-container) .swal2-range input,div:where(.swal2-container) .swal2-range output{height:2.625em;padding:0;font-size:1.125em;line-height:2.625em}div:where(.swal2-container) .swal2-input{height:2.625em;padding:0 .75em}div:where(.swal2-container) .swal2-file{width:75%;margin-right:auto;margin-left:auto;background:var(--swal2-input-background);font-size:1.125em}div:where(.swal2-container) .swal2-textarea{height:6.75em;padding:.75em}div:where(.swal2-container) .swal2-select{min-width:50%;max-width:100%;padding:.375em .625em;background:var(--swal2-input-background);color:inherit;font-size:1.125em}div:where(.swal2-container) .swal2-radio,div:where(.swal2-container) .swal2-checkbox{align-items:center;justify-content:center;background:var(--swal2-background);color:inherit}div:where(.swal2-container) .swal2-radio label,div:where(.swal2-container) .swal2-checkbox label{margin:0 .6em;font-size:1.125em}div:where(.swal2-container) .swal2-radio input,div:where(.swal2-container) .swal2-checkbox input{flex-shrink:0;margin:0 .4em}div:where(.swal2-container) label:where(.swal2-input-label){display:flex;justify-content:center;margin:1em auto 0}div:where(.swal2-container) div:where(.swal2-validation-message){align-items:center;justify-content:center;margin:1em 0 0;padding:.625em;overflow:hidden;background:var(--swal2-validation-message-background);color:var(--swal2-validation-message-color);font-size:1em;font-weight:300}div:where(.swal2-container) div:where(.swal2-validation-message)::before{content:"!";display:inline-block;width:1.5em;min-width:1.5em;height:1.5em;margin:0 .625em;border-radius:50%;background-color:#f27474;color:#fff;font-weight:600;line-height:1.5em;text-align:center}div:where(.swal2-container) .swal2-progress-steps{flex-wrap:wrap;align-items:center;max-width:100%;margin:1.25em auto;padding:0;background:rgba(0,0,0,0);font-weight:600}div:where(.swal2-container) .swal2-progress-steps li{display:inline-block;position:relative}div:where(.swal2-container) .swal2-progress-steps .swal2-progress-step{z-index:20;flex-shrink:0;width:2em;height:2em;border-radius:2em;background:#2778c4;color:#fff;line-height:2em;text-align:center}div:where(.swal2-container) .swal2-progress-steps .swal2-progress-step.swal2-active-progress-step{background:#2778c4}div:where(.swal2-container) .swal2-progress-steps .swal2-progress-step.swal2-active-progress-step~.swal2-progress-step{background:var(--swal2-progress-step-background);color:#fff}div:where(.swal2-container) .swal2-progress-steps .swal2-progress-step.swal2-active-progress-step~.swal2-progress-step-line{background:var(--swal2-progress-step-background)}div:where(.swal2-container) .swal2-progress-steps .swal2-progress-step-line{z-index:10;flex-shrink:0;width:2.5em;height:.4em;margin:0 -1px;background:#2778c4}div:where(.swal2-icon){position:relative;box-sizing:content-box;justify-content:center;width:5em;height:5em;margin:2.5em auto .6em;zoom:var(--swal2-icon-zoom);border:.25em solid rgba(0,0,0,0);border-radius:50%;border-color:#000;font-family:inherit;line-height:5em;cursor:default;user-select:none}div:where(.swal2-icon) .swal2-icon-content{display:flex;align-items:center;font-size:3.75em}div:where(.swal2-icon).swal2-error{border-color:#f27474;color:#f27474}div:where(.swal2-icon).swal2-error .swal2-x-mark{position:relative;flex-grow:1}div:where(.swal2-icon).swal2-error [class^=swal2-x-mark-line]{display:block;position:absolute;top:2.3125em;width:2.9375em;height:.3125em;border-radius:.125em;background-color:#f27474}div:where(.swal2-icon).swal2-error [class^=swal2-x-mark-line][class$=left]{left:1.0625em;transform:rotate(45deg)}div:where(.swal2-icon).swal2-error [class^=swal2-x-mark-line][class$=right]{right:1em;transform:rotate(-45deg)}div:where(.swal2-icon).swal2-error.swal2-icon-show{animation:swal2-animate-error-icon .5s}div:where(.swal2-icon).swal2-error.swal2-icon-show .swal2-x-mark{animation:swal2-animate-error-x-mark .5s}div:where(.swal2-icon).swal2-warning{border-color:#f8bb86;color:#f8bb86}div:where(.swal2-icon).swal2-warning.swal2-icon-show{animation:swal2-animate-error-icon .5s}div:where(.swal2-icon).swal2-warning.swal2-icon-show .swal2-icon-content{animation:swal2-animate-i-mark .5s}div:where(.swal2-icon).swal2-info{border-color:#3fc3ee;color:#3fc3ee}div:where(.swal2-icon).swal2-info.swal2-icon-show{animation:swal2-animate-error-icon .5s}div:where(.swal2-icon).swal2-info.swal2-icon-show .swal2-icon-content{animation:swal2-animate-i-mark .8s}div:where(.swal2-icon).swal2-question{border-color:#87adbd;color:#87adbd}div:where(.swal2-icon).swal2-question.swal2-icon-show{animation:swal2-animate-error-icon .5s}div:where(.swal2-icon).swal2-question.swal2-icon-show .swal2-icon-content{animation:swal2-animate-question-mark .8s}div:where(.swal2-icon).swal2-success{border-color:#a5dc86;color:#a5dc86}div:where(.swal2-icon).swal2-success [class^=swal2-success-circular-line]{position:absolute;width:3.75em;height:7.5em;border-radius:50%}div:where(.swal2-icon).swal2-success [class^=swal2-success-circular-line][class$=left]{top:-0.4375em;left:-2.0635em;transform:rotate(-45deg);transform-origin:3.75em 3.75em;border-radius:7.5em 0 0 7.5em}div:where(.swal2-icon).swal2-success [class^=swal2-success-circular-line][class$=right]{top:-0.6875em;left:1.875em;transform:rotate(-45deg);transform-origin:0 3.75em;border-radius:0 7.5em 7.5em 0}div:where(.swal2-icon).swal2-success .swal2-success-ring{position:absolute;z-index:2;top:-0.25em;left:-0.25em;box-sizing:content-box;width:100%;height:100%;border:.25em solid rgba(165,220,134,.3);border-radius:50%}div:where(.swal2-icon).swal2-success .swal2-success-fix{position:absolute;z-index:1;top:.5em;left:1.625em;width:.4375em;height:5.625em;transform:rotate(-45deg)}div:where(.swal2-icon).swal2-success [class^=swal2-success-line]{display:block;position:absolute;z-index:2;height:.3125em;border-radius:.125em;background-color:#a5dc86}div:where(.swal2-icon).swal2-success [class^=swal2-success-line][class$=tip]{top:2.875em;left:.8125em;width:1.5625em;transform:rotate(45deg)}div:where(.swal2-icon).swal2-success [class^=swal2-success-line][class$=long]{top:2.375em;right:.5em;width:2.9375em;transform:rotate(-45deg)}div:where(.swal2-icon).swal2-success.swal2-icon-show .swal2-success-line-tip{animation:swal2-animate-success-line-tip .75s}div:where(.swal2-icon).swal2-success.swal2-icon-show .swal2-success-line-long{animation:swal2-animate-success-line-long .75s}div:where(.swal2-icon).swal2-success.swal2-icon-show .swal2-success-circular-line-right{animation:swal2-rotate-success-circular-line 4.25s ease-in}[class^=swal2]{-webkit-tap-highlight-color:rgba(0,0,0,0)}.swal2-show{animation:var(--swal2-show-animation)}.swal2-hide{animation:var(--swal2-hide-animation)}.swal2-noanimation{transition:none}.swal2-scrollbar-measure{position:absolute;top:-9999px;width:50px;height:50px;overflow:scroll}.swal2-rtl .swal2-close{margin-right:initial;margin-left:0}.swal2-rtl .swal2-timer-progress-bar{right:0;left:auto}.swal2-toast{box-sizing:border-box;grid-column:1/4 !important;grid-row:1/4 !important;grid-template-columns:min-content auto min-content;padding:1em;overflow-y:hidden;border:var(--swal2-toast-border);background:var(--swal2-background);box-shadow:var(--swal2-toast-box-shadow);pointer-events:auto}.swal2-toast>*{grid-column:2}.swal2-toast h2:where(.swal2-title){margin:.5em 1em;padding:0;font-size:1em;text-align:initial}.swal2-toast .swal2-loading{justify-content:center}.swal2-toast input:where(.swal2-input){height:2em;margin:.5em;font-size:1em}.swal2-toast .swal2-validation-message{font-size:1em}.swal2-toast div:where(.swal2-footer){margin:.5em 0 0;padding:.5em 0 0;font-size:.8em}.swal2-toast button:where(.swal2-close){grid-column:3/3;grid-row:1/99;align-self:center;width:.8em;height:.8em;margin:0;font-size:2em}.swal2-toast div:where(.swal2-html-container){margin:.5em 1em;padding:0;overflow:initial;font-size:1em;text-align:initial}.swal2-toast div:where(.swal2-html-container):empty{padding:0}.swal2-toast .swal2-loader{grid-column:1;grid-row:1/99;align-self:center;width:2em;height:2em;margin:.25em}.swal2-toast .swal2-icon{grid-column:1;grid-row:1/99;align-self:center;width:2em;min-width:2em;height:2em;margin:0 .5em 0 0}.swal2-toast .swal2-icon .swal2-icon-content{display:flex;align-items:center;font-size:1.8em;font-weight:bold}.swal2-toast .swal2-icon.swal2-success .swal2-success-ring{width:2em;height:2em}.swal2-toast .swal2-icon.swal2-error [class^=swal2-x-mark-line]{top:.875em;width:1.375em}.swal2-toast .swal2-icon.swal2-error [class^=swal2-x-mark-line][class$=left]{left:.3125em}.swal2-toast .swal2-icon.swal2-error [class^=swal2-x-mark-line][class$=right]{right:.3125em}.swal2-toast div:where(.swal2-actions){justify-content:flex-start;height:auto;margin:0;margin-top:.5em;padding:0 .5em}.swal2-toast button:where(.swal2-styled){margin:.25em .5em;padding:.4em .6em;font-size:1em}.swal2-toast .swal2-success{border-color:#a5dc86}.swal2-toast .swal2-success [class^=swal2-success-circular-line]{position:absolute;width:1.6em;height:3em;border-radius:50%}.swal2-toast .swal2-success [class^=swal2-success-circular-line][class$=left]{top:-0.8em;left:-0.5em;transform:rotate(-45deg);transform-origin:2em 2em;border-radius:4em 0 0 4em}.swal2-toast .swal2-success [class^=swal2-success-circular-line][class$=right]{top:-0.25em;left:.9375em;transform-origin:0 1.5em;border-radius:0 4em 4em 0}.swal2-toast .swal2-success .swal2-success-ring{width:2em;height:2em}.swal2-toast .swal2-success .swal2-success-fix{top:0;left:.4375em;width:.4375em;height:2.6875em}.swal2-toast .swal2-success [class^=swal2-success-line]{height:.3125em}.swal2-toast .swal2-success [class^=swal2-success-line][class$=tip]{top:1.125em;left:.1875em;width:.75em}.swal2-toast .swal2-success [class^=swal2-success-line][class$=long]{top:.9375em;right:.1875em;width:1.375em}.swal2-toast .swal2-success.swal2-icon-show .swal2-success-line-tip{animation:swal2-toast-animate-success-line-tip .75s}.swal2-toast .swal2-success.swal2-icon-show .swal2-success-line-long{animation:swal2-toast-animate-success-line-long .75s}.swal2-toast.swal2-show{animation:var(--swal2-toast-show-animation)}.swal2-toast.swal2-hide{animation:var(--swal2-toast-hide-animation)}@keyframes swal2-show{0%{transform:translate3d(0, -50px, 0) scale(0.9);opacity:0}100%{transform:translate3d(0, 0, 0) scale(1);opacity:1}}@keyframes swal2-hide{0%{transform:translate3d(0, 0, 0) scale(1);opacity:1}100%{transform:translate3d(0, -50px, 0) scale(0.9);opacity:0}}@keyframes swal2-animate-success-line-tip{0%{top:1.1875em;left:.0625em;width:0}54%{top:1.0625em;left:.125em;width:0}70%{top:2.1875em;left:-0.375em;width:3.125em}84%{top:3em;left:1.3125em;width:1.0625em}100%{top:2.8125em;left:.8125em;width:1.5625em}}@keyframes swal2-animate-success-line-long{0%{top:3.375em;right:2.875em;width:0}65%{top:3.375em;right:2.875em;width:0}84%{top:2.1875em;right:0;width:3.4375em}100%{top:2.375em;right:.5em;width:2.9375em}}@keyframes swal2-rotate-success-circular-line{0%{transform:rotate(-45deg)}5%{transform:rotate(-45deg)}12%{transform:rotate(-405deg)}100%{transform:rotate(-405deg)}}@keyframes swal2-animate-error-x-mark{0%{margin-top:1.625em;transform:scale(0.4);opacity:0}50%{margin-top:1.625em;transform:scale(0.4);opacity:0}80%{margin-top:-0.375em;transform:scale(1.15)}100%{margin-top:0;transform:scale(1);opacity:1}}@keyframes swal2-animate-error-icon{0%{transform:rotateX(100deg);opacity:0}100%{transform:rotateX(0deg);opacity:1}}@keyframes swal2-rotate-loading{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}@keyframes swal2-animate-question-mark{0%{transform:rotateY(-360deg)}100%{transform:rotateY(0)}}@keyframes swal2-animate-i-mark{0%{transform:rotateZ(45deg);opacity:0}25%{transform:rotateZ(-25deg);opacity:.4}50%{transform:rotateZ(15deg);opacity:.8}75%{transform:rotateZ(-5deg);opacity:1}100%{transform:rotateX(0);opacity:1}}@keyframes swal2-toast-show{0%{transform:translateY(-0.625em) rotateZ(2deg)}33%{transform:translateY(0) rotateZ(-2deg)}66%{transform:translateY(0.3125em) rotateZ(2deg)}100%{transform:translateY(0) rotateZ(0deg)}}@keyframes swal2-toast-hide{100%{transform:rotateZ(1deg);opacity:0}}@keyframes swal2-toast-animate-success-line-tip{0%{top:.5625em;left:.0625em;width:0}54%{top:.125em;left:.125em;width:0}70%{top:.625em;left:-0.25em;width:1.625em}84%{top:1.0625em;left:.75em;width:.5em}100%{top:1.125em;left:.1875em;width:.75em}}@keyframes swal2-toast-animate-success-line-long{0%{top:1.625em;right:1.375em;width:0}65%{top:1.25em;right:.9375em;width:0}84%{top:.9375em;right:0;width:1.125em}100%{top:.9375em;right:.1875em;width:1.375em}}</style>
+<script src="./3_files/Rashdi.js.download"></script>
+<script>
+var last_notify=new Date("2026-10-08 06:55:18");
+</script>
+<script>
+
+function captcha_post(self, method, data, callback, link=null){
+	
+	
+	
+	
+	query_post(method, data, function(rsp){
+		callback(rsp);
+		if(self.refreshCAPTCHA)self.refreshCAPTCHA();
+		if(self.captcha_input && self.captcha_input.length>0)data['captcha_input'] = self.captcha_input;
+	}, link);
+	
+	}
+
+Vue.component('mvc-captcha', {
+	data(){return {
+		image : '',
+		turnstileWidgetId: null,
+		captchaType: "GdImage",
+		turnstileSiteKey: ""	}; },
+	props: ['obj', 'refresh_callback_parent', 'onenter'],
+    mounted(){
+        let self=this;
+		self.obj.captcha_input='';
+		self.obj.captcha_token='';
+		if(self.captchaType === 'turnstile'){
+			self.renderTurnstile();
+			// Turnstile tokens are single-use, so every submit gets a fresh challenge.
+			self.refresh_callback_parent.refreshCAPTCHA=(self.resetTurnstile);
+		} else if(self.captchaType === 'o_auth'){
+			// Login with Google: nothing to solve on this form, so the component renders nothing.
+			self.refresh_callback_parent.refreshCAPTCHA=function(){};
+		} else {
+			self.loadSource();
+			self.refresh_callback_parent.refreshCAPTCHA=(self.loadSource);
+		}
+    },
+	beforeDestroy(){
+		if(window.turnstile && this.turnstileWidgetId !== null)turnstile.remove(this.turnstileWidgetId);
+	},
+	methods: {
+		renderTurnstile(){
+			let self=this;
+			// api.js loads async from the page header; wait until it is ready.
+			(function tryRender(){
+				if(self._isDestroyed)return;
+				if(window.turnstile && self.$refs.turnstileEl){
+					self.turnstileWidgetId = turnstile.render(self.$refs.turnstileEl, {
+						sitekey: self.turnstileSiteKey,
+						size: 'flexible',
+						callback: function(token){ self.obj.captcha_token = token; },
+						'expired-callback': function(){ self.obj.captcha_token = ''; },
+						'error-callback': function(code){
+							self.obj.captcha_token = '';
+							// Cloudflare's widget only says "Unable to connect"; log the real reason for whoever debugs it.
+							var hint = {'110200': 'this site key is not allowed on ' + location.hostname + ' (add it to the widget hostnames, or use a test site key locally)',
+								'110100': 'invalid site key', '110110': 'invalid site key', '400020': 'invalid site key'}[String(code)] || 'see developers.cloudflare.com/turnstile/troubleshooting/client-side-errors/error-codes/';
+							console.warn('Turnstile error ' + code + ': ' + hint);
+						}
+					});
+				} else {
+					setTimeout(tryRender, 200);
+				}
+			})();
+		},
+		resetTurnstile(){
+			let self=this;
+			self.obj.captcha_token = '';
+			if(window.turnstile && self.turnstileWidgetId !== null)turnstile.reset(self.turnstileWidgetId);
+		},
+		loadSource(){
+			let self=this;
+			self.obj.challan = "";
+			$.get("https://attest.ibcc.edu.pk/api.php?req=captcha", function(rsp){
+				console.log("#", rsp);
+                self.image =  rsp;
+            });
+		},
+		codeSubmitted(){
+			let self=this;
+			if(self.onenter)self.onenter(self.obj.captcha_input);
+		}
+	},
+	template:	`<div>
+	<div v-if="captchaType === 'turnstile'" ref="turnstileEl" class="mb-3" style="width:100%; min-height:65px;"></div>
+	<div v-else-if="captchaType !== 'o_auth'" class="input-group mb-3"><div class="input-group-prepend">
+    <span class="input-group-text p-0"><img v-bind:src="image"></span></div>
+	<input v-on:keyup.enter="codeSubmitted" class="form-control" name="captcha_code" type="text" v-model="obj.captcha_input" v-bind:placeholder="'Enter Code displayed on left '">
+	</div>
+	</div>`
+});
+
+mvc_component("mvc_input",
+{
+	props:['type'],
+	methods: {
+		getText : function(data)
+		{
+			return data;
+		},
+		staticInput : function(root_,ce)
+		{
+			let self=this;
+			root_.text=(self.getfromProp()=="" || !self.getfromProp() ?"Empty":self.getfromProp());
+		},
+		dynamicInput : function(root_,ce)
+		{
+			let self=this;
+			if(self.type && self.type.indexOf("textarea")!=-1){
+				root_.tag="textarea";
+
+				root_.data.class="form-control form-control-sm";
+				root_.data.domProps= {
+						value: self.getfromProp()
+				};
+
+				let toks=self.type.split("textarea:");
+				if(toks.length>=2)root_.data.domProps.rows=parseInt(toks[1]);
+			}
+			else {
+				root_.tag="input";
+				root_.data.class="form-control form-control-sm";
+				root_.data.domProps= {
+						value: self.getfromProp()
+				};
+			}
+		},
+		eventManager : function(event)
+		{
+			let self=this;
+		}
+	}
+});
+
+mvc_component("mvc_checkbox",
+{
+	methods: {
+		getText : function(data)
+		{
+			return data;
+		},
+		staticInput : function(root_,ce)
+		{
+			let self=this;
+			root_.text=(!self.getfromProp()|| self.getfromProp()==""?"Unchecked":"Checked");
+		},
+		dynamicInput : function(root_,ce)
+		{
+			let self=this;
+			
+			root_.tag="input";
+			root_.data.class="";
+			root_.data.attrs = {type: 'checkbox'};
+			root_.data.on.change = function(e, s){
+				self.settoProp( e.target.checked? 1: 0);
+				self.data['temp'].changed=true;
+			};
+			/*root_.data.domProps= {
+					checked: self.getfromProp(),
+					value: self.getfromProp()
+			};*/
+		},
+		eventManager : function(event)
+		{
+			let self=this;
+		}
+	}
+});
+
+mvc_component("mvc_select",
+{
+	props:['options'],
+	dta :{
+		isFocus:false, search: ""
+	},
+	computed :{
+		filteredOptions(){
+			let self=this;
+			if(self.search=="")return self.options;
+			let ret=[];
+			let keys=Object.keys(self.options);
+			for(let i=0;i<keys.length;i++){
+				let x=self.options[keys[i]];
+				if(x.name.toLowerCase().indexOf(self.search.toLowerCase())!=-1)ret.push(x);
+			}
+			return ret;
+		}
+	},
+	methods: {
+		getText : function(id,cmp)
+		{
+			let self=cmp.propsData;
+			if(!self)self=cmp;
+			
+			if(self.options)for(let i=0;i<self.options.length;i++)
+				if(self.options[i].id==id)return self.options[i].name;
+			return 'Not Select';
+		},
+		staticInput : function(root_,ce)
+		{
+			let self=this;
+			
+			root_.text=self.getText(self.getfromProp(),self);
+		},
+		dynamicInput : function(root_,ce)
+		{
+			let self=this;root_.tag="div";
+			
+			root_.data.class="row";
+			root_.data.on.mouseenter=function(e){self.isFocus=true;};root_.data.on.mouseleave=function(e){self.isFocus=false;};
+
+			let nodes=[];
+			
+			//if(self.isFocus)nodes.push(ce('input',{class: 'form-control', domProps:{placeholder:'Search/Filter'}, on:{input:function(e){self.search=(e.target.value);} } }));
+			
+			let opts=[];
+			opts.push(ce('input',{class: "form-control",on:{input:function(e){} } }));
+			opts.push(ce('option',{domProps:{value:0} },'Not Selected!'));
+			if(self.options)for(let i=0;i<self.filteredOptions.length;i++)
+			{
+				let x=self.filteredOptions[i];
+				//opts.push(ce('option',{domProps:{value:-2} },[ce('input',{on:{input:function(e) } })]));
+				opts.push(ce('option',{domProps:{value:x.id} },x.name));
+			}
+
+			nodes.push(ce('select',{class:'form-control', domProps:{value: self.getfromProp()}},opts));
+			root_.children=nodes;
+		},
+		eventManager : function(event)
+		{
+			let self=this;
+		}
+	}
+});
+
+mvc_component("mvc_select_other",
+{
+	props:['options'],
+	dta :{
+		other : false
+	},
+	computed :{
+		
+	},
+	mounted(){
+		let self=this;
+		let val= self.getfromProp();
+		let ans=self.isFoundinList(val);
+		
+		if(ans)self.other=false;
+		else self.other=true;
+	},
+	methods: {
+		isFoundinList(id){
+			let self=this;
+			if(self.options)for(let i=0;i<self.options.length;i++)
+				if(self.options[i].id==id)return true;
+			return false;
+		},
+		getText : function(id,cmp)
+		{
+			let self=cmp.propsData;
+			if(!self)self=cmp;
+			
+			return id;
+		},
+		staticInput : function(root_,ce)
+		{
+			let self=this;
+			
+			root_.text=(self.getfromProp()==""?"Empty":self.getfromProp());
+		},
+		dynamicInput : function(root_,ce)
+		{
+			let self=this;
+			if(!self.other){
+				root_.tag="select";
+				
+				root_.data.class="form-control form-control-sm";
+				root_.data.domProps = {value: self.getfromProp()};
+				//root_.data.on.change=function(e){if(e.target.value=="__other"){self.other= true;self.settoProp("");} };
+
+				let opts=[];
+				opts.push(ce('option',{domProps:{value:''} },'Not Selected!'));
+				if(self.options)for(let i=0;i<self.options.length;i++)
+				{
+					let x=self.options[i];
+					//opts.push(ce('option',{domProps:{value:-2} },[ce('input',{on:{input:function(e) } })]));
+					opts.push(ce('option',{domProps:{value:x.id} },x.name));
+					
+				}
+				opts.push(ce('option',{domProps:{value:'__other'} },'Other'));
+
+				root_.children=opts;
+			}else {
+				root_.tag="input";
+				
+				root_.data.class="form-control form-control-sm";
+				root_.data.domProps = {value: self.getfromProp()};
+
+				
+			}
+		},
+		eventManager : function(event)
+		{
+			let self=this;
+			if(event.type=="change"){
+				if(event.target.value=="__other"){self.other= true;self.settoProp("");}
+			}
+		}
+	}
+});
+
+mvc_component_wtyped("mvc_multi_select",
+{
+	props:['options'],
+	methods: {
+		getText : function(ids,cmp)
+		{
+			let self=cmp.propsData;
+			if(!self)self=cmp;
+			
+			let str="";
+			for(let j=0;j<ids.length;j++){
+				let id=ids[j];
+				if(self.options)for(let i=0;i<self.options.length;i++)
+					if(self.options[i].id==parseInt(id)){str+=' '+self.options[i].name;break;}
+			}
+			
+			if(str.length>0)return str;
+			return 'Not Found for Select';
+		},
+		staticInput : function(root_,ce)
+		{
+			let self=this;
+			
+			root_.text=self.getText(self.getfromProp(),self);
+		},
+		dynamicInput : function(root_,ce)
+		{
+			let self=this;root_.tag="div";
+			let selected=self.getfromProp();
+			root_.data.style="display : inline-block; width: 100px; height: 80px; padding : 5px; border: 1px solid black; background-color: white;overflow:auto;";
+			
+			let opts=[];
+			
+			
+			if(self.options)for(let i=0;i<self.options.length;i++)
+			{
+				let x=self.options[i];
+				let obj={on:{click: function(){
+						let index=selected.indexOf(x.id);
+						if(index==-1)selected.push(x.id);
+						else selected.splice(index,1);
+						self.data['temp'].changed=true;
+					} 
+				}};
+				obj.style="background-color:"+(selected.includes(x.id)?'green':'white');
+				opts.push(ce('div',obj,x.name),ce('br'));
+			}
+			root_.children=opts;
+		},
+		eventManager : function(event)
+		{
+		}
+	}
+});
+
+//Select By input
+mvc_component_wtyped("mvc_selinp",
+{
+	props:['options'],
+	dta :{
+		org_typed:'',toggle:false,selected:0
+	},
+	computed:{
+		forward :function()
+		{
+			let self=this,org_typed=self.org_typed.toLowerCase(),from_id=false;
+			if(org_typed.length==0){
+				from_id=true;
+			}
+			
+			let ignore=0;let first=null;
+			for(let i=0,len=self.options.length;i<len;i++)
+			{
+				let x=self.options[i];
+				if( (org_typed.length>0 && x.name.toLowerCase().startsWith(org_typed)) || (org_typed.length==0 && x.id==self.getfromProp()) ){
+					if(!first)first=x;
+					if(self.selected==ignore)return x;
+					else ignore++;
+				}
+			}
+			if(first){self.selected=0;return first;}
+			return null;
+		}
+	},
+	methods: {
+		getText : function(id,cmp)
+		{
+			let self=cmp.propsData;
+			if(!self)self=cmp;
+			for(let i=0;i<self.options.length;i++)
+				if(self.options[i].id==id)return self.options[i].name;
+			
+			return id;
+		},
+		staticInput : function(root_,ce)
+		{
+			let self=this;
+			
+			if(self.forward && self.forward.id.length==7 && self.forward.id[0]=='#'){
+				
+				root_.data.style="color:#"+self.forward.id.substr(1)+";";
+			}
+			root_.text=self.getText(self.getfromProp(),self);
+		},
+		dynamicInput : function(root_,ce)
+		{
+			let self=this;root_.tag="input";
+			root_.data.class="form-control";
+			if(self.forward && self.forward.id.length==7 && self.forward.id[0]=='#')root_.data.style="background-color:"+self.forward.id+";color:#"+GS(self.forward.id.substr(1));
+			
+			root_.data.domProps= {
+			  value: self.toggle?self.org_typed:(self.forward?self.forward.name:self.getText(self.getfromProp(),self))
+			};
+			//root_.data.on.focusout=function(e){self.saveProp();};
+		},
+		eventManager : function(event)
+		{
+			let self=this,can_change=self.can_change;
+			
+			if(event.type=="beforeinput")event.target.value=self.org_typed;
+			
+			if(!can_change){if(event.type=="input")event.target.value=self.org_typed;return;}
+			else
+			{
+				
+				if(event.type=="input"){self.org_typed=event.target.value;self.toggle=true;setTimeout(function(){self.toggle=false;},1000);}
+				else if(event.type=="keyup"){
+					let k=event.keyCode;
+					if(k==38 && self.selected>0){self.selected--;self.toggle=false;}
+					if(k==40 ){self.selected++;self.toggle=false;}
+					
+				}else if(event.type=="change"){
+					if(self.forward)self.settoProp(self.forward.id);self.toggle=true;}
+			}
+		}
+	},
+});
+
+mvc_component("mvc_input_password",
+{
+	props: ['onenter_callback']
+	,dta :{
+		show_password: false
+	},
+	methods: {
+		getText : function(val,cmp)
+		{
+			return val;
+		},
+		staticInput : function(root,ce)
+		{
+			let self=this;
+			root.text=(self.getfromProp()==""?"Empty":self.getfromProp());
+		},
+		dynamicInput : function(root,ce)
+		{
+			let self=this;root.tag="div";
+			root.data.class="input-group";
+			root.children=[];//<i class="bi bi-x-square"></i>
+			root.children.push(ce('div',{class:'input-group-prepend'},[ce('span',{class:'input-group-text bi bi-lock-fill'})]));
+			root.children.push(ce('input',{class:'form-control',attrs:{type:self.show_password?"text":"password"}
+			,domProps:{value:self.getfromProp()},on:{
+				input:function(e){self.settoProp(e.target.value);},
+				keyup:function(e){if(e.keyCode==13 && (self.onenter_callback && typeof self.onenter_callback=="function"))self.onenter_callback(self.getfromProp());}	
+			}}));
+			root.children.push(ce('div',{class:'input-group-append',on:{click:function(e){self.show_password=!self.show_password;} }},[ce('span',{class:'input-group-text bi bi-eye-'+(self.show_password?'slash-fill':'fill')})]));
+		},
+		eventManager : function(event)
+		{
+			let self=this,can_change=self.can_change;
+			
+			/*if(event.type=="beforeinput")event.target.value=self.typed;
+			
+			if(!can_change){if(event.type=="input")event.target.value=self.typed;return;}
+			else
+			{
+				
+				if(event.type=="input"){self.typed=event.target.value;self.toggle=true;setTimeout(function(){self.toggle=false;},1000);}
+				else if(event.type=="keyup"){
+					let k=event.keyCode;
+					if(k==38 && self.selected>0){self.selected--;self.toggle=false;}
+					if(k==40 ){self.selected++;self.toggle=false;}
+					
+				}else if(event.type=="change"){if(self.forward)self.settoProp(self.forward.val);self.toggle=true;}
+			}*/
+		}
+	},
+});
+</script>  <!-- Google Font: Source Sans Pro -->
+  <!--link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <link rel="stylesheet" href="https://attest.ibcc.edu.pk/template/AdminLTE/plugins/fontawesome-free/css/all.min.css">
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"--->
+  <link href="./3_files/all.min.css" rel="stylesheet">
+  <!-- Tempusdominus Bootstrap 4 -->
+  <link rel="stylesheet" href="./3_files/tempusdominus-bootstrap-4.min.css">
+  <!-- iCheck -->
+  <link rel="stylesheet" href="./3_files/icheck-bootstrap.min.css">
+  <!-- JQVMap -->
+  <link rel="stylesheet" href="./3_files/jqvmap.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="./3_files/adminlte.min.css">
+  <!-- overlayScrollbars -->
+  <link rel="stylesheet" href="./3_files/OverlayScrollbars.min.css">
+  <!-- Daterange picker -->
+  <link rel="stylesheet" href="./3_files/daterangepicker.css">
+  <!-- summernote -->
+  <link rel="stylesheet" href="./3_files/summernote-bs4.min.css">
+</head>
+<body class="sidebar-mini layout-fixed layout-navbar-fixed" style="height: auto;">
+<style>
+.nav-sidebar {
+  padding-bottom:110px;
+}
+
+.layout-navbar-fixed .wrapper .content-wrapper {
+    margin-top: 0;}
+
+.layout-navbar-fixed.layout-fixed .wrapper .sidebar {
+    margin-top: 18px !important;
+}
+</style>
+<div class="wrapper">
+<!-- Preloader -->
+  <div class="preloader flex-column justify-content-center align-items-center">
+    <img class="animation__shake" src="./3_files/logo.jpg" alt="SALU" height="60" width="60">
+  </div>
+
+  <!-- Navbar -->
+  <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+    <!-- Left navbar links -->
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" data-widget="pushmenu" href="https://attest.ibcc.edu.pk/category/3#" role="button"><i class="fas fa-bars"></i></a>
+      </li>
+      <li class="nav-item d-none d-sm-inline-block">
+        <a href="https://attest.ibcc.edu.pk/page/home" class="nav-link">Home</a>
+      </li>
+    </ul>
+
+    <!-- Right navbar links -->
+    <ul class="navbar-nav ml-auto">
+      <!-- Navbar Search -->
+      <!--li class="nav-item searchApp">
+		<search_engine name="sidebar_search">
+		  <template v-slot:default="slotProp">
+      <a class="nav-link" data-widget="navbar-search" href="#" role="button">
+          <i class="fas fa-search"></i>
+        </a>
+        <div class="navbar-search-block">
+          <div class="form-inline">
+            <div class="input-group input-group-sm">
+              <input id="sidebarsearch" v-on:keyup.enter="slotProp.submit($('#sidebarsearch')[0])" class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
+              <div class="input-group-append">
+                <button class="btn btn-navbar" v-on:click="slotProp.submit($('#sidebarsearch')[0])">
+                  <i class="fas fa-search"></i>
+                </button>
+                <button class="btn btn-navbar" type="button" data-widget="navbar-search">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+		</template>
+		  
+		  <template v-slot:results="slotProp">
+			 <div class="list-group">
+				<a v-for="x in slotProp.results" v-bind:href="x.link" class="list-group-item">
+					<div class="search-title">{{x.title}}</div>
+					<div class="search-path"><small>{{x.path}}</small></div>
+				</a>
+			 </div>
+		  </template>
+		</search_engine>
+	</li-->
+    <script>
+/*var app = new Vue({
+	data:{
+		
+	}
+});
+app.$mount('.searchApp');*/
+</script> 
+
+      <!-- Messages Dropdown Menu -->
+      <!--li class="nav-item dropdown">
+        <a class="nav-link" data-toggle="dropdown" href="#">
+          <i class="far fa-comments"></i>
+          <span class="badge badge-danger navbar-badge">3</span>
+        </a>
+        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+          <a href="#" class="dropdown-item">
+            <div class="media">
+              <img src="dist/img/user1-128x128.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle">
+              <div class="media-body">
+                <h3 class="dropdown-item-title">
+                  Brad Diesel
+                  <span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>
+                </h3>
+                <p class="text-sm">Call me whenever you can...</p>
+                <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
+              </div>
+            </div>
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="#" class="dropdown-item">
+            <div class="media">
+              <img src="dist/img/user8-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
+              <div class="media-body">
+                <h3 class="dropdown-item-title">
+                  John Pierce
+                  <span class="float-right text-sm text-muted"><i class="fas fa-star"></i></span>
+                </h3>
+                <p class="text-sm">I got your message bro</p>
+                <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
+              </div>
+            </div>
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
+        </div>
+      </li-->
+	  
+      <!-- Notifications Dropdown Menu -->
+<script>//Used for Notification
+	//var last_notify=new Date("2026-10-08 06:55:18");
+</script>
+      <!--li class="nav-item dropdown dropdown notificationApp">
+        <a class="nav-link" data-toggle="dropdown"  v-on:click="viewNotifications" href="#">
+          <i class="far fa-bell"></i>
+          <span class="badge badge-warning navbar-badge">{{new_messages+new_permissions}}</span>
+        </a>
+        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="height: 30em;overflow: auto;">
+          <span class="dropdown-item dropdown-header">{{new_messages+new_permissions}} Notifications</span>
+          <div class="dropdown-divider"></div>
+          <a v-if="messages.length>0"href="#" class="dropdown-item">
+            <i class="fas fa-envelope mr-2"></i> {{new_messages>0 ? new_messages+" new messages":'Messages'}}
+            <i v-on:click="event.stopPropagation();show_messages=!show_messages;" v-bind:class="'float-right fa '+(!show_messages?'fa-plus':'fa-minus')"></i>
+          </a>
+		  <template v-if="show_messages" v-for="(x,idx) in messages" >
+			<div class="dropdown-divider"></div>
+			<a href="#" >
+				<span class="small italic pull-right">{{time_ago(x.date)}}</span>
+			</a>
+			<p style="font-size:1em" v-html="x.content"></p>
+		  </template>
+          <div class="dropdown-divider"></div>
+          <a v-if="permissions.length>0" href="#" class="dropdown-item">
+            <i class="fas fa-file mr-2"></i> {{new_permissions>0 ? new_permissions+" new permissions":'Permissions'}}
+            <i v-on:click="event.stopPropagation();show_permissions=!show_permissions;" v-bind:class="'float-right fa '+(!show_permissions?'fa-plus':'fa-minus')"></i>
+          </a>
+		  <template v-if="show_permissions" v-for="(x,idx) in permissions" >
+			<div class="dropdown-divider"></div>
+			<a>
+				<span class="small italic pull-right">{{time_ago(x.date)}}</span>
+			</a>
+			<p style="font-size:1em" v-html="x.content"></p>
+			<span class="bold pull-left"><button v-on:click="permissionResponse(idx,x,0)" class="btn btn-danger">Reject</button></span>
+			<button v-on:click="window.location.href='?view='+x.address;" class="btn">View</button>
+			<span class="bold pull-right"><button v-on:click="permissionResponse(idx,x,1)"class="btn btn-success">Confirm</button></span>
+		  </template>
+		</div>  
+      </li-->
+      <!--li class="nav-item">
+        <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+          <i class="fas fa-expand-arrows-alt"></i>
+        </a>
+      </li--->
+      <!--li class="nav-item">
+        <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#" role="button">
+          <i class="fas fa-th-large"></i>
+        </a>
+      </li-->
+	  
+	  <!-- User Panel Dropdown Menu -->
+	  <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle d-flex align-items-center" href="https://attest.ibcc.edu.pk/category/3#" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <img src="./3_files/0female.png" class="img-circle" alt="User Image" style="width: 30px; height: 30px;">
+            <div class="ml-2">
+              <span class="d-block">Muhammad Qasim<br><small>(Student)</small></span>
+              <!--small class="d-block">Super Admin</small---> <!-- Role -->
+            </div>
+          </a>
+		  
+		            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+            <a class="dropdown-item" href="https://attest.ibcc.edu.pk/page/profile">
+              <i class="fas fa-user mr-2"></i> Profile <!-- Icon for Profile -->
+            </a>
+            <a class="dropdown-item" href="https://attest.ibcc.edu.pk/?action=logout">
+              <i class="fas fa-sign-out-alt mr-2"></i> Logout <!-- Icon for Logout -->
+            </a>
+          </div>
+		         </li>
+    </ul>
+  </nav>  
+  
+  <!-- /.navbar -->
+<style>
+
+/* Style for the brand logo container */
+.brand-logo-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.brand-image {
+  width: 100px; /* Adjust the size as needed */
+  height: auto;
+}
+
+.social-icons {
+      display: flex;
+      /* Use flexbox for icons */
+      gap: 10px;
+      /* Space between icons */
+    }
+
+    .social-icons a {
+      color: #06653D;
+      font-size: 16px;
+      text-decoration: none;
+    }
+
+</style>
+  <!-- Main Sidebar Container -->
+  <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <!--a href="/" class="brand-link">
+      <span class="brand-text font-weight-light">Attestation</span>
+    </a-->
+	
+	  <!-- Brand Logo Container -->
+    <div class="brand-logo-container">
+      <img src="./3_files/logo.jpg" alt="IBCC Logo" class="brand-image img-circle elevation-3">
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar os-host os-theme-light os-host-resize-disabled os-host-scrollbar-horizontal-hidden os-host-scrollbar-vertical-hidden os-host-transition"><div class="os-resize-observer-host observed"><div class="os-resize-observer" style="left: 0px; right: auto;"></div></div><div class="os-size-auto-observer observed" style="height: calc(100% + 1px); float: left;"><div class="os-resize-observer"></div></div><div class="os-content-glue" style="margin: 0px -8px; width: 249px; height: 527px;"></div><div class="os-padding"><div class="os-viewport os-viewport-native-scrollbars-invisible"><div class="os-content" style="padding: 0px 8px; height: 100%; width: 100%;">
+
+      <!-- SidebarSearch Form -->
+      <!--div class="form-inline">
+        <div class="input-group" data-widget="sidebar-search">
+          <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
+          <div class="input-group-append">
+            <button class="btn btn-sidebar">
+              <i class="fas fa-search fa-fw"></i>
+            </button>
+          </div>
+        </div>
+      </div-->
+
+      <!-- Sidebar Menu -->
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+          <!-- Add icons to the links using the .nav-icon class
+               with font-awesome or any other icon font library -->
+<li class="nav-item  menu-open"><a href="https://attest.ibcc.edu.pk/category/1" class="nav-link active nav-level1"><i class="right fas fa-angle-right"></i><i class="fa fa-graduation-cap  nav-icon"></i><p onclick="document.location.href='https://attest.ibcc.edu.pk/category/1'">Student Portal</p></a><ul class="nav nav-treeview" style="display: block;"><li class="nav-item  menu-open"><a href="https://attest.ibcc.edu.pk/category/3" class="nav-link active nav-level2"><i class="fa fa-file-text  nav-icon"></i><p>My Applications</p></a></li></ul></li><li class="nav-item"><a href="https://attest.ibcc.edu.pk/page/profile" class="nav-link nav-level1"><i class="fa fa-circle  nav-icon"></i><p>Profile</p></a></li>
+        </ul>
+      </nav>
+      <!-- /.sidebar-menu -->
+    </div></div></div><div class="os-scrollbar os-scrollbar-horizontal os-scrollbar-unusable os-scrollbar-auto-hidden"><div class="os-scrollbar-track"><div class="os-scrollbar-handle" style="width: 100%; transform: translate(0px, 0px);"></div></div></div><div class="os-scrollbar os-scrollbar-vertical os-scrollbar-unusable os-scrollbar-auto-hidden"><div class="os-scrollbar-track"><div class="os-scrollbar-handle" style="height: 100%; transform: translate(0px, 0px);"></div></div></div><div class="os-scrollbar-corner"></div></div>
+    <!-- /.sidebar -->
+  </aside>
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper" style="min-height: 489.667px;">
+    <!-- Content Header (Page header) -->
+	    <div class="content-header">
+      <div class="container-fluid">
+		
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0">My Applications</h1>
+          </div><!-- /.col -->
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="https://attest.ibcc.edu.pk/page/home">Home</a></li>
+			  <li class="breadcrumb-item"><a href="https://attest.ibcc.edu.pk/category/3?cat=1">Student Portal</a></li><li class="breadcrumb-item active" aria-current="page">My Applications</li>            </ol>
+			
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+		
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <!-- Small boxes (Stat box) -->
+
+<link rel="stylesheet" href="./3_files/vuejs-datepicker.css">
+<script src="./3_files/vuejs-datepicker"></script>
+<script src="./3_files/html2pdf.bundle.min.js.download" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+Vue.component('mvc_fileupload', {
+  props: ['filename', 'path', 'value', 'accept', 'view', 'callback_loaded', 'max_size_kb', 'allowed_extensions'], // `value` is the prop that v-model binds to
+  template: `
+    <div class="file-upload-wrapper">
+      <template v-if="!uploaded">
+		<input v-if="view!='true'"  type="file" v-bind:accept="accept?accept:'application/pdf'" @change="handleFile" title="Upload a single file only. Combine multiple documents into one PDF." />
+		
+
+	  </template>
+      <div v-else class="file-info">
+        <!--p><strong>{{ filename }}.pdf</strong></p-->
+		
+		
+		<button @click="viewFile" title="View" class="btn btn-sm badge-warning"><i class="fas fa-eye"></i></button>
+		<button @click="downloadFile" class="btn btn-sm bg-success" title="Download"><i class="fa-solid fa-download" style="color: #ffffff;"></i></button>
+		<button v-if="view!='true'" @click="deleteFile" class="btn btn-sm bg-danger text-white" title="Delete"><i class="fa-solid fa-trash"></i></button>
+      </div>
+    </div>
+  `,
+  data: function () {
+    return {
+      uploaded: this.value,
+	  uploadedPath: "", uploadedDate: ""
+    };
+  },
+  watch: {
+    value(newVal) {
+      this.uploaded = newVal;
+    },
+    uploaded(newVal) {
+      this.$emit('input', newVal); // emits update for v-model
+    }
+  },
+  mounted: function () {
+    this.checkFileExists();
+  },
+  methods: {
+    handleFile: function (event) {
+		let self=this;
+      var file = event.target.files[0];
+      if (file) {
+		let maxSizeKb = parseInt(this.max_size_kb || 0);
+		if(maxSizeKb > 0 && file.size > maxSizeKb * 1024){
+			alertText(1, "File size must be less than "+maxSizeKb+"KB.");
+			event.target.value = "";
+			return;
+		}
+
+		let allowedExtensions = this.allowed_extensions ? this.allowed_extensions.split(",").map(function(x){ return x.trim().toLowerCase(); }) : [];
+		let extension = file.name.split(".").pop().toLowerCase();
+		if(allowedExtensions.length > 0 && !allowedExtensions.includes(extension)){
+			alertText(1, "Only "+allowedExtensions.join(", ").toUpperCase()+" file is allowed.");
+			event.target.value = "";
+			return;
+		}
+
+        var formData = new FormData();
+        formData.append("file", file);
+        formData.append("filename", this.filename);
+        formData.append("path", this.path);
+		if(maxSizeKb > 0)formData.append("max_size_kb", maxSizeKb);
+		if(this.allowed_extensions)formData.append("allowed_extensions", this.allowed_extensions);
+
+		let linkPath = "https://attest.ibcc.edu.pk/upload.php?utype=singlefile&method=upload";
+		
+        fetch(linkPath, {
+          method: "POST",
+          body: formData
+        })
+        .then(res => res.text())
+        .then(res => {
+          let obj = JSON.parse(res);
+		  if(obj.code==0) {
+            this.uploaded = true;
+			this.uploadedPath = obj.file;
+			this.uploadedDate = obj.modifiedTime;
+          } else {
+			  console.log(obj);
+            alertText(obj.code, obj.msg);
+          }
+        });
+      } else {
+        alert("Something is wrong, Try again later!");
+      }
+    },
+    viewFile: function () {
+      window.open(this.uploadedPath+'?'+this.uploadedDate, "_blank");
+    },
+    downloadFile: function () {
+      var link = document.createElement("a");
+      link.href = this.uploadedPath+'?'+this.uploadedDate;
+      link.download = this.uploadedPath+'?'+this.uploadedDate;
+      link.click();
+    },
+    deleteFile: function () {
+      var formData = new FormData();
+	  formData.append("filename", this.filename);
+	  formData.append("path", this.path);
+
+	 let linkPath = "https://attest.ibcc.edu.pk/upload.php?utype=singlefile&method=delete";
+	
+	  fetch(linkPath, {
+		method: "POST",
+		body: formData
+	  })
+      .then(res => res.text())
+      .then(res => {
+        let obj = JSON.parse(res);
+		if(obj.code==0){
+          this.uploaded = false;
+        } else {
+          alertText(obj.code, obj.msg);
+        }
+      });
+    },
+	checkFileExists: function () {
+	  let self=this;
+	  var formData = new FormData();
+	  formData.append("filename", self.filename);
+	  formData.append("path", self.path);
+
+	 let linkPath = "https://attest.ibcc.edu.pk/upload.php?utype=singlefile&method=checked";
+	  self.uploaded = false;
+	  fetch(linkPath, {
+		method: "POST",
+		body: formData
+	  })
+	  .then(res => res.text())
+	  .then(res => {
+		  let obj = JSON.parse(res);
+		  if(obj.code==0){
+			  console.log("CHECKED: ",obj);
+			self.uploadedPath = obj.file;
+			self.uploadedDate = obj.modifiedTime;
+			self.uploaded = true;
+			if(self.callback_loaded)self.callback_loaded(self.uploadedPath)
+		  }
+	  });
+	}
+  }
+});
+</script>
+<script>
+let attestation_holidays = {"All":["2026-02-05","2026-03-13","2026-03-19","2026-03-20","2026-03-23","2026-03-27","2026-04-03","2026-04-10","2026-04-17","2026-04-24","2026-05-01","2026-05-26","2026-05-27","2026-05-28","2026-05-29","2026-06-26","2026-06-25","2026-08-14","2026-08-26","2026-11-09","2026-12-25"],"Islamabad":["2026-04-09"]};
+let attestation_express_holidays = [];
+
+// Merges the 'All' holidays of a holiday map with the ones of the given center
+function attestationHolidaysFrom(map, city){
+	if(Array.isArray(map))return [...new Set(map)];
+
+	let ret = [];
+	if(map && Array.isArray(map.All)) ret = ret.concat(map.All);
+	if(map && Array.isArray(map.all)) ret = ret.concat(map.all);
+	if(map && city && Array.isArray(map[city])) ret = ret.concat(map[city]);
+
+	return [...new Set(ret)];
+}
+
+function attestationHolidaysOf(city){
+	return attestationHolidaysFrom(attestation_holidays, city);
+}
+
+// Express-only holidays (cat/255) close Express alone, so they are added to that
+// picker only - Appointment and Courier are unaffected by them.
+function attestationExpressHolidaysOf(city){
+	return [...new Set(attestationHolidaysOf(city).concat(attestationHolidaysFrom(attestation_express_holidays, city)))];
+}
+
+// 'Y-m-d' (or 'Y-m-d H:i:s') to a local Date, avoids the UTC shift of new Date('Y-m-d')
+function attestationParseDate(str){
+	if(!str)return null;
+	if(str instanceof Date)return str;
+	let t = (''+str).split(' ')[0].split('T')[0].split('-');
+	if(t.length<3)return null;
+	return new Date(parseInt(t[0]), parseInt(t[1])-1, parseInt(t[2]));
+}
+
+function attestationFormatDate(dt){
+	if(!dt)return null;
+	let m = dt.getMonth()+1, d = dt.getDate();
+	return dt.getFullYear()+'-'+(m<10?'0'+m:m)+'-'+(d<10?'0'+d:d);
+}
+
+let document_array = {FT: 'New/First Time', U:'Urgent', D1: 'Duplicate',D2: 'Triplicate',D3: 'Quadruplicate',R1: '1st Revision',R2: '2nd Revision',R3: '3rd Revision'};
+let degree_array = {Local: 'Local', Foreign: 'Foreign',Madaris: 'Deni-Madaris in Pakistan'};
+
+function appFilteredCenters(centers, case_type){
+
+	let ret = [];
+
+	for(let i=0;i<centers.length;i++){
+		let obj = centers[i];
+
+		//Restriction for Courier
+		if(case_type==1 && ['Islamabad', 'Karachi', 'Quetta'].indexOf(obj.name)==-1)continue;
+		ret.push(obj);
+	}
+	return ret;
+}
+
+function IBCC_paymentFrame(x, case_prefix){
+	let amount = 0;
+	for(let i=0;i<x.details.length;i++){
+		let y=x.details[i];
+		if(case_prefix=='E')y.amount=(y.document_type.length>0?3000:0)+(y.no_copies*1500)
+		else y.amount=(y.document_type.length>0?1200:0)+(y.no_copies*600)
+		amount+=y.amount;
+	}
+	
+	return amount;
+}
+
+function IBCCroundOFF(p){
+	/*if(Math.round(p) == parseInt(p))
+		return parseFloat(p).toFixed(2);
+	else 
+	return parseFloat(Math.round(p)).toFixed(2);*/
+	let str= parseFloat(p).toFixed(3);
+	return str.substr(0,str.length-1);
+}
+
+function initializeSSCMarks(doc){
+			doc.ssc_pak_marks_obj = {is_calculate: false, obtained: 0, total: 0};
+			if(doc.ssc_pak_marks.length>0){
+				let tok=doc.ssc_pak_marks.split(",");
+				if(tok.length>1)
+					doc.ssc_pak_marks_obj = {is_calculate: true, obtained: parseInt(tok[0]), total: parseInt(tok[1])};
+			}
+		}
+
+function staticViewExaminingBody(doc, captial=false){
+	let str="";
+	if(typeof doc.examining_body=="object" && doc.examining_body!=null)
+		for(let i=0;i<doc.examining_bodies.length;i++){
+			let x = doc.examining_bodies[i];
+			for(let j=0;j<doc.examining_body.length;j++){
+				let y= doc.examining_body[j];
+				if(x.id==y){
+					str += (str.length==0?"":", ")+(captial?x.full_name:x.name);
+				}
+			}
+		}
+	else str = doc.other_examining_body;
+	return str;
+}
+
+Vue.component('challan-input', {
+	data(){return {list:[], challan_input: 0} },
+	props: ['obj'],
+	methods: {
+		load_list(){
+			let self=this;
+			if(self.obj.challan.length>0 && self.list.length==0){
+				self.list = self.obj.challan.split(", ");
+			}else if(self.obj.challan.length>0){
+				let lst = self.obj.challan.split(", ");
+				if(self.list[0]!=lst[0])self.list = lst;
+
+			}
+			else if(self.obj.challan.length==0 && self.list.length>0)self.list = [];
+			return self.list;
+		},
+		addChallan(){
+			let self=this;
+			if(self.list.length>2){alertText(1, "Alert - You can add atleast 2 challans!");return false;}
+			self.list.push(self.challan_input);self.challan_input='';
+			self.setupOutput();
+			document.getElementsByName('cmp_challan')[0].focus()
+		},
+		removeChallan(idx){
+			let self=this;
+			self.list.splice(idx,1);
+			self.setupOutput();
+		},
+		setupOutput(){
+			let self=this;
+			self.obj.challan = "";
+			for(let i=0;i<self.list.length;i++){
+				let x= self.list[i];
+				if(i>0)self.obj.challan+=", ";
+				self.obj.challan += x;
+			}
+		}
+	},
+	template: `
+		<div class="input-group mb-3">
+			<p><span v-for="(x,idx) in load_list()" v-on:click="removeChallan(idx)" class="badge badge-pill badge-success">{{x}}</span></p><br>
+			<input type="text" placeholder="Challan" name="cmp_challan" v-model="challan_input" v-mask="'N############'" class="form-control form-control-sm" v-on:keyup.enter="addChallan">
+			<div class="input-group-append">
+				<button class="btn btn-outline-secondary btn-sm" type="button" id="button-addon2" v-on:click="addChallan">Add</button>
+			</div>
+		</div>`
+});
+
+Vue.component('mvc-searchcases-filter', {
+	data(){
+		return {
+			options : [
+				'Father name', 'CNIC/Passport', 'Case Status', 'Group', 'Examining Body', 'Qualification', 'By Staff'
+			],
+			selected_option: ''
+		}
+	},
+	template : `
+		<div class="row">
+			<div class="col-md-3">
+				<label> Options </label>
+			</div>
+			<div class="col-md-3">
+				<select class="form-control form-control-sm" v-model="selected_option">
+					<option v-for="x in options" v-bind:value="x">{{x}}</option>
+				</select>
+			</div>
+			<div class="col-md-6">
+				
+			</div>
+		</div>
+	`
+
+});
+Vue.component('ibcc-report', {
+	data(){
+		return {
+			list:[], report: [], head: [], challan_input: 0,
+			centers: [], selected_center: "",
+			hidden: ["dtime","cases", "city"],
+			start_date: '',
+			end_date: ''
+		} 
+	},
+	mounted(){
+		let self=this;
+		let d= new Date();
+		
+		self.end_date   = d.toISOString().split("T")[0]
+		d.setDate(d.getDate() - 6);
+		self.start_date = d.toISOString().split("T")[0];
+		self.loadReport();
+	},
+	methods: {
+		loadReport(){
+			let self=this;
+			
+			query_post("ibccreport_fetch",{from_date: self.start_date, to_date:self.end_date}, function(response){
+				let obj= JSON.parse(response);
+				if(obj.code>0)alertText(1, obj.msg);
+				else {
+					self.list = obj.data;
+					self.makeReport();
+				}
+			},'app=components/IBCC');
+		},
+		makeReport(){
+			let self=this;
+			self.report=[];
+			
+			let detail = makeHierarchy(self.list, ['city', 'case_type'], ['paid_cases'], {type: self.selected_date_type, start: self.start_date, end: self.end_date});
+			
+			self.centers=Object.keys(detail.nodes);
+			self.selected_center = self.centers[0];
+			
+			self.viewReport();
+		},
+		viewReport(){
+			let self=this;
+			let list=[];
+			let detail = makeHierarchy(self.list, ['city', 'case_type'], ['paid_cases', 'deliver_intime', 'deliver_late', 'p_deadline', 'p_due'], {type: self.selected_date_type, start: self.start_date, end: self.end_date});
+			
+			let nodes = detail.nodes[self.selected_center].nodes;
+			let keys = Object.keys(nodes);
+			for(let i=0;i<keys.length;i++){
+				let x = nodes[keys[i]].data;
+				x.case_type=keys[i];
+				list.push(x);
+			}
+			
+			self.head = ["Case Type", "Total Cases", /*"Paid Cases",*/ "InTime", "Late", "Cross-Deadline", "Have-Time"]
+			self.report = [];
+			for (let index = 0; index < list.length; index++) {
+				let row = list[index];
+				self.report.push([row.case_type, /*row.submit_cases,*/ row.paid_cases, row.deliver_intime, row.deliver_late, row.p_deadline, row.p_due]);
+			}
+		}
+	},
+	template: `
+		<div class="row">
+		<div class="col-md-3">
+			<label>Center</label>
+		</div>
+		<div class="col-md-3">
+			<select class="form-control form-control-sm" v-model="selected_center" v-on:change="viewReport">
+				<option v-for="x in centers">{{x}}</option>
+			</select>
+		</div>
+		<div class="col-md-6">
+			<div class="input-group input-group-sm">
+				<div class="input-group-prepend">
+					<span class="input-group-text" id="">Date From - To</span>
+				</div>
+				<input type="date" class="form-control" v-model="start_date" v-on:change="makeReport" v-on:change="loadReport">
+				<input type="date" class="form-control" v-model="end_date" v-on:change="makeReport" v-on:change="loadReport">
+			</div>
+		</div>
+		<div class="col-md-12">
+		<table v-if="report.length>0" class="table table-responsive">
+			<thead class="thead">
+				<tr>
+					<th scope="col" rowspan="2">#</th>
+					<th scope="col" rowspan="2">Case Type</th>
+					<th scope="col" rowspan="2">Total Cases</th>
+					<th scope="col" colspan="2">Processed Cases</th>
+					<th scope="col" colspan="2">In-Process Cases</th>
+				</tr>
+				<tr>
+					<th scope="col">In-Time</th>
+					<th scope="col">Late</th>
+
+					<th scope="col">Incomplete</th>
+					<th scope="col">Due</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr v-for="(x,idx) in report" >
+					<th scope="row" v-bind:title="list[idx].cases">{{idx+1}}</th>
+					<td v-for="y in x">{{y}}</td>
+				</tr>
+			</tbody>
+		</table>
+		</div>`
+});
+
+
+
+Vue.component('ibcc-partial-payments', {
+	data(){return {is_oldcase: 0, creditSources: [], challan_input: 0, updater: 0} },
+	props: ['obj'],
+	mounted(){
+		let self=this;
+		if(typeof self.obj.payments != "object"){self.obj.payments=[];self.obj.payments_total=0;}
+		self.loadData();
+	},
+	methods: {
+		currentPSID(){
+			let self=this;
+			const opts = ['A', 'C', 'O', 'M', 'E'];
+			const index = opts.indexOf(self.obj.case_prefix);
+			
+			if (index === -1) {
+				return 'Error';
+			}
+			let current_invoice = 0;
+			
+			if(typeof self.obj.payments == "object"){current_invoice=self.obj.payments.length;}
+
+			const paddedCaseId = self.obj.case_id.toString().padStart(13, '0');
+			return `100805${current_invoice}211${index + 1}${paddedCaseId}`;
+		},
+		updateScreen(){
+			let self = this;
+			self.updater = 1 - self.updater;
+			self.$parent.updater = !self.$parent.updater;
+		},
+		loadData(){
+			let self=this;
+			query_post("load_payments",{case_code: self.obj.case_prefix+self.obj.case_id}, function(response){
+                let obj= JSON.parse(response);
+                if(obj.code>0)alertText(1, obj.msg);
+				else {
+					self.creditSources = obj.creditSources;
+
+					let total = 0;
+					for(let p=0;p<obj.payments.length;p++){
+						obj.payments[p].file = false
+						total += parseInt(obj.payments[p].amount);
+					}
+					self.obj.payments_total = total;
+
+					self.obj.payments = obj.payments;
+					self.obj.is_oldcase = self.is_oldcase = obj.is_oldcase;
+					self.updateScreen();
+				}
+            },'app=components/IBCC');
+		},
+		isCompleteFields(){
+			let self=this;
+			let payments = self.obj.payments;
+			for(let i=0;i<self.obj.payments.length;i++){
+				let payment=self.obj.payments[i];
+				if(payment.account_id<1){alertText(1,"Account Field is Empty");return false;}
+				if(payment.amount<50){alertText(1,"Incorrect amount ("+payment.amount+") minimum acceptable amount is 50");return false;}
+				if(payment.transaction_number.length==0){alertText(1,"Incorrect Transaction number ("+payment.transaction_number+")!");return false;}
+				if(payment.dtime==''){alertText(1,"Incorrect Transaction DateTime ("+payment.dtime+")!");return false;}
+				if(!payment.file && payment.account_id==7){alertText(1,"Manual payment must be uploaded!");return false;}
+			}
+			return true;
+		},
+		addNewPayment(){
+			let self=this;
+			let OK=self.isCompleteFields();
+			if(OK){
+				let insert = {id: 0, case_prefix: "",case_id: 0, account_id: 0, amount: 0, transaction_number: '', dtime: "", file: false};
+				self.obj.payments.push(insert);
+				self.updater = 1 - self.updater;
+			}
+		},
+		removePayment(idx){
+			let self=this;
+			let len=self.obj.payments.length;
+			if(idx>=len)return false;
+			if(self.obj.payments[idx].id>0)if(!confirm("Are you sure to remove this payments!"))return false;
+
+			self.obj.payments.splice(idx, 1);
+			self.updater = 1 - self.updater;
+			self.$parent.updater = !self.$parent.updater;
+		},
+		savePayments(){
+			let self=this;
+			if(!self.isCompleteFields())return false;
+
+			let save_pay = self.obj.payments.map(({ file, ...rest }) => rest);
+
+			console.log(save_pay);
+			
+			query_post("save_payments",{case_code: self.obj.case_prefix+self.obj.case_id, payments: save_pay, require_amount: self.obj.case_amount}, function(response){
+                let obj= JSON.parse(response);
+				
+                if(obj.code>0)alertText(obj.code, obj.msg);
+				else {
+					let total = 0;
+					let str="<p>";
+					for(let p=0;p<obj.payments.length;p++){
+						let pay=obj.payments[p];
+						if(pay.code==0){
+							if(pay.id>0)self.obj.payments[p].id = pay.id;
+						}
+						str+=pay.msg+'<br>';
+						if(pay.code!=5)total+= parseInt(self.obj.payments[p].id>0 ? self.obj.payments[p].amount: 0);
+					}
+					str+="</p>";
+					self.obj.payments_total = total;
+					self.$parent.updater = !self.$parent.updater;
+					
+					alertText(obj.code, str, 0);
+				}
+            },'app=components/IBCC');
+		},
+		resolvePayment(){
+			let self=this;
+			if(!self.isCompleteFields())return false;
+			
+			query_post("resolve_payment",{case_code: self.obj.case_prefix+self.obj.case_id, is_oldcase: self.is_oldcase}, function(response){
+                let obj= JSON.parse(response);
+				
+                if(obj.code>0)alertText(obj.code, obj.msg);
+				else {
+					self.obj.is_oldcase = self.is_oldcase;
+					self.$parent.updater = !self.$parent.updater;
+					alertText(obj.code, "Payment Resolved!");
+				}
+            },'app=components/IBCC');
+		},
+		load_list(){
+			let self=this;
+			if(self.obj.challan.length>0 && self.list.length==0){
+				self.list = self.obj.challan.split(", ");
+			}else if(self.obj.challan.length>0){
+				let lst = self.obj.challan.split(", ");
+				if(self.list[0]!=lst[0])self.list = lst;
+
+			}
+			else if(self.obj.challan.length==0 && self.list.length>0)self.list = [];
+			return self.list;
+		},
+		addChallan(){
+			let self=this;
+			if(self.list.length>2){alertText(1, "Alert - You can add atleast 2 challans!");return false;}
+			self.list.push(self.challan_input);self.challan_input='';
+			self.setupOutput();
+			document.getElementsByName('cmp_challan')[0].focus()
+		},
+		removeChallan(idx){
+			let self=this;
+			self.list.splice(idx,1);
+			self.setupOutput();
+		},
+		setupOutput(){
+			let self=this;
+			self.obj.challan = "";
+			for(let i=0;i<self.list.length;i++){
+				let x= self.list[i];
+				if(i>0)self.obj.challan+=", ";
+				self.obj.challan += x;
+			}
+		},
+		loadTransaction(x){
+            let self=this;
+			x.dtime='';x.amount=0;
+			self.updateScreen();
+			if(x.transaction_number.length>= 5 && x.transaction_number.length<=9)x.transaction_number='0301'+parseInt(x.transaction_number).zeroPad('10000000000000');
+            query_post("findPayment", {consumer_no: x.transaction_number}, function(response){
+				let obj = JSON.parse(response);
+				console.log("F",obj);
+				if(obj.code>0){ alertText(obj.code, obj.message);}
+				else if(obj.bill_status=='U')alertText(1, "Payment is not paid yet!");
+				else if(obj.reflected_to && obj.reflected_to.length>0)alertText(2, "This payment is already paid against "+obj.reflected_to);
+				else {
+					x.amount = obj.amount;
+					let dt = obj.date_paid;
+					x.transaction_fetched = obj.transaction_number;
+					x.dtime = dt.substr(0,4)+"-"+dt.substr(4,2)+"-"+dt.substr(6,2);
+					self.updateScreen();
+					alertText(0, "Payment is verified Successfully!");
+                }
+				
+			}, 'action=home');
+        },
+		paymentReceipt(){
+			let self = this;
+			query_post("paymentInvoice",{case_code: self.obj.case_prefix+self.obj.case_id}, function(response){
+                let obj= JSON.parse(response);
+				
+                if(obj.code>0)alertText(obj.code, obj.msg);
+				else {
+					if(obj.cases.length>0){
+						let _case = obj.cases[0];
+						loadRashdiScript('paymentReceipt', function(rsp){
+							
+							eval(rsp);
+						});
+
+					}
+					
+					else alertText(obj.code, "Payment already paid!");
+				}
+            },'app=components/IBCC');
+		}
+	},
+	template: `
+	    <div class="step-content" data-step="2">
+		<h5>Payment Details</h5>
+									
+					<div class="row">
+							<div class="form-group col-md-12">
+								<label for="documentType">Case Type</label>
+								<select class="form-control form-control" v-model="is_oldcase">
+								<option value="0">Fresh Case</option>
+								<option value="1">Old System Case</option>
+								<option value="2">Payment waived for special/disabled person</option>
+								</select>
+							</div>
+					</div>
+				<!-- First row with 4 form fields -->
+					<template  v-if="is_oldcase==0">
+					<div class="row">
+						<div class="col-md-12 col-12">
+						<div style="display: none">{{updater}}</div>
+						
+						<table class="table table-bordered" id="transactionTable" style="font-size: 13px;">
+							<thead>
+								<tr>
+									<th>#</th>
+									<th>Account</th>
+									<th>Transaction Number</th>
+									<th>Amount</th>
+									<th>Transaction Date</th>
+									<th>Receipt</th>
+									<th>Action</th>
+								</tr>
+							</thead>
+							<tbody>
+								<template v-for="(x,idx) in obj.payments">
+								<tr>
+									<td>{{(idx+1).zeroPad(100)}}</td>
+									<td>
+										<p v-if="x.account_id==10"> Online</p>
+										<select v-else class="form-control form-control-sm" v-model="x.account_id" v-on:change="updateScreen">
+											<option v-for="y in creditSources" v-bind:value="y.id">{{y.name}}</option>
+										</select>
+									</td>
+									<template v-if="!x.account_id"></template>
+									<template v-else-if="x.account_id == 10">
+										<td>
+											<input type="text" v-bind:disabled="x.id>0" class="form-control form-control-sm" v-model="x.transaction_number" v-on:change="loadTransaction(x)" v-on:keyup.enter="loadTransaction(x)" style="font-size: 10px;">
+										</td>
+										<td>
+											{{x.amount}}
+										</td>
+										<td>
+											{{x.dtime}}
+										</td>
+										<td>
+											<button class="btn btn-sm bg-success" title="Print Receipt" v-on:click="paymentReceipt"><i class="fa-solid fa-print" style="color: #ffffff;"></i></button>
+										</td>
+									</template>
+									<template v-else>
+										<td>
+											<input type="text" class="form-control form-control-sm" v-model="x.transaction_number" style="font-size: 10px;" >
+										</td>
+										<td>
+											<input type="number" class="form-control form-control-sm" v-model="x.amount" style="font-size: 10px;" >
+										</td>
+										<td>
+											<input type="date" class="form-control form-control-sm" v-model="x.dtime" style="font-size: 10px;">
+										</td>
+										<td>
+										<mvc_fileupload :key="'payment_'+(idx+1)" v-model="x.file" accept="image/*,.pdf" v-bind:filename="getParameterByName('id')+'_'+(idx+1)" v-bind:path="'tmp/ubl_payments'" v-bind:callback_loaded="function(path){console.log('Hello: ', path);}"></mvc_fileupload>
+										</td>
+									</template>
+									
+									<td>
+										<button v-if="!(x.account_id==10 && x.id>0)" class="btn btn-sm btn-danger" v-on:click="removePayment(idx)" title="Delete Row">
+										<i class="fas fa-trash"></i>
+										</button></td>
+								</tr>
+								<tr v-if="x.account_id == 7"><td colspan="7">
+								<div class="col-md-12 justify-content-center">
+									<p style="color: red; font-weight: bold; font-size: 13px; text-align: center;">Note - The UBL Manual Payment option should be utilized only under exceptional circumstances.</p>
+								</div>
+								</td></tr>
+								</template>
+							</tbody>
+						</table>
+
+						</div>
+					
+					</div>
+					<div class="row">
+						<div class="col-12 d-flex justify-content-between">
+						<button type="Verify" class="btn btn-primary mr-2" v-on:click="addNewPayment">Add New Payment</button>
+						<button type="Print" class="btn bg-success" v-on:click="savePayments">Save Payments</button>
+						</div>
+					</div>
+					
+			<!-- Note Section -->
+		<div class="important-notice mt-4">
+			<h6 style="font-weight: bold; color: red;">Note - Use this PSID for Online Payments</h4>
+			<div class="row mb-2">
+
+			<div class="col-md-12">
+			<div class="input-group">
+				<button class="btn-sm bg-blue" type="button" onclick="copyToClipboard()" title="Copy to Clipboard"><i class="fa-solid fa-clipboard" ></i><!-- Bootstrap Icon for clipboard --> </button>
+				<p style="font-weight: bold; margin: 2px;">{{currentPSID()}}</p>
+			</div>
+			</div>
+			</div>
+			
+		</div>
+
+					<!-- Second row  -->
+					<div class="row"> 
+					<div class="col-md-6 col-12">
+						<label for="Totalfee">Total Paid ({{obj.payments_total < obj.total_amount ? 'Partial Payment':'Full Payment'}})</label>
+						<input type="text" class="form-control" v-bind:value="obj.payments_total" readonly>
+					</div>  
+					<div class="col-md-6 col-12">
+						<label for="paidfee">Remaining Fee</label> 
+						<input type="text" class="form-control" v-bind:value="Math.max(0,obj.total_amount-obj.payments_total)"  style="background-color: #dc3545; color: #fff; border-color: #dc3545;"readonly >
+					</div> 
+
+					</div>
+
+		</template>
+		<div class="row" v-if="is_oldcase > 0">
+			<div class="col-md-12 important-notice" >
+				<strong style="color: red;">Important Information:</strong><br><br>
+
+				• You can only resolve payments that belong to the <strong>old system</strong>.<br>
+				• Payment waive is available only for <strong>Special / Disabled persons</strong>.<br>
+				• You can only waive a payment after receiving <strong>approval from the relevant authority</strong>.<br>
+
+				<hr style="margin: 12px 0;">
+
+				<button v-if="obj.is_oldcase != 1" class="btn bg-success" v-on:click="resolvePayment">
+					Resolve Payment
+				</button>
+			</div>
+
+		</div>
+		
+		
+		</div>
+		`
+});
+
+Vue.component('ibcc-identity', {
+	data(){return {result: ''} },
+	props: ['obj'],
+	methods: {
+		checkIdentity(){
+			let self=this, identity= self.obj.cnic;
+			query_post("checkIdentity", {identity: identity}, function(resp){
+				//let obj= JSON.parse(resp);
+				
+				self.result= resp;
+				self.obj.cnic_status = self.result;
+			},'app=components/IBCC');
+		}
+	},
+	template: `<div class="row">
+			<div class="col-md-12" v-if="result.length>0">
+			<p v-html="result"></p>
+			</div>
+			<div class="col-md-12">
+			<input type="text" v-model="obj.cnic" v-mask="'NNNNNNNNNNNNN'" class="form-control" v-on:change="checkIdentity()" placeholder="C.N.I.C No./Passport No./Registration No.">
+			</div>
+		</div>`
+});
+
+function time_differ(time, differ=59){
+	let d=new Date('2023-09-01 '+time+':00');
+	let toks = d.toLocaleTimeString().split(":");
+	let current_time = parseInt(toks[0]).zeroPad(10)+':'+toks[1];
+
+	d.setMilliseconds(d.getMilliseconds() + (differ*60*1000));
+	toks = d.toLocaleTimeString().split(":");
+	let end_time = parseInt(toks[0]).zeroPad(10)+':'+toks[1];
+	return current_time+' to '+end_time;
+}
+
+function getNextAvailableDate(disables) {
+    let currentDate = new Date(); // Start from today
+	currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+
+    // Helper function to check if a date is a weekend
+    function isWeekend(date) {
+        const day = date.getDay();
+        return day === 6 || day === 0; // 6 is Saturday, 0 is Sunday
+    }
+
+    // Helper function to check if a date is in the disabled list
+    function isDisabled(_dds,date) {
+        return _dds.some(disabledDate =>
+            disabledDate === (date.getFullYear()+'-'+(date.getMonth()+1).zeroPad(10)+'-'+date.getDate().zeroPad(10))
+        );
+    }
+
+    // Find the next available date
+    console.log(disables[0]+" ==== "+(currentDate.getFullYear()+'-'+(currentDate.getMonth()+1)+'-'+currentDate.getDate())+" = "+(disables[0] === (currentDate.getFullYear()+'-'+currentDate.getMonth()+'-'+currentDate.getDate())?'Y':'N'));
+    while (true) {
+        currentDate.setDate(currentDate.getDate() + 1); // Increment the date
+
+        // Check if it's a weekend or a disabled date
+		if (!isWeekend(currentDate) && !isDisabled(disables,currentDate)) {
+            return currentDate;
+        }
+    }
+}
+
+if(typeof vuejsDatepicker !== 'undefined')
+Vue.component('attestation-appointment', {
+	data(){return {
+		is_loading_data: false,
+		holidays : [],
+		default_slots: [],
+		slots_after: {},
+		disableDates: {
+			to: new Date(new Date().setDate(new Date().getDate() - 1)), // Disable all dates up to specific date
+			//from: new Date(2016, 0, 26), // Disable all dates after specific date
+			days: [6, 0], // Disable Saturday's and Sunday's
+			//daysOfMonth: [29, 30, 31], // Disable 29th, 30th and 31st of each month
+			dates: [],
+			/*ranges: [{ // Disable dates in given ranges (exclusive).
+				from: new Date(2016, 11, 25),
+				to: new Date(2016, 11, 30)
+			}, {
+				from: new Date(2017, 1, 12),
+				to: new Date(2017, 2, 25)
+			}]*/
+		}
+	} },
+	props: ['obj'],
+	mounted(){
+		let self=this;
+		self.check_slots(1);
+	},
+	computed: {
+		slots(){
+			let self=this;
+			return self.compute_slots(false);
+		},
+		is_slots(){
+			let self = this;
+			return self.obj.city!='' && self.slots.length > 0;
+		}
+	},
+	methods: {
+		slot_value(slot, key, fallback_key, default_value){
+			if(slot && typeof slot[key] !== 'undefined')return slot[key];
+			if(slot && fallback_key && typeof slot[fallback_key] !== 'undefined')return slot[fallback_key];
+			return default_value;
+		},
+		slot_taken(slot, default_value = 0){
+			if(slot && typeof slot.taken !== 'undefined')return slot.taken;
+			if(slot && typeof slot.avail !== 'undefined')return slot.avail;
+			return default_value;
+		},
+		slot_comment(slot){
+			return this.slot_value(slot, 'comment', null, 'Get Attested document(s) on same day of appointment');
+		},
+		get_slot_by_name(slots, slot_name){
+			let slot = get_from(slots, slot_name, 'slot_name');
+			return slot ? slot : get_from(slots, slot_name, 'name');
+		},
+		get_holidays(){
+			let self = this;
+			if(Array.isArray(self.holidays)) return self.holidays;
+
+			let ret = [];
+			if(self.holidays && Array.isArray(self.holidays.All)) ret = ret.concat(self.holidays.All);
+			if(self.holidays && Array.isArray(self.holidays.all)) ret = ret.concat(self.holidays.all);
+			if(self.holidays && self.obj.city && Array.isArray(self.holidays[self.obj.city])) ret = ret.concat(self.holidays[self.obj.city]);
+
+			return [...new Set(ret)];
+		},
+		compute_slots(is_load_avail = true){
+			let self = this;
+			if(!self.obj.city || !self.obj.date)return [];
+			let dy=(new Date(self.obj.date)).getDay();
+			let holidays = self.get_holidays();
+			for(let i=0;i<holidays.length;i++){
+				let x = holidays[i];
+				if(self.obj.date==x)return [];
+			}
+
+			let s_dt = (new Date(self.obj.date));
+			//self.check_slots();
+			let afters = Object.keys(self.slots_after);
+
+			let ret = {}, found=false;
+			for(let i=0;i<afters.length;i++){
+				let x = self.slots_after[afters[i]];
+				let dt = new Date(afters[i]);
+				if(s_dt >= dt){
+					if(typeof x[self.obj.city] !== 'undefined'){
+						found = true;
+						ret[self.obj.city] = x[self.obj.city];
+					}else if(typeof x.Each !== 'undefined'){
+						found = true;
+						ret[self.obj.city] = x.Each;
+					}
+				}
+			}
+			
+			let __slots = [];
+			if(found)__slots = ret[self.obj.city];
+			else __slots = self.default_slots
+			
+
+			ret = [];
+			for(let i=0;i<__slots.length;i++){
+				let x = __slots[i];
+				let available_slots = parseInt(self.slot_value(x, 'available_slots', 'range', 0));
+				let taken = parseInt(self.slot_taken(x, 0));
+				let result = (true) && !(  (x._not_for==dy) || (!x._for?false:(x._for==dy?false:true)) || dy==0 || dy==6);
+				if(result)ret.push(x);
+			}
+
+			return ret;
+
+		},
+		initializeCalender(){
+			let self = this;
+			if(self.obj.city=='')return false;
+
+			query_post("initializeAppointmentCalender", {center: self.obj.city}, function(rsp){
+				
+				let obj= JSON.parse(rsp);
+				if(obj.code==0){
+					self.disableDates.dates = obj.disables.map(function(x){return new Date(x);});
+					//self.obj.date = 
+					console.log(obj.disables);
+					let nextAvailableDate = getNextAvailableDate(obj.disables);
+					console.log("Next available date is:", nextAvailableDate);
+					self.obj.date = (nextAvailableDate.getFullYear()+'-'+(nextAvailableDate.getMonth()+1).zeroPad(10)+'-'+nextAvailableDate.getDate().zeroPad(10));
+					self.check_slots();
+				}
+				
+			},'app=components/IBCC');
+		},
+		check_slots(initialize=0){
+			let self=this, identity= self.obj.cnic;
+			self.is_loading_data = true;
+			let slots = initialize==1?[]:self.compute_slots(true);
+			$('.dsbl').attr('disabled', true);
+
+			for(let i=0;i<slots.length;i++){
+				slots[i].taken = self.slot_taken(slots[i], 0);
+			}
+			query_post("check_slots", {a_date: self.obj.date, a_center: self.obj.city, is_load_data: initialize}, function(rsp){
+				$('.dsbl').attr('disabled', null)
+				self.is_loading_data = false;
+				
+				let obj= JSON.parse(rsp);
+				//self.slot = obj.slot;
+				if(obj.initial_data){
+					self.holidays = obj.initial_data.holidays;
+					self.default_slots = obj.initial_data.default_slots;
+					self.slots_after = obj.initial_data.slots_after;
+
+					if(initialize==1 && self.obj.city!=''){
+						self.initializeCalender();
+						return false;
+					}
+				}
+				if(obj.slots_used)
+					for(let i=0;i<slots.length;i++){
+						let x = slots[i];
+						let y = self.get_slot_by_name(obj.slots_used, self.slot_value(x, 'slot_name', 'name', ''));
+						if(y){
+							slots[i].taken = y.selected;
+						}
+					}
+			},'app=components/IBCC');
+		},
+		dateLimiter(){
+			let curr_date = (new Date());
+			
+
+			const nextDate = new Date();
+			nextDate.setDate(curr_date.getDate() + 1);
+
+			return (new Date()).getHours()>=15 ? nextDate.toISOString().split('T')[0] : curr_date.toISOString().split('T')[0];
+		},
+		dateChanged(dt){
+			let self=this;
+			self.obj.date = dt;
+			self.obj.time_slot = '';
+			self.check_slots();
+			
+			global_mvc.inp_change();
+		},
+		shiftChanged(){
+			let self=this;
+			//self.check_slots();
+			let s = self.get_slot_by_name(self.slots, self.obj.time_slot);
+			
+			if(s){
+				self.obj.appointment_duration = self.slot_value(s, 'duration', 'timing', 30);
+				self.obj.appointment_limit = self.slot_value(s, 'available_slots', 'range', 0);
+			}
+				
+			if(global_mvc && global_mvc.inp_change)global_mvc.inp_change();
+		}
+	},
+	components: {
+		vuejsDatepicker
+	},
+	template: `<div class="row">
+	<p> <b>Public Holiday Notice</b> - Please refrain from scheduling appointment on public holidays, as no applications will be processed on these days.</p>
+	<div class="col-xs-12 col-sm-6">
+			<div class="form-group label-floating">
+			<label class="control-label" style="font-size: 12px">Select Date<span style="color: red;">*</span></label>
+			<vuejs-datepicker
+			v-model="obj.date"
+			:inline="false"
+			:disabled-dates="disableDates"
+			@selected="dateChanged"
+			></vuejs-datepicker>
+			</div>
+	</div>
+	<div class="col-xs-12 col-sm-6">
+			<div class="form-group label-floating">
+			<label class="control-label" style="font-size: 12px">Book Available Slot<span style="color: red;">*</span></label>
+			<template v-if="obj.city!='' && obj.date">
+				<template v-if="is_slots">
+				<select class="form-control valid dsbl" v-model="obj.time_slot" v-on:change="shiftChanged()">
+					<option  value="">Select Slot</option>
+					<option v-for="x in slots" v-bind:value="slot_value(x, 'slot_name', 'name', '')" :disabled="parseInt(slot_taken(x, 0)) >= parseInt(slot_value(x, 'available_slots', 'range', 0))">
+						{{time_differ(slot_value(x, 'start_time', 'show', slot_value(x, 'slot_name', 'name', '')), slot_value(x, 'duration', 'timing', 30)>0?slot_value(x, 'duration', 'timing', 30):30)}} 
+						({{(slot_taken(x, 0)+' / '+slot_value(x, 'available_slots', 'range', 0))}})
+						{{parseInt(slot_taken(x, 0)) >= parseInt(slot_value(x, 'available_slots', 'range', 0)) ? ' - FULL' : ''}}
+					</option>
+				</select>
+				<p style="text-align: center; color:red; font-weight: bold;">{{get_slot_by_name(slots, obj.time_slot)? slot_comment(get_slot_by_name(slots, obj.time_slot)):''}}</p>
+				</template>
+				<p v-else style="text-align: center; color:red; font-weight: bold;"> No Slots available for this date</p>
+			</template>
+			</div>
+	</div>
+		</div>`
+});
+
+if(typeof vuejsDatepicker !== 'undefined')
+Vue.component('express-visiting-date', {
+	props: ['value', 'city', 'disabled'],
+	computed: {
+		selected_date(){
+			return attestationParseDate(this.value);
+		},
+		disableDates(){
+			let self = this;
+			let yesterday = new Date();
+			yesterday.setHours(0,0,0,0);
+			yesterday.setDate(yesterday.getDate() - 1);
+
+			return {
+				to: yesterday, // Disable all the past dates
+				days: [6, 0], // Disable Saturday's and Sunday's
+				dates: attestationExpressHolidaysOf(self.city).map(function(x){return attestationParseDate(x);}).filter(function(x){return x!=null;})
+			};
+		}
+	},
+	watch: {
+		city(){
+			let self = this;
+			// A center change can turn the picked date into a holiday of that center
+			let picked = attestationFormatDate(attestationParseDate(self.value));
+			if(picked && attestationExpressHolidaysOf(self.city).indexOf(picked)!=-1)
+				self.dateSelected(null);
+		}
+	},
+	methods: {
+		dateSelected(dt){
+			let self = this, val = dt ? attestationFormatDate(dt) : null;
+			self.$emit('input', val);
+			self.$emit('change', val);
+		}
+	},
+	components: {
+		vuejsDatepicker
+	},
+	template: `<vuejs-datepicker
+		:value="selected_date"
+		:disabled="disabled?true:false"
+		:disabled-dates="disableDates"
+		input-class="form-control form-control-sm"
+		format="yyyy-MM-dd"
+		placeholder="Select Date"
+		@selected="dateSelected"
+	></vuejs-datepicker>`
+});
+
+Vue.component('change-case-option', {
+	props: ['case_code'],
+	data(){
+		return {
+			current_option: '',
+			case_options: [
+								{id: 0, name:'Appointment'},
+								{id: 1, name:'Courier'},
+				{id: 4, name:'Express'}
+			],
+			centers : [],
+
+			obj : {
+				prs: {
+					third_party: -1
+				},
+				gen: {
+					date: null,
+					time_slot: '',
+					city: '',
+					appointment_limit: 0,
+
+					authority: '',
+
+					auth_person: '',
+					auth_person_add: '',
+					auth_person_fn: '',
+					auth_person_cnic: '',
+					auth_person_rel: ''
+				}
+			}
+		}
+	},
+	mounted(){
+		let self=this;
+		self.initialize();
+	},
+	methods:{
+		initialize(){
+			let self=this;
+			query_post("load_centers", {}, function(rsp){
+				let obj= JSON.parse(rsp);
+				self.centers = obj.centers;
+			},'app=components/IBCC');
+		},
+		checkRequirement(){
+			let self=this, obj=self.obj;
+			if(typeof obj.prs.third_party=="undefined" || obj.prs.third_party==-1){return {code: 17, msg: "Case option is not selected!"};}
+			if( obj.gen.city==''){return {code: 33, msg: "City is Empty!"};}
+			if(obj.prs.third_party==0){ // Appointment
+				if(obj.gen.authority=="Authorize"){
+				if( obj.gen.auth_person==''){return {code: 29, msg: "Authorize Person is Empty!"};}
+				if( obj.gen.auth_person_cnic==''){return {code: 30, msg: "Mobile No. is Empty!"};}
+				//if( obj.gen.auth_person_fn==''){return {code: 31, msg: "Authorize Father Name is Empty!"};}
+				if( obj.gen.auth_person_rel==''){return {code: 32, msg: "RelationShip is Empty!"};}
+				//if( obj.gen.auth_person_add==''){return {code: 33, msg: "Address is Empty!"};}
+				}
+				if( obj.gen.date==null){return {code: 34, msg: "Date is Empty!"};}
+				if( obj.gen.time_slot.length!=5){return {code: 35, msg: "Time Slot is incorrect/empty!"};}
+			}
+			if(obj.prs.third_party==4){
+				if( obj.gen.date==null){return {code: 35, msg: "Visiting Date is Empty!"};}
+			}
+			return {code: 0};
+		},
+		submitData(){
+			let self=this;
+
+			let rsp = self.checkRequirement();
+			if(rsp.code>0){alertText(rsp.code,rsp.msg);}
+			else query_post("changeCaseOption", {obj: self.obj, case_code: self.case_code}, function(rsp){
+				
+				let obj = JSON.parse(rsp);
+				if(Array.isArray(obj))obj=obj[0];
+				if(obj.code==0){
+					alertText(0, "Application type is changed successfully!");
+					setTimeout(function(){
+						document.location.href = document.location.href;
+					}, 500);
+				}else alertText(obj.code, obj.msg);
+				
+				//let obj= JSON.parse(rsp);
+			},'app=components/IBCC');
+		},
+		submissionCenterChanged(){
+			let self=this;
+			self.obj.gen.date=null;self.obj.gen.time_slot='';
+
+			/*if(self.obj.prs.third_party==4)
+				self.obj.gen.city='Islamabad';*/
+			//else self.obj.gen.city='';
+			
+
+			if(self.obj.prs.third_party>=0 &&  self.obj.gen.city!=''){
+				//vue.inp_change();
+				self.$children.reduce(function(a, x){if(x._vnode.parent.tag.indexOf('attestation-appointment')!=-1)return x;return a;}, null).initializeCalender();
+			}
+		}
+	},
+	template: `<div class="form-group">
+					<div class="row">
+					<div class="col-xs-6 col-sm-4">
+                         <div class="form-group label-floating">
+                          <label class="control-label" style="font-size: 12px">Application Type</label>
+						  <select v-model="obj.prs.third_party" class="form-control form-control-sm" v-on:change="submissionCenterChanged">
+							<option v-for="x in case_options" v-bind:value="x.id">{{x.name}}</option>
+						  </select>
+						 </div>
+                    </div>
+					<div class="col-xs-6 col-sm-4">
+                         <div class="form-group label-floating">
+                          <label class="control-label" style="font-size: 12px">Submission Center</label>
+						  <select v-model="obj.gen.city" class="form-control form-control-sm" v-on:change="submissionCenterChanged">
+							<option v-for="x in appFilteredCenters(centers, obj.prs.third_party)" v-bind:value="x.name">{{x.name}}</option>
+						  </select>
+						 </div>
+                    </div>
+					</div>
+				<!-- Appointment -->
+				<div v-if="obj.prs.third_party==4" class="row">
+					<div class="col-xs-8 col-sm-4">
+                         <div class="form-group label-floating">
+                          <label class="control-label" style="font-size: 12px">Visiting Date</label>
+						  <express-visiting-date v-model="obj.gen.date" v-bind:city="obj.gen.city"></express-visiting-date>
+						 </div>
+                    </div>
+				</div>
+				<div v-if="obj.prs.third_party==0" class="row">
+					<div class="form-row col-xs-12 col-sm-12">
+					  <div class="col-xs-6">
+						<div class="form-group label-floating">
+						<label for="" class="control-label"><small>Authorize Family Member <span style="color: red;">*</span>(Only Parent, Spouse, Sibling & Children)</small></label>
+						<select v-model="obj.gen.authority" class="form-control">
+							<option value="Self">Self</option>
+							<option value="Authorize">Authorize</option>
+						</select>
+						</div>
+					  </div>
+					  <div class="col-xs-6">
+					   </div>
+					</div>
+					
+					<template v-if="obj.gen.authority=='Authorize'">
+					<div class="col-xs-12 col-sm-4">
+                         <div class="form-group label-floating">
+                          <label class="control-label" style="font-size: 12px">Authorize Person Name <span style="color: red;">*</span></label>
+                          <input type="text" class="form-control valid" v-model="obj.gen.auth_person">
+						 </div>
+                    </div>
+					<!--div class="col-xs-12 col-sm-6">
+                         <div class="form-group label-floating">
+                          <label class="control-label" style="font-size: 12px">Address <span style="color: red;">*</span></label>
+                          <input type="text" class="form-control valid" v-model="obj.gen.auth_person_add">
+						 </div>
+                    </div>
+					<div class="col-xs-12 col-sm-4">
+                         <div class="form-group label-floating">
+                          <label class="control-label" style="font-size: 12px">Authorize's Father Name <span style="color: red;">*</span></label>
+                          <input type="text" class="form-control valid" v-model="obj.gen.auth_person_fn">
+						 </div>
+                    </div-->
+					<div class="col-xs-12 col-sm-4">
+                         <div class="form-group label-floating">
+                          <label class="control-label" style="font-size: 12px">Mobile <span style="color: red;">*</span></label>
+                          <input type="text" v-mask="'NNNNNNNNNNNNN'" class="form-control valid" v-model="obj.gen.auth_person_cnic">
+						 </div>
+                    </div>
+					<div class="col-xs-12 col-sm-4">
+                         <div class="form-group label-floating">
+                          <label class="control-label" style="font-size: 12px">RelationShip <span style="color: red;">*</span></label>
+                          <select class="form-control valid" v-model="obj.gen.auth_person_rel">
+						  <option value="">Select Relative</option><option>Brother</option><option>Father</option><option>Mother</option><option>Sister</option><option>Children</option><option>Spouse</option>
+						  </select>
+						 </div>
+                    </div>
+					</template>
+					
+					<div class="col-md-12">
+						<attestation-appointment v-bind:obj='obj.gen'></attestation-appointment>
+					</div>
+					
+				</div>
+				<div class="col-md-12">
+						<button class="btn btn-success" v-on:click="submitData">Submit</button>
+				</div>
+				</div>`
+});
+
+Vue.component('get-board-verification', {
+    props: ['xx', 'completed'],
+    data() {
+        return {
+
+			info: [],
+            //step: 1, // 1: Question, 2: Form, 3: Document List
+            verifiedDocuments: [], // Stores documents from API
+			selectedDocs: [],
+
+			verificationStatus: null,   // backend response
+			checkingStatus: true,
+
+            searchQuery: '',
+			degree_types: ["", "", "Marksheet", "Certificate"],
+			certificate_types: ["", "SSC", "HSSC"],
+			boardConfigs: {
+				7: { // Federal Board
+					title: "Federal Board (IBCC Verification)",
+					fields: [
+						{ key: 'regNumber', label: 'Registration Number', type: 'text', auto_fill: function(x){return x.registration_number;} },
+						{ key: 'degreeType', label: 'Degree Type', type: 'select', options: ['SSC', 'HSSC'], auto_fill: function(x){if(x.certificate_id==1)return 'SSC';if(x.certificate_id==2)return 'HSSC'; return null;}  }
+					]
+				}/*,
+				18: { // Example: Lahore Board
+					title: "Lahore Board Verification",
+					fields: [
+						{ key: 'rollNo', label: 'Roll Number', type: 'text' },
+						{ key: 'year', label: 'Passing Year', type: 'number' }
+					]
+				}*/
+				// Add other boards here...
+			}
+        };
+    },
+	mounted(){
+		let self = this;
+
+		self.loadVerificationStatus();
+		let d = self.isVP;
+		for(let i=0;i<d.docs.length;i++){
+			let doc = d.docs[i];
+			let bc = self.boardConfigs[doc.board_id];
+
+			self.info.push({
+				step: 1,
+				loading: false,
+				values: bc.fields.map((x, field_index) => x.auto_fill(doc))
+			});
+		}
+	},
+    computed: {
+		isVP(){
+			let self = this;
+			let _cs = self.xx;
+			if(!_cs)return {isDeficient: false};
+			console.log("CS: ", _cs);
+			let _docs = _cs.docs;
+			let via_ibcc_boards = Object.keys(self.boardConfigs);
+			let isDeficient = false;
+
+			let docs = [];
+			for(let d=0;d<_docs.length;d++){
+				let _doc = _docs[d];
+				
+				if(via_ibcc_boards.indexOf(_doc.board_id+'') !=-1){
+					isDeficient=true;
+					docs.push(_doc);
+				}
+			}
+
+			let board_ids = docs.map((x) => x.board_id);
+			console.log("CS BDs: ", board_ids);
+			let title = board_ids.join(", ");
+
+			let ret= {isDeficient: isDeficient, title: title, docs: docs};
+			
+			return ret;
+		},
+        filteredDocuments() {
+            return this.verifiedDocuments.filter(doc => 
+                doc.name.toLowerCase().includes(this.searchQuery.toLowerCase())
+            );
+        },
+		totalAmount() {
+			return this.selectedDocs.reduce((t, d) => t + Number(d.fee || 0), 0);
+		},
+		grandTotal(){
+			if(!this.verificationStatus) return 0;
+
+			return Number(this.xx.case_amount || 0) +
+				Number(this.verificationStatus.verification_fee || 0);
+		}
+
+    },
+    methods: {
+		async loadVerificationStatus(){
+			let self = this;
+
+			self.checkingStatus = true;
+			try{
+				console.log('get-verification-status');
+				query_post('get-verification-status',{ application_id: self.xx.case_code }, function(res){
+					self.checkingStatus = false;
+
+					console.log("vStatus: ", res);
+					if(res.code>0)alertText(1, res.msg || "Failed to load verification status.");
+					
+					self.verificationStatus = res;
+
+					if(self.completed){
+
+						let is_all_done = res.is_paid && res.is_all_verified;
+						if(is_all_done)self.completed(2);
+						 
+					}
+					console.log(self.verificationStatus);
+				},'app=components/IBCC');
+
+			}catch(e){
+				console.log(e);
+			}
+		},
+
+        // Use this if user says "YES" to having verification already
+        async fetchDocumentsOnly(doc_idx) {
+            /*self.info[doc_idx].loading = true;
+            try {
+                // Adjust endpoint to just fetch list
+                const res = await axios.get(`/api/board-documents/${this.boardId}`);
+                this.verifiedDocuments = res.data.documents;
+                this.step = 3;
+            } catch (e) { alert("Error loading documents"); }
+            this.loading = false;*/
+			let self=this;
+			self.info[doc_idx].step=3;
+		},
+		initializeRequestData(doc_idx){
+			let self=this;
+
+			self.info[doc_idx].step = 2
+		},
+
+        // Use this for the "NO" path (Full Verification)
+        submitVerification(doc_idx) {
+			let self=this;
+            self.info[doc_idx].loading = true;
+
+			let formData = {};
+			let d = self.isVP;
+			
+			let doc = d.docs[doc_idx];
+			let bc = self.boardConfigs[doc.board_id];
+
+			for(let i=0;i<bc.fields.length;i++){
+				formData[bc.fields[i].key] = self.info[doc_idx].values[i];
+			}
+			console.log(formData);
+			
+			
+
+            
+			query_post('get-verification-verify', {
+				board_id: doc.board_id,
+				...formData
+			},  (res) => {
+				console.log("##", res);
+				if (res.code === 0) {
+					let ss = res;
+					console.log("Init: ", ss);
+
+					let dd = [];
+
+					
+
+					for (let j = 0; j < res.data.length; j++) { // ✅ fixed
+						let x = res.data[j];
+
+						x.document_type = x.degree_type=='2'? 'Marksheet':'Certificate';
+						dd.push(x);
+					}
+					
+
+					console.log("Final: ", dd);
+
+					self.verifiedDocuments = dd;
+					self.info[doc_idx].step = 3;
+
+				} else {
+					alertText(1, "Verification Failed. Try again.");
+					self.info[doc_idx].step = 1;
+				}
+
+			},'app=components/IBCC');
+            
+        },
+		requestVerifications(doc) {
+			let self = this;
+
+			if (self.selectedDocs.length === 0) return;
+
+			let payload = {
+				name: self.selectedDocs[0].name,
+				country: "Pakistan",
+				city: "Islamabad",
+				postal_address: "H-13, Islamabad",
+				phone: "03051395555",
+				email: "sajjad.rashdi@ibcc.edu.pk",
+				registration_no: self.selectedDocs[0].reg_no,
+				is_paid: false,
+				total_amount: self.totalAmount,
+				chosen_options: self.selectedDocs,
+				certificate_id: doc.certificate_id,
+				application_id: self.xx.case_code,
+				board_id: doc.board_id
+			};
+
+			try {
+				query_post('request-verifications', payload, function(res){
+
+					console.log(res);
+					if (res.code == 0) {
+						let d = res.data;
+						alertText(0, "Request submitted successfully.\nTracking ID: " + d.tracking_id);
+						//Refresh
+						setTimeout(function(){
+							document.location.href = document.location.href;
+						}, 1000);
+					} else {
+						alertText(1, res.msg || "Failed to submit request.");
+					}
+				},'app=components/IBCC');
+			} catch (e) {
+				alertText(1, "Server error. Try again.");
+			}
+		},
+		markManualVerification(doc){
+			let self=this;
+
+			let payload = {
+				certificate_id: doc.certificate_id,
+				application_id: self.xx.case_code
+			};
+
+			query_post('mark-manual-verification', payload, function(res){
+
+				console.log(res);
+				if (res.success) {
+					alertText(0, "Request submitted successfully.");
+					setTimeout(function(){
+						document.location.href = document.location.href;
+					}, 1000);
+				} else {
+					alertText(1, res.message || "Failed to submit request.");
+				}
+			},'app=components/IBCC');
+		}
+    },
+
+    template: `
+        <div class="board-verification-container mt-3" v-if="isVP.isDeficient && info.length>0">
+			 	
+				
+
+					<template v-if="verificationStatus && verificationStatus.exists && verificationStatus.is_all_verified">
+					<div class="important-notice">
+						<h4 style="font-weight: bold;">
+							Board Verification Received
+						</h4>
+						<p class="mb-0 small">
+							Verification for Application ID: <strong>{{ xx.case_code }}</strong> has been successfully completed. Your verified documents from the board are now available below. You can view or download your documents directly from this portal.
+						</p>
+					</div>
+					</template>
+					<template v-else>
+					<div class="important-notice">
+						<h4 style="font-weight: bold;">
+							Board Verification Required
+						</h4>
+						<p class="mb-0 small">
+							You may apply for <strong>verification through IBCC</strong> for the following board(s)
+							against your <strong>Application ID: {{ xx.case_code }}</strong>.
+							If verification has already been completed directly with the board, select
+							<strong>“Yes”</strong>; otherwise, choose
+							<strong>“No, Verify via IBCC.”</strong>
+						</p>
+					</div>
+					</template>
+
+				
+		    <div v-if="checkingStatus" class="text-center p-5">
+				<div class="spinner-border text-success mb-2"></div>
+				<div class="small text-muted">Loading verification requirements...</div>
+			</div>
+
+			<div
+			v-else-if="verificationStatus && verificationStatus.exists && !verificationStatus.is_paid && verificationStatus.is_all_verified"
+			class="card border-success shadow-sm"
+			>
+				<!-- Header -->
+				<div class="card-header bg-success text-white font-weight-bold">
+					Verification Request Submitted Successfully
+				</div>
+
+				<div class="card-body">
+
+					<!-- Message -->
+					<p class="mb-2">
+						Your board verification request has been successfully submitted for the following document(s):
+					</p>
+
+					<!-- Document List -->
+					<ul class="mb-3 pl-3">
+						<li v-for="d in verificationStatus.details" class="mb-1">
+							<strong>{{ d.name }}</strong>
+							— {{ certificate_types[d.certificate_id] }}
+							{{ degree_types[d.degree_type] }}
+							({{ d.year }})
+						</li>
+					</ul>
+
+					<hr>
+
+					<!-- Payment Summary -->
+					<h6 class="text-success font-weight-bold mb-2">
+						Payment Summary
+					</h6>
+
+					<table class="table table-sm table-borderless mb-3">
+						<tr>
+							<td class="text-muted">PSID</td>
+							<td class="font-weight-bold text-monospace">{{ xx.PSID }}</td>
+						</tr>
+						<tr>
+							<td class="text-muted">IBCC Application Fee</td>
+							<td>{{ xx.case_amount }}</td>
+						</tr>
+						<tr>
+							<td class="text-muted">Board Verification Fee</td>
+							<td>{{ verificationStatus.verification_fee }}</td>
+						</tr>
+						<tr class="border-top">
+							<td class="font-weight-bold">Total Payable Amount</td>
+							<td class="font-weight-bold text-success h5 mb-0">
+								{{ grandTotal }}
+							</td>
+						</tr>
+					</table>
+
+					<!-- Action -->
+					<!--button class="btn btn-success btn-block font-weight-bold">
+						Proceed to Payment
+					</button-->
+
+					<small class="text-muted d-block mt-2 text-center">
+						Please complete the payment to finalize your verification request. Your <b>verified documents will be available within 5 minutes</b> after successful payment.
+					</small>
+
+				</div>
+			</div>
+
+
+
+			<template v-else v-for="doc, doc_idx in isVP.docs" >
+
+
+			<template v-if="verificationStatus && verificationStatus.verified_list && (v_doc = verificationStatus.verified_list[doc.certificate_id])">
+
+				<div class="card shadow-sm border-success mb-3">
+
+					<div class="card-body text-left">
+
+						<!-- Manual verified -->
+						<div v-if="v_doc.total_amount == 0" class="text-success font-weight-bold">
+							<i class="fa fa-check-circle mr-2"></i>
+							I have personally completed the verification of my
+							<strong>{{ doc.certificate_id == 1 ? 'SSC' : 'HSSC' }}</strong>
+							document from
+							<strong>{{ boardConfigs[doc.board_id].title }}</strong>.
+						</div>
+
+						<!-- Already applied -->
+						<div v-else class="text-success font-weight-bold">
+							<template v-if="verificationStatus.verified_list[doc.certificate_id]?.documents?.length > 0">
+								<i class="fa fa-file-text mr-2"></i>
+								Verification documents received for 
+								<strong>{{ doc.certificate_id == 1 ? 'SSC' : 'HSSC' }}</strong>
+								
+								<div class="mt-2">
+									<div v-for="(file, index) in verificationStatus.verified_list[doc.certificate_id].documents" :key="index" class="mb-1">
+										<a :href="file.document_path" target="_blank" class="badge badge-primary p-2">
+											<i class="fa fa-download mr-1"></i>
+											Download {{ file.level }} {{ file.document_type }}
+										</a>
+									</div>
+								</div>
+							</template>
+
+							<template v-else>
+								<i class="fa fa-check-circle mr-2"></i>
+								Verification has already been applied for
+								<strong>{{ doc.certificate_id == 1 ? 'SSC' : 'HSSC' }}</strong>
+								from
+								<strong>{{ boardConfigs[doc.board_id].title }}</strong>.
+							</template>
+						</div>
+
+					</div>
+
+				</div>
+
+			</template>
+
+			<template v-else>
+            <div v-if="info[doc_idx].step === 1" class="card border-primary shadow-sm">
+                <div class="card-body text-center">
+                    <p class="h6 mb-3">Do you have Board verification for <strong>{{doc.certificate_id==1?'SSC':'HSSC'}}</strong> from <strong>{{ boardConfigs[doc.board_id].title }}</strong>?</p>
+                    <button class="btn btn-success btn-sm px-4 mr-2" @click="markManualVerification(doc)">Yes</button>
+                    <button class="btn btn-outline-primary btn-sm px-4" @click="initializeRequestData(doc_idx)">No, Verify via IBCC</button>
+                </div>
+            </div>
+
+			<template v-else-if="info[doc_idx].step === 2">
+				<div class="card shadow-sm">
+					<div class="card-header bg-primary text-white py-2">
+						<span class="h6 mb-0">{{doc.certificate_id==1?'SSC':'HSSC'}} Verification from <strong>{{ boardConfigs[doc.board_id].title }}</strong> </span>
+					</div>
+					<div class="card-body">
+						<div v-for="field, field_idx in boardConfigs[doc.board_id].fields" :key="field.key" class="form-group mb-2">
+							<label class="small font-weight-bold mb-1">{{ field.label }}</label>
+							<select v-if="field.type === 'select'" v-model="info[doc_idx].values[field_idx]" class="form-control form-control-sm">
+								<option value="">-- Select --</option>
+								<option v-for="opt in field.options" :key="opt" :value="opt">{{ opt }}</option>
+							</select>
+							<input v-else :type="field.type" v-model="info[doc_idx].values[field_idx]" class="form-control form-control-sm" :placeholder="'Enter ' + field.label">
+						</div>
+						<button class="btn btn-info btn-block mt-3" :disabled="info[doc_idx].loading" @click="submitVerification(doc_idx)">
+							<span v-if="info[doc_idx].loading" class="spinner-border spinner-border-sm mr-1"></span>
+							Verify & Load Documents
+						</button>
+						<button class="btn btn-link btn-block btn-sm mt-1 text-muted" @click="info[doc_idx].step = 1">Back</button>
+					</div>
+				</div>
+			</template>
+
+            <div v-else-if="info[doc_idx].step === 3" class="card shadow border-success">
+                <div class="card-header bg-success text-white d-flex justify-content-between align-items-center py-2">
+                    <span class="font-weight-bold">Select {{doc.certificate_id==1?'SSC':'HSSC'}} Documents for Verification</span>
+                </div>
+                <div class="card-body p-0">
+                    <div class="p-2 bg-light border-bottom">
+                        <p>Please select the verifications for the <strong>{{doc.certificate_id==1?'SSC':'HSSC'}}</strong> documents you wish to have attested. By default, the required verifications are automatically selected for you.</p>
+                    </div>
+                    <div class="table-responsive" style="max-height: 300px;">
+                        <table class="table table-hover table-sm mb-0">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th width="10%">Select</th>
+                                    <th>Document Name</th>
+                                    <th>Ref #</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(doc, index) in filteredDocuments" :key="index">
+									<td class="text-center align-middle">
+										<input type="checkbox"
+										v-model="selectedDocs"
+										:value="doc">
+
+									</td>
+									<td>
+										<div class="font-weight-bold text-uppercase">{{ doc.name }}</div>
+										<small class="text-muted">S/D of: {{ doc.fname }}</small>
+									</td>
+									<td>
+										<span class="badge badge-info">Roll: {{ doc.roll_no }}</span>
+										<div class="small mt-1">
+											<strong>Year:</strong> {{ doc.year }} <br>
+											<strong>Reg:</strong> {{ doc.reg_no }} <br>
+											<strong>Document:</strong> {{ doc.document_type }}
+										</div>
+									</td>
+								</tr>
+                                <tr v-if="filteredDocuments.length === 0">
+                                    <td colspan="3" class="text-center py-3 text-muted">No documents found.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer bg-white text-right">
+				<span class="mr-3 font-weight-bold">Total Verifications Fee: <span class="text-primary">{{ totalAmount }}</span></span>
+                    <button class="btn btn-success btn-sm"
+							:disabled="selectedDocs.length === 0"
+							@click="requestVerifications(doc)">
+						Request for Verifications
+					</button>
+
+                </div>
+            </div>
+			</template>
+			</template>
+        </div>
+    `
+});
+
+function verifyCertificate(board_id,opts, callback=null){
+	
+	query_post("boardapis_verify", {board_id: board_id, opts: opts}, function(resp){
+		let obj = JSON.parse(resp);
+		console.log(obj);
+		if(obj.code==0){
+			//alertText(obj.code, obj.detail);
+			try {
+				if(callback!=null)callback(obj);
+			} catch (error) {
+				alertText(1, "Something is wrong, Try again!"+error );
+			}
+		}
+		else alertText(obj.code, obj.msg);
+	},'app=components/IBCC');
+}
+
+Vue.component('ibcc-certificate_verification', {
+	data(){
+		return {
+			board: null,
+			boards: [], 
+
+			degrees : ['SSC', 'HSSC', '9th', '10th', '11th', '12th'],
+			allow_degrees: [1, 1, 0, 0, 0, 0],
+			sessionTypes : ['Annual', 'Supplemenetary', '1st Annual', '2nd Annual', 'Special'],
+			naming : {
+				'via': 'Select mode',
+				'roll_number' : 'Roll Number',
+				'registration_number' : 'Registration Number',
+				'v_no' : 'Verification Number',
+				'certificate_id' : 'Degree Type',
+				'year' : 'Exam Year',
+				'session' : 'Session Type'
+			},
+			details : null,
+			api_type: 0
+		} 
+	},
+	// case_code is optional: the window page (cats/63) already knows which application this is
+	// for, so it is not asked for again there.
+	props: ['callback', 'case_code'],
+	mounted(){
+		let self=this;
+		query_post("boardapis_fetch", {}, function(resp){
+			let obj= JSON.parse(resp);
+			
+			if(obj.code==0){
+				let boards = obj.data;
+				for(let b=0;b<boards.length;b++){
+					let board = boards[b];
+					
+					let inputs=[], inps = board.inputs.split(',');
+
+					if(board.have_api==3){
+						inputs.push({name: 'via', type: 'number', value: 0});
+						//inputs.push({name: 'v_no', type: 'text', value: null});
+					}
+					for(let i=0;i<inps.length;i++){
+						let inp = inps[i];
+						let parms=inp.split(':'), name=parms[0];
+						let type = 'text', naming = null;
+						if(parms.length>1){
+							type=parms[1];
+							let type_split = type.split(';');
+							
+							if(type_split.length>1){
+								naming=type_split[1];
+								type = type_split[0];
+							}
+						}
+						inputs.push({name: name, type: type, value: null, naming: naming});
+					}
+					obj.data[b].inputs = inputs;
+				}
+				
+				self.boards = boards;
+			}
+			else alertText(obj.code, obj.msg);
+		},'app=components/IBCC');
+	},
+	methods: {
+		boardSelected(b){
+			let self=this;
+			self.details = null;
+			if(b.id==29 || b.id==30 || b.id==74){
+				self.allow_degrees = [0, 0, 1, 1, 1, 1];
+			}
+			else self.allow_degrees = [1, 1, 0, 0, 0, 0];
+		},
+		apiTypeChanged(b, inp){
+			console.log(this.api_type, b);
+			let id_changed =  this.api_type;
+			
+
+			if(id_changed==1){
+				b.backup = b.inputs;
+
+				b.inputs = [];
+				b.inputs.push({name: 'via', type: 'number', value: 1});
+				b.inputs.push({name: 'v_no', type: 'text', value: null});
+			}else {
+				b.inputs = b.backup;
+			}
+
+
+		},
+		fetchAPIs(){
+			let self=this;
+
+			query_post("fetch_boardapi", {}, function(rsp){
+				let obj = JSON.parse(rsp);
+
+			})
+		},
+		getVerification(){
+			let self=this;
+			self.details = null;
+			verifyCertificate(self.board.id, self.board.inputs, function(obj){
+				if(obj.code==0 && obj.details[0] && obj.details[0].detail && obj.details[0].detail.name && obj.details[0].detail.name.length>0)
+					{self.details = obj.details;console.log("Details", self.details);}
+				else alertText(1, "Record not found!");
+			});
+		},
+		/** What was searched for, as one line: "Roll Number 438294, Exam Year 2024". */
+		searchedFor(){
+			let self=this;
+			return (self.board && self.board.inputs ? self.board.inputs : [])
+				.filter(function(inp){ return inp.name != 'via' && inp.value != null && String(inp.value).length > 0; })
+				.map(function(inp){ return self.getName(inp) + ' ' + inp.value; }).join(', ');
+		},
+		/** The name the board returned for the candidate. */
+		verifiedName(){
+			let d = this.details && this.details[0] && this.details[0].detail;
+			return d && d.name ? d.name : '';
+		},
+		verifiedFather(){
+			let d = this.details && this.details[0] && this.details[0].detail;
+			return d ? (d.father_name || d.fatherName || d.father || '') : '';
+		},
+		/** Step 1: which application is this verification for? */
+		askCaseAndPrint(){
+			let self=this;
+			if(self.case_code && String(self.case_code).length > 1){ self.compareWithCase(String(self.case_code)); return; }
+
+			Swal.fire({
+				title: 'Which application?',
+				input: 'text',
+				inputLabel: 'Case number this verification belongs to',
+				inputPlaceholder: 'e.g. A12345',
+				showCancelButton: true,
+				confirmButtonText: 'Continue',
+				confirmButtonColor: '#157347', cancelButtonColor: '#6c757d', reverseButtons: true,
+				inputValidator: function(v){ return (!v || String(v).trim().length < 2) ? 'Please enter the case number.' : undefined; }
+			}).then(function(r){ if(r.isConfirmed)self.compareWithCase(String(r.value).trim().toUpperCase()); });
+		},
+		/** Step 2: do the board record and the case describe the same person? */
+		compareWithCase(case_code){
+			let self=this;
+			query_post("verification_case", {case_code: case_code}, function(rsp){
+				let obj;
+				try { obj = JSON.parse(rsp); } catch(e){ obj = {code: 1, msg: 'Invalid response from server.'}; }
+				if(obj.code > 0){ alertText(1, obj.msg || 'Case could not be loaded.'); return; }
+
+				let c = obj.case, esc = function(v){ return String(v == null ? '' : v).replace(/[&<>"]/g, function(ch){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]; }); };
+				let row = function(label, left, right){
+					return '<tr><th style="text-align:left;padding:4px 8px;white-space:nowrap">' + label + '</th>'
+						+ '<td style="padding:4px 8px">' + esc(left || '—') + '</td>'
+						+ '<td style="padding:4px 8px">' + esc(right || '—') + '</td></tr>';
+				};
+				Swal.fire({
+					title: 'Do these details match?',
+					width: '760px',
+					icon: 'question',
+					html: '<table style="width:100%;font-size:13px;border-collapse:collapse">'
+						+ '<tr><th></th><th style="text-align:left;padding:4px 8px">Board verification</th>'
+						+ '<th style="text-align:left;padding:4px 8px">Case ' + esc(c.case_code) + '</th></tr>'
+						+ row('Name', self.verifiedName(), c.full_name)
+						+ row('Father name', self.verifiedFather(), c.father_name)
+						+ row('Board', self.board ? self.board.name : '', c.city)
+						+ row('Searched by', self.searchedFor(), c.cnic ? ('CNIC ' + c.cnic) : '')
+						+ '</table>',
+					showCancelButton: true,
+					confirmButtonText: 'Yes, they match',
+					cancelButtonText: 'No, they do not',
+					confirmButtonColor: '#157347', cancelButtonColor: '#dc3545', reverseButtons: true
+				}).then(function(r){
+					if(r.isConfirmed)self.saveVerification(c.case_code, 1);
+					else if(r.dismiss === Swal.DismissReason.cancel)self.saveVerification(c.case_code, 0);
+				});
+			}, 'app=components/IBCC');
+		},
+		/** Step 3: record the answer; a matched verification then goes to the printer. */
+		saveVerification(case_code, matched){
+			let self=this;
+			query_post("save_board_verification", {
+				case_code: case_code, matched: matched,
+				board_id: self.board ? self.board.id : 0,
+				board_name: self.board ? self.board.name : '',
+				searched: self.searchedFor(),
+				candidate_name: self.verifiedName(),
+				details: JSON.stringify(self.details || [])
+			}, function(rsp){
+				let obj;
+				try { obj = JSON.parse(rsp); } catch(e){ obj = {code: 1, msg: 'Invalid response from server.'}; }
+				if(obj.code > 0){ alertText(1, obj.msg); return; }
+				alertText(0, obj.msg);
+				if(matched)self.printBoardVerification(case_code, obj.stamp, obj.caption);
+			}, 'app=components/IBCC');
+		},
+		/**
+		 * The record was verified for an Equivalence case, so there is no attestation case to tie
+		 * it to and nothing to record against one: the board's reply is simply printed. The sheet
+		 * carries no QR, because a QR here would point at an attestation record that does not
+		 * exist - the line under the heading names who printed it and when instead.
+		 */
+		printForEquivalence(){
+			let self=this;
+			if(self.details == null){ alertText(1, "Verify a record first."); return; }
+
+			let by = 'Muhammad Qasim';
+			self.printBoardVerification('', '', 'For Equivalence · ' + by + ' · ' + toGeneralDate());
+		},
+		printBoardVerification(case_code, stamp, caption){
+			let self=this;
+			let details = self.details;
+			let board_name = self.board?self.board.name:null;
+			let inp_naming = self.naming;
+			let board_inputs = self.board.inputs;
+			// The QR is an encrypted link back to this verification; the caption under it names
+			// the record, the case, who printed it and when.
+			let verification_case = case_code || '';
+			let verification_stamp = stamp || '';
+			let verification_caption = caption || '';
+			loadRashdiScript('documentBoardVerification', function(rsp){
+				eval(rsp);
+			});
+		},
+		getName(inp){
+			let self=this;
+			let name = inp.name;
+			if(inp.naming!=null && inp.naming.length>0)return inp.naming;
+			return self.naming[name]?self.naming[name]:name
+			
+		}
+	},
+	template: `<div class="row">
+			<div class="col-md-4">
+				<p>Board: <br>
+				<select class="form-control" v-model="board" v-on:change="api_type=0;boardSelected(board)">
+					<option v-for="x in boards" v-bind:value="x">{{x.name}}</option>
+				</select>
+				</p>
+			</div>
+			<template v-if="board!=null">
+			
+			<div class="col-md-12">
+			<p v-if="board.comments.length>0" v-html="board.comments"></p>
+			<p style="text-align:center"><span v-if="board.have_api==1">Mode: BISE API</span><span v-if="board.have_api==2">Mode: IBCC Verification Portal</span></p>
+			</div>
+			<div v-for="inp in board.inputs" class="col-md-4">
+				<p>{{getName(inp)}}:<br>
+					<select v-if="inp.name=='via'" v-model="api_type" class="form-control" v-on:change="apiTypeChanged(board)">
+						<option value="0">BISE API</option><option value="1">IBCC Verification Portal</option>
+					</select>
+					<select v-else-if="inp.name=='certificate_id'" v-model="inp.value" class="form-control">
+						<option v-for="(x,idx) in degrees" v-if="allow_degrees[idx]" v-bind:value="idx+1">{{x}}</option>
+					</select>
+					<select v-else-if="inp.name=='session'" v-model="inp.value" class="form-control">
+						<option v-for="(x,idx) in sessionTypes" v-bind:value="idx+1">{{x}}</option>
+					</select>
+					<input v-else v-bind:type="inp.type" v-model="inp.value" class="form-control" v-bind:placeholder="inp.name">
+				</p>
+			</div>
+			<div class="col-md-4">
+				<p> Verify:<br>
+					<button class="btn btn-success btn-block" v-on:click="getVerification">Verify</button>
+					<button v-if="details!=null" class="btn btn-success btn-block" v-on:click="askCaseAndPrint">{{case_code ? 'Verify &amp; Print' : 'Select Case &amp; Print'}}</button>
+					<!-- Equivalence has its own cases; on the window page (cats/63) the attestation case is known, so this is the home page only. -->
+					<button v-if="details!=null && !case_code" class="btn btn-outline-success btn-block" v-on:click="printForEquivalence">For Equivalency</button>
+				</p>
+			</div>
+			</template>
+		</div>`
+});
+
+Vue.component('ibcc-messenger', {
+	data(){
+		return {
+			section: ['Default', 'IT Section', 'Case Section'], section_id: 0, 
+			user: {id: 1370138},
+			contacts : [],
+			send_message: '', messages: []
+		} 
+	},
+	props: ['obj'],
+	mounted(){
+		let self=this;
+		query_post("messenger_fetchContacts", {section_id: self.section_id}, function(resp){
+			
+			let obj= JSON.parse(resp);
+			
+			if(obj.code==0){
+				//self.messages = obj.messages;
+				self.contacts = self.contacts.concat(obj.contacts);
+			}
+		},'app=components/IBCC');
+	},
+	methods: {
+		get_contact(id){
+			let self=this;
+			//Current User
+			if(id==self.user.id)return {id: 1370138, name: "You", image: "https://attest.ibcc.edu.pk/assets/attestation/users/0female.png"};
+
+			//Other contacts
+			for(let i=0, len=self.contacts.length;i<len;i++){
+				let x= self.contacts[i];
+				if(x.id==id)return x;
+			}
+			return null;
+		},
+		loadMessages(contact_id){
+			let self = this;
+			query_post("messenger_fetchMessages", {section_id: self.section_id, contact_id: contact_id}, function(resp){
+			
+				let obj= JSON.parse(resp);
+				
+				if(obj.code==0){
+					//self.messages = obj.messages;
+					self.contacts = self.contacts.concat(obj.contacts);
+				}
+			},'app=components/IBCC');
+		},
+		sendMessage(){
+			let self=this;
+			if(self.send_message.length==0)alertText(1, "message is Empty")
+			else query_post("messenger_sendMessage", {message: self.send_message, section_id: self.section_id}, function(resp){
+				let obj= JSON.parse(resp);
+				
+				if(obj.code==0){
+					self.messages.push(obj.message);
+				}else alertText(obj.code, obj.msg);
+			},'app=components/IBCC');
+		},
+		messengerDateFormat(dtime){
+			let dt=new Date(dtime);
+			let dte = dt.toDateString().split(" ");
+			return dte[1]+" "+dte[2]+" "+dt.toTimeString().split(" ")[0];
+		}
+	},
+	template: `<div class="card direct-chat direct-chat-warning">
+                  <div class="card-header">
+                    <h3 class="card-title">Direct Chat</h3>
+                    <div class="card-tools">
+                      <span title="3 New Messages" class="badge badge-warning">3</span>
+                      <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                      </button>
+                      <button type="button" class="btn btn-tool" title="Contacts" data-widget="chat-pane-toggle">
+                        <i class="fas fa-comments"></i>
+                      </button>
+                      <button type="button" class="btn btn-tool" data-card-widget="remove">
+                        <i class="fas fa-times"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <!-- /.card-header -->
+                  <div class="card-body" style="display: block;">
+                    <!-- Conversations are loaded here -->
+                    <div class="direct-chat-messages">
+                      
+
+                      <div v-for="msg in messages" v-if="contact=get_contact(msg.user_id)" v-bind:class="'direct-chat-msg'+(msg.user_id==user.id?' right':'')">
+                        <div class="direct-chat-infos clearfix">
+                          <span v-bind:class="'direct-chat-name float-'+(msg.user_id==user.id?'right':'left')">{{contact.name}}<br><small>{{msg.msg_about}}</small></span>
+                          <span v-bind:class="'direct-chat-timestamp float-'+(msg.user_id==user.id?'left':'right')">{{messengerDateFormat(msg.dtime)}}</span>
+                        </div>
+                        <!-- /.direct-chat-infos -->
+                        <img class="direct-chat-img" v-bind:src="contact.image" alt="message user image">
+                        <!-- /.direct-chat-img -->
+                        <div class="direct-chat-text">
+                          {{msg.message}}
+                        </div>
+                        <!-- /.direct-chat-text -->
+                      </div>
+
+                    </div>
+                    <!--/.direct-chat-messages-->
+
+                    <!-- Contacts are loaded here -->
+                    <div class="direct-chat-contacts">
+                      <ul class="contacts-list">
+                        <li v-for="contact in contacts">
+                          <a v-on:click="loadMessages(contact.id)">
+                            <img class="contacts-list-img" v-bind:src="contact.image" alt="User Avatar">
+
+                            <div class="contacts-list-info">
+                              <span class="contacts-list-name">
+                                {{get_contact(contact.last_message.user_id).name}} <small>({{contact.messages}} unread messages)</small>
+                                <small class="contacts-list-date float-right">{{messengerDateFormat(contact.last_message.dtime)}}</small>
+                              </span>
+                              <span class="contacts-list-msg">{{contact.last_message.message}}</span>
+                            </div>
+                            <!-- /.contacts-list-info -->
+                          </a>
+                        </li>
+                        <!-- End Contact Item -->
+                      </ul>
+                      <!-- /.contacts-list -->
+                    </div>
+                    <!-- /.direct-chat-pane -->
+                  </div>
+                  <!-- /.card-body -->
+                  <div class="card-footer" style="display: block;">
+                    <form action="#" method="post">
+                      <div class="input-group">
+                        <input type="text" name="message" v-model="send_message" v-on:keyup-enter="sendMessage" placeholder="Type Message ..." class="form-control">
+                        <span class="input-group-append">
+                          <button type="button" class="btn btn-warning" v-on:click="sendMessage">Send</button>
+                        </span>
+                      </div>
+                    </form>
+                  </div>
+                  <!-- /.card-footer-->
+                </div>`
+});
+
+</script>
+<style>
+        .bs4-application-tracking {
+            margin-bottom: 15px;
+            overflow: hidden;
+            color: #878788;
+            padding-left: 0px;
+            margin-top: 15px; /* Reduced space from progress bar top */
+        }
+        .bs4-application-tracking li {
+            list-style-type: none;
+            font-size: 13px;
+            width: 16.6%;
+            float: left;
+            position: relative;
+            font-weight: 400;
+            color: #878788;
+            text-align: center;
+        }
+        .bs4-application-tracking li:first-child:before {
+            margin-left: 15px !important;
+            padding-left: 11px !important;
+            text-align: left !important;
+        }
+        .bs4-application-tracking li:last-child:before {
+            margin-right: 5px !important;
+            padding-right: 11px !important;
+            text-align: right !important;
+        }
+        .bs4-application-tracking li > div {
+            color: #fff;
+            width: 29px;
+            text-align: center;
+            line-height: 29px;
+            display: block;
+            font-size: 12px;
+            background: #878788;
+            border-radius: 50%;
+            margin: auto;
+        }
+        .bs4-application-tracking li:after {
+            content: '';
+            width: 150%;
+            height: 2px;
+            background: #878788;
+            position: absolute;
+            left: 0%;
+            right: 0%;
+            top: 15px;
+            z-index: -1;
+        }
+        .bs4-application-tracking li:first-child:after {
+            left: 50%;
+        }
+        .bs4-application-tracking li:last-child:after {
+            left: 0%!important;
+            width: 0% !important;
+        }
+        .bs4-application-tracking li.completed {
+            font-weight: bold;
+            color: #157347;
+        }
+        .bs4-application-tracking li.completed > div {
+            background: #157347;
+        }
+        .bs4-application-tracking li.completed:after {
+            background: #157347;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border: none !important; /* Ensuring all table elements have no borders */
+        }
+        thead th {
+            background-color: #157347; /* Green background */
+            color: white; /* White text */
+        }
+        tbody tr td {
+            border: none; /* Remove row dividers */
+        }
+        .table-actions {
+            border: none;
+            padding: 0px;
+        }
+        .table-actions table {
+            margin: 0;
+        }
+        .btn-group-vertical .btn {
+            margin-bottom: 7px; /* Reduce vertical space between buttons */
+        }
+        .btn-group-horizontal .btn {
+            margin-right: 3px; /* Add horizontal space between buttons */
+        }
+
+		.card-timeline { 
+			background-color: transparent; /* Remove the background color */
+			box-shadow: none;
+			z-index: 0; 
+			width: 100%; /* Extend the width */
+			padding: 0; /* Remove padding */
+			margin: 0; /* Remove margin */ 
+		}
+
+		.hide-card .card-body {
+			display: none;
+		}
+
+		.hide-card .card-timeline {
+			display: block;
+		}
+    </style>
+<div id="x_content" class="x_content table-responsive"><table class="table table-bordered table-striped dataTable dtr-inline"><thead style="font-size: 12px;"><tr><th>Application ID</th> <th>Created Time</th> <th>PSID</th> <th>Payment Status</th> <th>City</th> <th>Action</th></tr></thead> <tbody><tr style="background-color: rgb(255, 255, 255);"><td>E11000574</td> <td>2026-10-08 12:21:10 </td> <td>100805121150000011000574</td> <td><b style="color:green;">Payment Paid</b></td> <td>Islamabad</td> <td rowspan="2" style="font-size: 16px;"><button class="btn btn-success btn-block">Print Form</button> <button class="btn btn-primary btn-block">Payment Receipt</button> <button class="btn btn-primary btn-block">Payment Method</button> <button class="btn btn-primary btn-block">Change Application Type</button> <!----></td></tr> <tr style="background-color: rgb(255, 255, 255);"><td colspan="5" style="text-align: center;"><!----> <div class="card card-timeline remove-shadow"><ul class="bs4-application-tracking"><li class="step completed"><div><i class="fas fa-user"></i></div>Awaiting Applicant</li> <li class="step "><div><i class="fas fa-hourglass"></i></div>In Progress</li> <li class="step "><div><i class="fa fa-thumbs-up"></i></div>Quality Control</li> <li class="step "><div><i class="fa fa-star"></i></div>Authority</li> <li class="step "><div><i class="fa fa-times"></i></div>Disapproved</li> <li class="step "><div><i class="fa fa-check-circle"></i></div>Delivered</li></ul></div> <p style="text-align: center;"><b>Application Created</b></p></td></tr></tbody></table> <div id="caseoptionModel" class="modal"><div class="modal-dialog modal-md"><div class="modal-content"><div class="modal-header"><h4 class="modal-title"></h4> <button type="button" data-dismiss="modal" class="close">×</button></div> <!----> <div class="modal-footer"><button type="button" data-dismiss="modal" class="btn btn-danger">Close</button></div></div></div></div> <div id="instructionModal" class="modal"><div class="modal-dialog modal-md"><div class="modal-content"><div class="modal-header"><h4 class="modal-title">
+				Application Applied
+			</h4> <button type="button" data-dismiss="modal" class="close">×</button></div> <div class="modal-body"><!----> <!----> <!----> <p style="text-align: left;">Dear Applicant, Your application has been applied successfully. Please follow the below mentioned steps.
+		<br><br>01. Pay the required attestation Fee through 1Bill using any of Mobile Banking App/ Easypaisa /Jazz Cash)/United Bank Limited through its Challan/PSID.
+		<br>02. After paying the fees, please visit the IBCC Islamabad office during the Express shift in the evening. Bring a printout of your application form along with the following documents:
+		</p><ul><li>Original Documents</li> <li>CNIC/Passport copy</li> <li>Original Fee Receipt</li> <li>Verification must be forwarded by the board to IBCC's online&nbsp;portal.</li></ul> <p></p></div> <div class="modal-footer"><button type="button" data-dismiss="modal" class="btn btn-danger">Close</button></div></div></div></div> <div id="p_instruction_model" class="modal"><div class="modal-dialog modal-md"><div class="modal-content"><div class="modal-header"><h4 class="modal-title"></h4> <button type="button" data-dismiss="modal" class="close">×</button></div> <div class="modal-body"><h3>Online Payment Instructions
+        <br>Pay Your IBCC Fee Using 1 Bill
+	  </h3> <br> <!----><ol><li>Sign into your Internet/Mobile Banking</li> <li>Select Bill Payment &amp; 1Bill</li> <li>Select Voucher/Invoice</li> <li>Add your given Challan/PSID <b></b></li> <li>Your bill details will automatically be fetched. </li> <li>Verify your details and press confirm/Pay Bill.</li> <li>You will be shown a confirmation message by your back on the screen.</li></ol> <br><br> <u>Pay via ATM</u> <ol><li>Insert your card and input your PIN on any ATM in Pakistan.</li> <li>Select Bill Payment &amp; 1Bill.</li> <li>Select Voucher/Invoice.</li> <li>Add your given Challan/PSID  <b></b></li> <li>Your bill details will automatically be fetched.</li> <li>Verify your details and press confirm/Pay Bill.</li> <li>You will be shown a confirmation message by your back&nbsp;on&nbsp;the&nbsp;screen.</li></ol> <br><br> <u>Pay Through Easypaisa/Jazzcash</u> <ol><li>Sign into your Account</li> <li>Select Bill Payment &amp; 1Bill.</li> <li>Select Voucher/Invoice</li> <li>Enter your Challan/PSID  <b></b></li> <li>Your bill details will automatically be fetched. </li> <li>Verify your details and press confirm/Pay Bill.</li> <li>You will be shown a confirmation message by your back&nbsp;on&nbsp;the&nbsp;screen</li></ol> <p></p></div> <div class="modal-footer"><button type="button" data-dismiss="modal" class="btn btn-danger">Close</button></div></div></div></div></div>
+<script type="text/javascript">
+
+let vue = new Vue({
+	el: '#x_content',
+	data: {
+		current_case_index : -1,
+		cases : [], certificates : [], boards: [],
+		allVerified: 0
+	},
+	mounted(){
+		let self=this;
+		self.loadCases();
+		self.fetchCertificates();
+		
+	},
+	methods: {
+		lastStatus(y){
+			if(y.is_trash==2)return '<b>Current Status:</b> On Hold';
+			let x = y.statuses[y.statuses.length-1];
+
+			let c= 'No Status';
+			if(x && x.status)c = '<b>'+x.status+'</b>';
+
+			return c;
+		},
+		paymentStatus(x){
+			let paid = 0;
+			for (let index = 0; index < x.payments.length; index++) {
+				const p = x.payments[index];
+				paid += parseInt(p.amount);
+				
+			}
+			let total = (x.case_amount+x.courier_fee);
+
+			if(paid==0)return '<b style="color:red;">Unpaid ( '+total+' )</b>';
+			else if(paid>=total)return '<b style="color:green;">Payment Paid</b>';
+			else return '<b style="color:red;">Remaining '+(total-paid)+'</b>';
+			return paid + ' / ' + total;
+		},
+		fetchCertificates(){
+			let self=this;
+			
+			query_post("fetchCertificates", {},function(data){
+				let obj=JSON.parse(data);
+				self.certificates = obj.certificates;
+				self.boards = obj.boards;
+			},'cat=2');
+		},
+		loadCases(){
+			let self=this;
+			query_post("load_cases", {}, function(rsp){
+				let obj= JSON.parse(rsp);
+				
+				if(obj.code>0)alertText(1, "Something is Wrong!");
+				else {
+					self.cases = obj.data.cases;
+
+					setTimeout(function(){ 
+					var h =$(document).height(); 
+					var x_panel_h = Math.floor(528/657*h);
+					$('.x_panel').css('min-height', x_panel_h+"px");
+					$('.right_col').css('min-height', x_panel_h+"px");
+						
+					}, 5);
+					//$('#instructionModal').modal({backdrop: 'static', keyboard: false},'show');
+				}
+			});
+		},
+		editCase(_case){
+			let result = false;
+
+			let tm = _case.datetime.split(" ")[0]+' 17:00:00';
+			if( (new Date()) < (new Date(tm))){
+				alertText(-4, "You can't edit this application before "+tm);
+				return false;
+			}
+
+			result = confirm("Are you sure, to edit the Case?");
+
+			if(result)query_post("editCase", {case_code: _case.case_code},function(rsp){
+				let obj= JSON.parse(rsp);
+				if(obj.code==0){
+					document.location.href = 'https://attest.ibcc.edu.pk/category/2';
+				}else alertText(obj.code, obj.msg);
+			});
+		},
+		deleteCase(case_code){
+			let result = false;
+
+			result = confirm("Are you sure, to delete the Case and Confirm that you have not send your physical documents to IBCC.");
+
+			if(result)query_post("deleteCase", {case_code: case_code},function(rsp){
+				let obj= JSON.parse(rsp);
+				if(obj.code==0){
+					document.location.href = 'https://attest.ibcc.edu.pk/category/2';
+				}else alertText(obj.code, obj.msg);
+			});
+		},
+		printForm(_case){
+			let self = this;
+			let certificates=self.certificates, boards = self.boards;
+			loadRashdiScript('attestationForm', function(rsp){
+				eval(rsp);
+			});
+		},
+		paymentReceipt(_case){
+			let self=this;
+			loadRashdiScript('paymentReceipt', function(rsp){
+				eval(rsp);
+			});
+		},
+		buildChallanRows(_case){
+			let rows = [];
+			let docs = Array.isArray(_case.docs) ? _case.docs : [];
+			for(let i=0;i<docs.length;i++){
+				let amount = parseInt(docs[i].amount || docs[i].doc_amount || 0);
+				if(amount<=0)continue;
+				rows.push({label: 'Document Fee ' + (i + 1), amount: amount});
+			}
+			let courierFee = parseInt(_case.courier_fee || 0);
+			if(courierFee>0)rows.push({label: 'Courier Fee', amount: courierFee});
+			if(rows.length===0){
+				rows.push({label: 'Attestation Fee', amount: parseInt(_case.case_amount || 0)});
+				if(courierFee>0)rows.push({label: 'Courier Fee', amount: courierFee});
+			}
+			return rows;
+		},
+		printChallanWindow(html, qrText){
+			let wnd = window.open('', 'ibcc_attestation_challan', 'width=1200,height=800');
+			if(!wnd){
+				alertText(1, 'Popup blocked. Please allow popups and try again.');
+				return;
+			}
+			wnd.document.open();
+			wnd.document.write(html);
+			wnd.document.close();
+			if(typeof QRCode !== 'undefined' && qrText){
+				let config = {
+					text: qrText,
+					width: 80,
+					height: 80,
+					quietZone: 0,
+					colorDark: '#000000',
+					colorLight: '#ffffff',
+					correctLevel: QRCode.CorrectLevel.H
+				};
+				['qr_1','qr_2','qr_3'].forEach(function(id){
+					let node = wnd.document.getElementById(id);
+					if(node)new QRCode(node, config);
+				});
+			}
+			setTimeout(function(){
+				wnd.focus();
+				wnd.print();
+			}, 400);
+		},
+		printChallan(_case){
+			let feeRows = this.buildChallanRows(_case);
+			let total = feeRows.reduce(function(sum, row){
+				return sum + parseInt(row.amount || 0);
+			}, 0);
+			let dt = new Date();
+			let currentDate = ('0' + dt.getDate()).slice(-2) + '-' + ('0' + (dt.getMonth() + 1)).slice(-2) + '-' + dt.getFullYear();
+			let rowHtml = '';
+			for(let i=0;i<feeRows.length;i++){
+				rowHtml += `<tr><td style="border-right:1px solid #000">${i+1}</td><td style="border-right:1px solid #000">${feeRows[i].label}</td><td style="text-align:right">${feeRows[i].amount}</td></tr>`;
+			}
+			for(let i=feeRows.length;i<10;i++)rowHtml += `<tr><td style="border-right:1px solid #000">&nbsp;</td><td style="border-right:1px solid #000"></td><td></td></tr>`;
+			let applicantHtml = `<tr><td colspan="3"><b>Name:</b> ${_case.full_name || ''}</td></tr><tr><td colspan="3"><b>Father Name:</b> ${_case.father_name || ''}</td></tr><tr><td colspan="3"><b>CNIC Number:</b> ${_case.cnic_no || _case.cnic || ''}</td></tr><tr><td colspan="3"><b>Contact:</b> ${_case.contact || _case.phone || ''}</td></tr>`;
+			let html = `<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>Challan - ${_case.case_code}</title><style>body{font-family:Arial,sans-serif;}table{border-collapse:collapse;font-size:12px;width:100%;}@media print{@page{size:landscape;}}</style></head><body><table style="width:100%"><tr>`;
+			let sections = ['Bank', 'IBCC', 'Student'];
+			for(let s=1;s<=3;s++){
+				let psid = (_case.PSID || '').toString();
+				let displayPSID = psid.length > 6 ? psid.substring(6) : psid;
+				html += `<td style="width:33%;vertical-align:top;"><table style="width:100%"><tr><td colspan="3"><a href="https://services.ibcc.edu.pk/" target="_blank"><img style="width:100%;height:50px;" src="https://services.ibcc.edu.pk/assets/ibcc_services/challan_theme/ubl-logo.jpg"></a></td></tr><tr><td colspan="2"><small style="text-decoration:underline;font-size:16px;">${sections[s-1]} Copy</small></td><td style="text-align:right;"><span id="qr_${s}" style="display:block;margin-left:auto;margin-right:auto;width:50%"></span></td></tr><tr><td colspan="3"><b>Date:</b> ${currentDate}</td></tr><tr><td colspan="3"><b>Form# </b>${_case.case_code}</td></tr><tr><td colspan="3"><b>Challan# </b>${displayPSID}</td></tr><tr><td colspan="3"><b>1Bill PSID# </b>100805${displayPSID}</td></tr><tr><td colspan="3"></td></tr><tr><td colspan="3"><strong>ATTESTATION FEE DEPOSIT SLIP</strong></td></tr><tr><td colspan="3"><div style="text-align:center;border:1px solid #ccc;padding:6px;"><em>Please receive and Credit to "Inter Boards Coordination Commission Collection Account" via "UBL"</em></div></td></tr>${applicantHtml}<tr><td colspan="3"><table style="width:100%;border:1px solid #000;"><tr><td style="border-bottom:1px solid #000;width:30px;border-right:1px solid #000"><b>SNo.</b></td><td style="border-bottom:1px solid #000;border-right:1px solid #000"><b>Particular of Fee</b></td><td style="border-bottom:1px solid #000;width:60px;"><b>Rs.</b></td></tr>${rowHtml}<tr><td style="border:1px solid #000">&nbsp;</td><td style="border:1px solid #000;text-align:right;">Total</td><td style="border:1px solid #000;text-align:right;">${total}/-</td></tr></table></td></tr><tr><td colspan="2">(Rs. <span style="text-decoration:underline;">${total}</span>)</td><td><button style="background:#000;padding:5px;font-size:13px;color:#fff;">Non Refundable</button></td></tr><tr><td><br>__________________<br>Depositor's Signature</td><td><br>________________<br>Cashier's Signature</td><td><br>___________________<br>Bank officer's Signature</td></tr></table></td>`;
+			}
+			html += `</tr></table></body></html>`;
+			this.printChallanWindow(html, _case.PSID || _case.case_code);
+		}
+	}
+});
+
+</script>
+        <!-- /.row (main row) -->
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  
+  
+    <!-- /.content-wrapper -->
+  <!--footer class="main-footer">
+    <strong>Copyright &copy; 2020-2021 <a href="#"><strong>Copyright &copy;</strong>All rights reserved by IBCC IT Team.</a>.</strong>
+    All rights reserved.
+    <div class="float-right d-none d-sm-inline-block">
+      <b>Version</b> 3.1.0-rc
+    </div>
+  </footer-->
+  
+  <footer class="main-footer">
+      <strong>Copyright ©</strong>All rights reserved by IBCC IT Team.      <div class="float-right d-none d-sm-inline-block">
+        <div class="social-icons">
+          <a href="https://ibcc.edu.pk/" title="Website"><i class="fas fa-globe"></i></a>
+          <a href="https://www.youtube.com/@IBCCOfficial" title="YouTube"><i class="fab fa-youtube"></i></a>
+          <a href="https://www.facebook.com/IBCCOfficial" title="Facebook"><i class="fa-brands fa-facebook"></i></a>
+          <a href="https://www.linkedin.com/company/ibcc-official/?originalSubdomain=pk" title="Linkedin"><i class="fab fa-linkedin"></i></a>
+        </div>
+      </div>
+    </footer>
+
+  <!-- Control Sidebar -->
+  <aside class="control-sidebar control-sidebar-dark">
+    <!-- Control sidebar content goes here -->
+  <div class="p-3 control-sidebar-content"><h5>Customize AdminLTE</h5><hr class="mb-2"><div class="mb-4"><input type="checkbox" value="1" class="mr-1"><span>Dark Mode</span></div><h6>Header Options</h6><div class="mb-1"><input type="checkbox" value="1" checked="checked" class="mr-1"><span>Fixed</span></div><div class="mb-1"><input type="checkbox" value="1" class="mr-1"><span>Dropdown Legacy Offset</span></div><div class="mb-4"><input type="checkbox" value="1" class="mr-1"><span>No border</span></div><h6>Sidebar Options</h6><div class="mb-1"><input type="checkbox" value="1" class="mr-1"><span>Collapsed</span></div><div class="mb-1"><input type="checkbox" value="1" checked="checked" class="mr-1"><span>Fixed</span></div><div class="mb-1"><input type="checkbox" value="1" checked="checked" class="mr-1"><span>Sidebar Mini</span></div><div class="mb-1"><input type="checkbox" value="1" class="mr-1"><span>Sidebar Mini MD</span></div><div class="mb-1"><input type="checkbox" value="1" class="mr-1"><span>Sidebar Mini XS</span></div><div class="mb-1"><input type="checkbox" value="1" class="mr-1"><span>Nav Flat Style</span></div><div class="mb-1"><input type="checkbox" value="1" class="mr-1"><span>Nav Legacy Style</span></div><div class="mb-1"><input type="checkbox" value="1" class="mr-1"><span>Nav Compact</span></div><div class="mb-1"><input type="checkbox" value="1" class="mr-1"><span>Nav Child Indent</span></div><div class="mb-1"><input type="checkbox" value="1" class="mr-1"><span>Nav Child Hide on Collapse</span></div><div class="mb-4"><input type="checkbox" value="1" class="mr-1"><span>Disable Hover/Focus Auto-Expand</span></div><h6>Footer Options</h6><div class="mb-4"><input type="checkbox" value="1" class="mr-1"><span>Fixed</span></div><h6>Small Text Options</h6><div class="mb-1"><input type="checkbox" value="1" class="mr-1"><span>Body</span></div><div class="mb-1"><input type="checkbox" value="1" class="mr-1"><span>Navbar</span></div><div class="mb-1"><input type="checkbox" value="1" class="mr-1"><span>Brand</span></div><div class="mb-1"><input type="checkbox" value="1" class="mr-1"><span>Sidebar Nav</span></div><div class="mb-4"><input type="checkbox" value="1" class="mr-1"><span>Footer</span></div><h6>Navbar Variants</h6><div class="d-flex"><select class="custom-select mb-3 text-light border-0 bg-white"><option class="bg-primary">Primary</option><option class="bg-secondary">Secondary</option><option class="bg-info">Info</option><option class="bg-success">Success</option><option class="bg-danger">Danger</option><option class="bg-indigo">Indigo</option><option class="bg-purple">Purple</option><option class="bg-pink">Pink</option><option class="bg-navy">Navy</option><option class="bg-lightblue">Lightblue</option><option class="bg-teal">Teal</option><option class="bg-cyan">Cyan</option><option class="bg-dark">Dark</option><option class="bg-gray-dark">Gray dark</option><option class="bg-gray">Gray</option><option class="bg-light">Light</option><option class="bg-warning">Warning</option><option class="bg-white">White</option><option class="bg-orange">Orange</option></select></div><h6>Accent Color Variants</h6><div class="d-flex"></div><select class="custom-select mb-3 border-0"><option>None Selected</option><option class="bg-primary">Primary</option><option class="bg-warning">Warning</option><option class="bg-info">Info</option><option class="bg-danger">Danger</option><option class="bg-success">Success</option><option class="bg-indigo">Indigo</option><option class="bg-lightblue">Lightblue</option><option class="bg-navy">Navy</option><option class="bg-purple">Purple</option><option class="bg-fuchsia">Fuchsia</option><option class="bg-pink">Pink</option><option class="bg-maroon">Maroon</option><option class="bg-orange">Orange</option><option class="bg-lime">Lime</option><option class="bg-teal">Teal</option><option class="bg-olive">Olive</option></select><h6>Dark Sidebar Variants</h6><div class="d-flex"></div><select class="custom-select mb-3 text-light border-0 bg-primary"><option>None Selected</option><option class="bg-primary">Primary</option><option class="bg-warning">Warning</option><option class="bg-info">Info</option><option class="bg-danger">Danger</option><option class="bg-success">Success</option><option class="bg-indigo">Indigo</option><option class="bg-lightblue">Lightblue</option><option class="bg-navy">Navy</option><option class="bg-purple">Purple</option><option class="bg-fuchsia">Fuchsia</option><option class="bg-pink">Pink</option><option class="bg-maroon">Maroon</option><option class="bg-orange">Orange</option><option class="bg-lime">Lime</option><option class="bg-teal">Teal</option><option class="bg-olive">Olive</option></select><h6>Light Sidebar Variants</h6><div class="d-flex"></div><select class="custom-select mb-3 border-0"><option>None Selected</option><option class="bg-primary">Primary</option><option class="bg-warning">Warning</option><option class="bg-info">Info</option><option class="bg-danger">Danger</option><option class="bg-success">Success</option><option class="bg-indigo">Indigo</option><option class="bg-lightblue">Lightblue</option><option class="bg-navy">Navy</option><option class="bg-purple">Purple</option><option class="bg-fuchsia">Fuchsia</option><option class="bg-pink">Pink</option><option class="bg-maroon">Maroon</option><option class="bg-orange">Orange</option><option class="bg-lime">Lime</option><option class="bg-teal">Teal</option><option class="bg-olive">Olive</option></select><h6>Brand Logo Variants</h6><div class="d-flex"></div><select class="custom-select mb-3 border-0"><option>None Selected</option><option class="bg-primary">Primary</option><option class="bg-secondary">Secondary</option><option class="bg-info">Info</option><option class="bg-success">Success</option><option class="bg-danger">Danger</option><option class="bg-indigo">Indigo</option><option class="bg-purple">Purple</option><option class="bg-pink">Pink</option><option class="bg-navy">Navy</option><option class="bg-lightblue">Lightblue</option><option class="bg-teal">Teal</option><option class="bg-cyan">Cyan</option><option class="bg-dark">Dark</option><option class="bg-gray-dark">Gray dark</option><option class="bg-gray">Gray</option><option class="bg-light">Light</option><option class="bg-warning">Warning</option><option class="bg-white">White</option><option class="bg-orange">Orange</option><a href="https://attest.ibcc.edu.pk/category/3#">clear</a></select></div></aside>
+  <!-- /.control-sidebar -->
+<div id="sidebar-overlay"></div></div>
+<!-- ./wrapper -->
+<style>
+        /* Overlay styles */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+            z-index: 9999; /* High z-index to overlay everything */
+            display: none; /* Hidden by default */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .overlay .spinner-border {
+            width: 3rem;
+            height: 3rem;
+        }
+</style>
+<!-- Overlay -->
+<div class="overlay" id="overlay" style="display: none;">
+	<div class="spinner-border text-light" role="status">
+		<span class="sr-only">Loading...</span>
+	</div>
+</div>
+
+<!-- jQuery UI 1.11.4 -->
+<script src="./3_files/jquery-ui.min.js.download"></script>
+<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<script>
+  $.widget.bridge('uibutton', $.ui.button)
+</script>
+<!-- Bootstrap 4 -->
+<script src="./3_files/bootstrap.bundle.min.js.download"></script>
+<!-- ChartJS -->
+<script src="./3_files/Chart.min.js.download"></script>
+<!-- Sparkline -->
+<script src="./3_files/sparkline.js.download"></script>
+<!-- JQVMap -->
+<script src="./3_files/jquery.vmap.min.js.download"></script>
+<script src="./3_files/jquery.vmap.usa.js.download"></script>
+<!-- jQuery Knob Chart -->
+<script src="./3_files/jquery.knob.min.js.download"></script>
+<!-- daterangepicker -->
+<script src="./3_files/moment.min.js.download"></script>
+<script src="./3_files/tempusdominus-bootstrap-4.min.js.download"></script>
+<link rel="stylesheet" href="./3_files/tempusdominus-bootstrap-4.min.css">
+<!-- Summernote -->
+<script src="./3_files/summernote-bs4.min.js.download"></script>
+<!-- overlayScrollbars -->
+<script src="./3_files/jquery.overlayScrollbars.min.js.download"></script>
+<!-- AdminLTE App -->
+<script src="./3_files/adminlte.js.download"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="./3_files/demo.js.download"></script>
+<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+<script src="./3_files/dashboard.js.download"></script>
+
+<script src="./3_files/App.js.download"></script>
+<script>
+	$(document).ready(function() {
+		// Example to hide the overlay after 3 seconds
+			q_posts++;
+			setTimeout(function() {
+				rq_posts++;
+				if(rq_posts>=q_posts)
+					$('#overlay').hide();
+			}, 100);
+	});
+</script>
+
+<style>
+        #qr-scanner {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+        }
+        .open-bar {
+            position: fixed;
+            bottom: 40px;
+            right: 20px;
+            z-index: 9999;
+			font-size: 3vw;
+        }
+		
+		.m-qrcode{
+            font-size: 3vw;
+        }
+		
+		
+.chat-ibcc{background:#fff;width:40%;height:500px;position:fixed;overflow:auto;bottom:0px;right:14px;border:none;border-radius:5px 5px 0 0;-webkit-box-shadow:0 10px 50px 0 rgba(0,0,0,0.25);-moz-box-shadow:0 10px 50px 0 rgba(0,0,0,0.25);box-shadow:0 10px 50px 0 rgba(0,0,0,0.25);z-index:1000000;display:none}
+.messages_chat{text-align:center;text-decoration:none;display:block;height:100%;padding:5px 5px 15px}
+.chat-header{margin:0 auto;padding:0 10px;height:35px;line-height:35px;font-size:16px;font-weight:700;color:#fff;text-align:left;display:block;background:#00a040}
+.messages_chat p{color:#616161;font-size:14px;margin:10px;}
+.close-chatt{position:absolute;top:0;right:0;font-family:Arial;font-size:24px;font-weight:700;cursor:pointer;width:24px;color:#fff;height:35px;line-height:35px;text-align:center;opacity:.7}
+.close-chatt:hover{opacity:1}
+.Chat-box-on{display:block!important;}
+.remove-chat {position: relative;top: 1px;left: -4px;display: inline-block;font-family: 'Glyphicons Halflings';font-style: normal;font-weight: 400;line-height: 1;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;}
+button {border-radius:4px;color:#fff;outline:none;font-family:;font-size: 16px;line-height: none;border:none;background:#00b0ff}
+button:hover,btn-default:hover{border-radius:4px;color:#ddd;border:#00a040}
+.btn-centered{text-align:center}
+
+	@media (max-width: 576px) {
+		.chat-ibcc{background:#fff;width:60%;height:500px;position:fixed;overflow:auto;bottom:0px;right:14px;border:none;border-radius:5px 5px 0 0;-webkit-box-shadow:0 10px 50px 0 rgba(0,0,0,0.25);-moz-box-shadow:0 10px 50px 0 rgba(0,0,0,0.25);box-shadow:0 10px 50px 0 rgba(0,0,0,0.25);z-index:1000000;display:none}
+		.m-qrcode{
+            font-size: 6vw;
+        }
+	}
+</style>
+
+
+
+</body></html>
